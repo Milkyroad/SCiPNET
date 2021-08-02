@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/src/css/iframe.min.css" async>
+  <style id="importantComSheet"></style>
+</head>
+
+<body>
+  <hr>
+  <h1>SCP Foundation Main Control Unit</h1>
+  <hr>
+  <h2 style="letter-spacing: 1px;font-weight: 100;font-size:12px">Welcome, researcher. Please select one of the following actions</h2>
+  <span class="applicationBtn" id="vc">Encrypted communication system</span>
+  <span class="applicationBtn" id="systatus" style="display:none">System Status</span>
+  <span class="applicationBtn" id="updateLog">Update Log</span>
+  <script src="/src/ex_file/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript">
+    $("#vc").off('click').bind('click', function() {
+      checkauthLoaded()
+
+      function checkauthLoaded() {
+        if (parent.userLoggedIn != undefined) {
+          if (parent.userLoggedIn == false) {
+            parent.showWarning(`<div>You must be logged in before you can use this function.</div>`)
+            return;
+          } else if (parent.tag == "Not yet registered") {
+            parent.showWarning(`<div>You are using a legacy account that does not support the communication function. Please go to the SCiPNET Dashboard tab, enter "Edit" in the terminal and edit your username to update your account.</div>`)
+            return;
+          } else if (parent.tag != undefined) {
+            parent.popUp("Encrypted communication system",
+              `<div><div><p>Enter the User ID (With #) of the registered Foundation member you wish to call:</p><p id="callIndicator"></p><input id='callID' placeholder="Username#0000"  onfocus="this.placeholder = ''" onblur="this.placeholder = 'Username#0000'" ></input><span class='applicationBtn' id='callBtn' style='margin-left:15px;font-size:14px' onclick='call(this)'>CALL</span></div><br><div><p>Click to receive calls:</p><br><span class='applicationBtn' id='callBtn' style='font-size:14px' onclick='recieve(this)'>RECEIVE</span></div><br></div><div><br></div><small style="opacity:0.7">ⓘ: This encryption communication system allows you to voice call another registered Foundation member. Click the "Receive" button to enter call receiving mode. Request another registered member to enter your User ID and click the "Call" button to establish connection with the member you wish to call.<br></small>`
+            )
+            return;
+          }
+        }
+        parent.popUp("Encrypted communication system", "<div>Loading...</div><br>")
+        window.setTimeout(checkauthLoaded, 100);
+      }
+    })
+    $("#updateLog").off('click').bind('click', function() {
+      parent.popUp("TERMINAL UPDATE LOG", "LOADING...")
+      $.get("/src/ex_file/updatelog.html", function(va) {
+        parent.popUp("TERMINAL UPDATE LOG", va)
+      })
+    })
+    $("#systatus").off('click').bind('click', function() {
+      parent.popUp("SYSTEM STATUS REPORT", `Under development`)
+    })
+  </script>
+</body>
+
+</html>
