@@ -1,10 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,700;1,400;1,700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
+:root {
+  --defaultTheme: #f5d546;
+  --defaultThemeRGB: 245, 213, 70;
+  --defaultText: #ffffff;
+  --defaultTextRGB: 255, 255, 255;
+  --defaultContrast: #111111;
+  --defaultBackground: #1e1e1e;
+}
+
 body {
   font-family: 'Barlow', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #fff;
+  color: var(--defaultText);
   margin: 0;
   padding: 30px;
   overflow-x: hidden;
@@ -69,7 +78,7 @@ body::-webkit-scrollbar-thumb, body::-webkit-scrollbar-thumb {
 hr {
   height: 1px;
   border: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-top: 1px solid rgba(var(--defaultTextRGB), 0.5);
 }
 
 #loadOverlay {
@@ -87,7 +96,7 @@ hr {
 #opening h1 {
   background: none;
   border: none;
-  color: white;
+  color: var(--defaultText);
   text-align: center;
   text-transform: none;
 }
@@ -95,7 +104,7 @@ hr {
 #opening h2 {
   background: none;
   border: none;
-  color: white;
+  color: var(--defaultText);
   text-align: center;
   font-size: 18.72px;
 }
@@ -105,11 +114,11 @@ blockquote {
 }
 
 p:not(.profile p), .wiki-content-table {
-  color: white;
+  color: var(--defaultText);
 }
 
 .highlight, .obj-text {
-  color: #f5d546 !important;
+  color: var(--defaultTheme) !important;
 }
 
 .codePageStyle {
@@ -119,10 +128,10 @@ p:not(.profile p), .wiki-content-table {
 
 /* titles */
 h1, h3, .top-left-box {
-  background-color: #f5d546;
-  color: #111;
+  background-color: var(--defaultTheme);
+  color: var(--defaultContrast);
   letter-spacing: 2px;
-  border: 1px #f5d546 solid;
+  border: 1px var(--defaultTheme) solid;
   border-radius: 5px;
   word-wrap: break-word;
   text-transform: uppercase;
@@ -170,14 +179,14 @@ li {
   margin: 5px;
 }
 
-a:not(.image-box-link), .languageList li, .listClass li {
-  color: #f5d546;
+a:not(.image-box-link), .listClass li {
+  color: var(--defaultTheme);
   margin: 5px;
 }
 
-a:not(.image-box-link):hover, .languageList li:hover, .listClass li:hover, ele-access {
-  background: #f5d546;
-  color: #111;
+a:not(.image-box-link):hover, .listClass li:hover, ele-access {
+  background: var(--defaultTheme);
+  color: var(--defaultContrast);
   text-decoration: none;
   cursor: pointer;
   border: none;
@@ -187,17 +196,17 @@ a:not(.image-box-link):hover, .languageList li:hover, .listClass li:hover, ele-a
   cursor: pointer;
 }
 
-.languageList li:hover, .listClass li:hover {
+.listClass li:hover {
   /*to add background for the bullet point*/
-  box-shadow: -2em 0 #f5d546;
+  box-shadow: -2em 0 var(--defaultTheme);
 }
 
 .disabledList {
-  background: #f5d546;
-  color: #111;
+  background: var(--defaultTheme);
+  color: var(--defaultContrast);
   width: -webkit-fit-content;
   width: -moz-fit-content;
-  box-shadow: -2em 0 #f5d546;
+  box-shadow: -2em 0 var(--defaultTheme);
   opacity: 0.7;
 }
 
@@ -213,7 +222,7 @@ a:not(.image-box-link):hover, .languageList li:hover, .listClass li:hover, ele-a
   word-break: break-all;
 }
 
-.languageList li, .listClass li, .collapsible-block-folded, .collapsible-block-unfolded-link, .foldable-list-container a {
+.listClass li, .collapsible-block-folded, .collapsible-block-unfolded-link, .foldable-list-container a {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   -webkit-touch-callout: none;
@@ -231,14 +240,14 @@ a:not(.image-box-link):hover, .languageList li:hover, .listClass li:hover, ele-a
   height: -moz-fit-content;
   width: 60%;
   margin: auto;
-  background: linear-gradient(to right, #f5d546 2.5px, transparent 2.5px) 0 0,
-    linear-gradient(to right, #f5d546 2.5px, transparent 2.5px) 0 100%,
-    linear-gradient(to left, #f5d546 2.5px, transparent 2.5px) 100% 0,
-    linear-gradient(to left, #f5d546 2.5px, transparent 2.5px) 100% 100%,
-    linear-gradient(to bottom, #f5d546 2.5px, transparent 2.5px) 0 0,
-    linear-gradient(to bottom, #f5d546 2.5px, transparent 2.5px) 100% 0,
-    linear-gradient(to top, #f5d546 2.5px, transparent 2.5px) 0 100%,
-    linear-gradient(to top, #f5d546 2.5px, transparent 2.5px) 100% 100%, rgb(78 78 78 / 21%);
+  background: linear-gradient(to right, var(--defaultTheme) 2.5px, transparent 2.5px) 0 0,
+    linear-gradient(to right, var(--defaultTheme) 2.5px, transparent 2.5px) 0 100%,
+    linear-gradient(to left, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 0,
+    linear-gradient(to left, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 100%,
+    linear-gradient(to bottom, var(--defaultTheme) 2.5px, transparent 2.5px) 0 0,
+    linear-gradient(to bottom, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 0,
+    linear-gradient(to top, var(--defaultTheme) 2.5px, transparent 2.5px) 0 100%,
+    linear-gradient(to top, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 100%, rgb(78 78 78 / 21%);
   background-repeat: no-repeat !important;
   background-size: 20px 20px !important;
   padding: 30px;
@@ -358,7 +367,7 @@ div.codePageStyle pre {
 }
 
 .wiki-content-table, th, td, table, tr {
-  border: 1px white solid;
+  border: 1px var(--defaultText) solid;
   border-radius: 5px;
   padding: 10px;
   border-collapse: collapse;
@@ -440,8 +449,8 @@ table {
 
 .scp-image-caption {
   text-align: center;
-  border-top: 2px white solid;
-  border-bottom: 2px white solid;
+  border-top: 2px var(--defaultText) solid;
+  border-bottom: 2px var(--defaultText) solid;
   margin: 15px auto;
   margin-top: 0;
 }
@@ -547,14 +556,14 @@ iframe {
 }
 
 .applicationFrame, #opening, blockquote blockquote {
-  background: linear-gradient(to right, #f5d546 2.5px, transparent 2.5px) 0 0,
-    linear-gradient(to right, #f5d546 2.5px, transparent 2.5px) 0 100%,
-    linear-gradient(to left, #f5d546 2.5px, transparent 2.5px) 100% 0,
-    linear-gradient(to left, #f5d546 2.5px, transparent 2.5px) 100% 100%,
-    linear-gradient(to bottom, #f5d546 2.5px, transparent 2.5px) 0 0,
-    linear-gradient(to bottom, #f5d546 2.5px, transparent 2.5px) 100% 0,
-    linear-gradient(to top, #f5d546 2.5px, transparent 2.5px) 0 100%,
-    linear-gradient(to top, #f5d546 2.5px, transparent 2.5px) 100% 100%;
+  background: linear-gradient(to right, var(--defaultTheme) 2.5px, transparent 2.5px) 0 0,
+    linear-gradient(to right, var(--defaultTheme) 2.5px, transparent 2.5px) 0 100%,
+    linear-gradient(to left, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 0,
+    linear-gradient(to left, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 100%,
+    linear-gradient(to bottom, var(--defaultTheme) 2.5px, transparent 2.5px) 0 0,
+    linear-gradient(to bottom, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 0,
+    linear-gradient(to top, var(--defaultTheme) 2.5px, transparent 2.5px) 0 100%,
+    linear-gradient(to top, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 100%;
   background-repeat: no-repeat !important;
   background-size: 20px 20px !important;
   padding: 15px;
@@ -562,17 +571,17 @@ iframe {
 }
 
 .blockquote, .accessPage blockquote, .infoCard blockquote, .location, .scp-image-block, .countryMap {
-  background: linear-gradient(to right, rgba(255,255,255, .7) 2.5px, transparent 2.5px) 0 0,
-    linear-gradient(to right, rgba(255,255,255, .7) 2.5px, transparent 2.5px) 0 100%,
-    linear-gradient(to left, rgba(255,255,255, .7) 2.5px, transparent 2.5px) 100% 0,
-    linear-gradient(to left, rgba(255,255,255, .7) 2.5px, transparent 2.5px) 100% 100%,
-    linear-gradient(to bottom, rgba(255,255,255, .7) 2.5px, transparent 2.5px) 0 0,
-    linear-gradient(to bottom, #rgba(255,255,255, .7) 2.5px, transparent 2.5px) 100% 0,
-    linear-gradient(to top, rgba(255,255,255, .7) 2.5px, transparent 2.5px) 0 100%,
-    linear-gradient(to top, rgba(255,255,255, .7) 2.5px, transparent 2.5px) 100% 100%;
+  background: linear-gradient(to right, rgba(var(--defaultTextRGB), .7) 2.5px, transparent 2.5px) 0 0,
+    linear-gradient(to right, rgba(var(--defaultTextRGB), .7) 2.5px, transparent 2.5px) 0 100%,
+    linear-gradient(to left, rgba(var(--defaultTextRGB), .7) 2.5px, transparent 2.5px) 100% 0,
+    linear-gradient(to left, rgba(var(--defaultTextRGB), .7) 2.5px, transparent 2.5px) 100% 100%,
+    linear-gradient(to bottom, rgba(var(--defaultTextRGB), .7) 2.5px, transparent 2.5px) 0 0,
+    linear-gradient(to bottom, rgba(var(--defaultTextRGB), .7) 2.5px, transparent 2.5px) 100% 0,
+    linear-gradient(to top, rgba(var(--defaultTextRGB), .7) 2.5px, transparent 2.5px) 0 100%,
+    linear-gradient(to top, rgba(var(--defaultTextRGB), .7) 2.5px, transparent 2.5px) 100% 100%;
   background-repeat: no-repeat !important;
   background-size: 20px 20px !important;
-  outline: 1px solid rgba(255, 255, 255, 0.2);
+  outline: 1px solid rgba(var(--defaultTextRGB), 0.2);
   outline-offset: -6px;
   padding: 15px;
   margin: 15px
@@ -618,7 +627,6 @@ iframe {
   font-family: 'Barlow', sans-serif;
 }
 
-
 .icon_image img {
   width: 50px;
 }
@@ -657,7 +665,7 @@ iframe {
 }
 
 .class1 {
-  border: solid 1px white;
+  border: solid 1px var(--defaultText);
   padding: 15px;
   border-radius: 5px;
   margin: 10px auto;
@@ -681,15 +689,33 @@ div.class1 .base:nth-of-type(2) {
   display: none;
 }
 
+/*special access class*/
+.bothChange {
+  background-color: var(--defaultText) !important;
+  color: var(--defaultText) !important;
+}
+
+.colorChange {
+  color: var(--defaultText) !important;
+}
+
+.borderChange {
+  border-color: var(--defaultText) !important;
+}
+
+.backgroundChange {
+  background-color: var(--defaultText) !important;
+}
+
 /*buttons*/
 .applicationBtn {
   cursor: pointer;
-  color: white;
+  color: var(--defaultText);
   font-size: 13px;
   font-family: 'Barlow', sans-serif;
   letter-spacing: 2px;
-  border: 2px #111 solid;
-  outline: 1.5px #f5d546 solid;
+  border: 2px var(--defaultContrast) solid;
+  outline: 1.5px var(--defaultTheme) solid;
   background-color: transparent;
   transition: 100ms all ease-out;
   padding: 10px 15px;
@@ -701,14 +727,14 @@ div.class1 .base:nth-of-type(2) {
 }
 
 .applicationBtn:hover {
-  background-color: rgba(245, 213, 70, .5);
-  color: white;
+  background-color: rgba(var(--defaultThemeRGB), .5);
+  color: var(--defaultText);
 }
 
 .applicationBtn:active {
-  border: 2px #f5d546 solid;
-  background-color: rgba(245, 213, 70, 1);
-  color: #111;
+  border: 2px var(--defaultTheme) solid;
+  background-color: rgba(var(--defaultThemeRGB), 1);
+  color: var(--defaultContrast);
 }
 
 /*location*/

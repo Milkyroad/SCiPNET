@@ -16,6 +16,7 @@ export const lock = () => {
   $(".close").hide()
   popUp("TERMINAL LOCKOUT", `<div style='text-align:center'>EMERGENCY LOCKOUT PROTOCOL INITIATED<br>.<br>.<br><span style="opacity:0.7;font-size:10px">INSTRUCTED BY ${String(displayName).toUpperCase()}, LEVEL ${clearance} CLEARANCE ORDER</span><br><span style="opacity:0.7;font-size:10px">Assigned via SCiPNET ${place.toUpperCase()} SCP FOUNDATION PORTAL</span></div>`)
   $("#NormalModalId").css("background", "none")
+  $(".modal-content").attr("style","background-color:transparent!important")
   $("#NormalModalId h1").css("text-align", "center")
   $(".modal").css("z-index", "4")
   appendNormal(`TERMINAL LOCKOUT - SYSTEM VALUE LOGGED<br><small>INSTRUCTED BY ${String(displayName).toUpperCase()}, LEVEL ${clearance} CLEARANCE ORDER</small>`)

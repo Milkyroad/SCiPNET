@@ -45,18 +45,14 @@ function cmdShow() {
 }
 
 function btnHide() {
-  $d.find(".languageList li").css("opacity", "0.7")
-  $d.find(".languageList li").css("pointer-events", "none")
-  $d.find(".editList li").css("opacity", "0.7")
-  $d.find(".editList li").css("pointer-events", "none")
+  $d.find(".listClass li").css("opacity", "0.7")
+  $d.find(".listClass li").css("pointer-events", "none")
   isBtnHide = true
 }
 
 function btnShow() {
-  $d.find(".languageList li").css("opacity", "")
-  $d.find(".languageList li").css("pointer-events", "auto")
-  $d.find(".editList li").css("opacity", "")
-  $d.find(".editList li").css("pointer-events", "auto")
+  $d.find(".listClass li").css("opacity", "")
+  $d.find(".listClass li").css("pointer-events", "auto")
   isBtnHide = false
 }
 
