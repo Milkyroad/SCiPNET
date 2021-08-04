@@ -1,5 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,700;1,400;1,700&family=Source+Code+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
+:root {
+  --defaultTheme: #f5d546;
+  --defaultThemeRGB: 245, 213, 70;
+  --defaultText: #ffffff;
+  --defaultTextRGB: 255, 255, 255;
+  --defaultContrast: #111111;
+  --defaultBackground: #1e1e1e;
+}
+
 @-webkit-keyframes entrance {
   to, 20%, 40%, 60%, 80% {
     opacity: 1;
@@ -59,13 +68,13 @@
 }
 
 a {
-  color: #f5d546;
+  color: var(--defaultTheme);
   margin: 5px;
 }
 
 a:hover {
-  background: #f5d546;
-  color: #111;
+  background: var(--defaultTheme);
+  color: var(--defaultContrast);
   text-decoration: none;
   cursor: pointer;
   border: none;
@@ -78,13 +87,13 @@ a:hover {
 }
 
 body {
-  background: #1e1e1e url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
+  background: var(--defaultBackground) url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
   display: flex;
   height: 100vh;
   font-family: 'Barlow', sans-serif;
   font-size: 14px;
   font-weight: 500;
-  color: #fff;
+  color: var(--defaultText);
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -94,7 +103,7 @@ body {
 hr {
   height: 1px;
   border: 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.5);
+  border-top: 1px solid rgba(var(--defaultTextRGB), 0.5);
 }
 
 #loadOverlay {
@@ -119,7 +128,7 @@ hr {
 #cmd {
   line-height: 20px;
   letter-spacing: 1px;
-  border: 1px #f5d546 solid;
+  border: 1px var(--defaultTheme) solid;
   border-radius: 5px;
   font-size: 12px;
   padding: 0;
@@ -144,22 +153,21 @@ hr {
   float: right;
   letter-spacing: 3px;
   font-size: 16px;
-  background: #f5d546;
+  background: var(--defaultTheme);
   border-radius: 5px 5px 0 0;
   padding: 5px 7px;
-  color: black;
+  color: var(--defaultContrast);
   margin: 0 20px 0 10px;
   cursor: pointer;
   animation: entrance 400ms 1000ms linear backwards 1;
 }
+.offTab{
+  background: #333333!important;
+  color: white!important;
+}
 
 #bottomItems {
   width: 100%
-}
-
-#chat {
-  background: #333333;
-  color: white;
 }
 
 .columnExt {
@@ -168,7 +176,7 @@ hr {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
   width: 3px;
-  background: #f5d546;
+  background: var(--defaultTheme);
   left: 30px;
   animation: entrance 400ms 1200ms linear backwards 1;
 }
@@ -176,12 +184,12 @@ hr {
 .textbox #input, #callID {
   font-family: 'Barlow', sans-serif;
   border-radius: 5px;
-  border: 1px #f5d546 solid;
+  border: 1px var(--defaultTheme) solid;
   width: 90%;
   height: 1.829vh;
   background: #E3DCBE1A;
   padding: 20px;
-  color: white;
+  color: var(--defaultText);
   font-size: 17px;
   animation: entrance 400ms 800ms linear backwards 1;
   transition: 300ms all ease-out;
@@ -196,7 +204,7 @@ hr {
 
 #callID:focus {
   outline: none;
-  border: 1px #f5d546 solid;
+  border: 1px var(--defaultTheme) solid;
 }
 
 textarea:focus, input:focus {
@@ -226,7 +234,7 @@ textarea:focus, input:focus {
 
 /* Iframe Panel */
 #comIframe, #cmdIframe {
-  background: linear-gradient(0deg, rgba(245, 213, 70, 0.05) 0%, rgba(17, 17, 17, 0) 100%), #1e1e1e url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
+  background: linear-gradient(0deg, rgba(245, 213, 70, 0.05) 0%, rgba(17, 17, 17, 0) 100%), var(--defaultBackground) url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
   border: none !important;
   width: 100%;
   position: absolute;
@@ -243,12 +251,12 @@ textarea:focus, input:focus {
 
 /* title property */
 h1, h3, .top-left-box {
-  background-color: #f5d546;
+  background-color: var(--defaultTheme);
   padding: 5px 3px;
-  color: #111;
+  color: var(--defaultContrast);
   letter-spacing: 2px;
   margin: 20px 0 10px;
-  border: 1px #f5d546 solid;
+  border: 1px var(--defaultTheme) solid;
   border-radius: 5px;
   line-height: 1;
   word-wrap: break-word;
@@ -293,12 +301,12 @@ h1, p, .columnExt::before {
 }
 
 .highlight {
-  color: #f5d546;
+  color: var(--defaultTheme);
 }
 
 /*side panel*/
 #shot .data {
-  color: #fff;
+  color: var(--defaultText);
 }
 
 /*data tag*/
@@ -370,8 +378,8 @@ smallres {
   font-size: 24px;
   font-family: 'Barlow', sans-serif;
   letter-spacing: 2px;
-  border: 2px #111 solid;
-  outline: 1.5px #f5d546 solid;
+  border: 2px var(--defaultContrast) solid;
+  outline: 1.5px var(--defaultTheme) solid;
   background-color: transparent;
   transition: 100ms all ease-out;
   padding: 10px 15px;
@@ -395,14 +403,14 @@ smallres {
 }
 
 #uploadBtn:hover, .applicationBtn:hover {
-  background-color: rgba(245, 213, 70, .5);
+  background-color: rgba(var(--defaultThemeRGB), .5);
   color: white;
 }
 
 #uploadBtn:active, .applicationBtn:active {
-  border: 2px #f5d546 solid;
-  background-color: rgba(245, 213, 70, 1);
-  color: #111;
+  border: 2px var(--defaultTheme) solid;
+  background-color: rgba(var(--defaultThemeRGB), 1);
+  color: var(--defaultContrast);
 }
 
 .croppie-container {
@@ -439,28 +447,28 @@ smallres {
   margin: auto;
   max-height: 90%;
   overflow: auto;
-  background-color: #fefefe;
   padding: 26px;
   outline: 1px solid #545454;
   outline-offset: -6px;
   width: 80%;
   height: fit-content;
-  background: linear-gradient(to right, #f5d546 2.5px, transparent 2.5px) 0 0,
-    linear-gradient(to right, #f5d546 2.5px, transparent 2.5px) 0 100%,
-    linear-gradient(to left, #f5d546 2.5px, transparent 2.5px) 100% 0,
-    linear-gradient(to left, #f5d546 2.5px, transparent 2.5px) 100% 100%,
-    linear-gradient(to bottom, #f5d546 2.5px, transparent 2.5px) 0 0,
-    linear-gradient(to bottom, #f5d546 2.5px, transparent 2.5px) 100% 0,
-    linear-gradient(to top, #f5d546 2.5px, transparent 2.5px) 0 100%,
-    linear-gradient(to top, #f5d546 2.5px, transparent 2.5px) 100% 100%;
+  background: linear-gradient(to right, var(--defaultTheme) 2.5px, transparent 2.5px) 0 0,
+    linear-gradient(to right, var(--defaultTheme) 2.5px, transparent 2.5px) 0 100%,
+    linear-gradient(to left, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 0,
+    linear-gradient(to left, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 100%,
+    linear-gradient(to bottom, var(--defaultTheme) 2.5px, transparent 2.5px) 0 0,
+    linear-gradient(to bottom, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 0,
+    linear-gradient(to top, var(--defaultTheme) 2.5px, transparent 2.5px) 0 100%,
+    linear-gradient(to top, var(--defaultTheme) 2.5px, transparent 2.5px) 100% 100%;
   background-repeat: no-repeat !important;
   background-size: 20px 20px !important;
-  background-color: rgba(48, 48, 48, 0.5);
+  background-color: rgba(48, 48, 48, 0.5) !important;
 }
 
 .modalText {
   letter-spacing: 1px;
   padding-top: 10px;
+  color: white;
 }
 
 .close {
@@ -542,7 +550,7 @@ smallres {
 }
 
 .outerFrame div {
-  border: 1px solid rgb(84 84 84);
+  border: 1px solid rgb(var(--defaultTextRGB), .2);
   padding: 10px;
   background: #1e1e1e url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
   background-clip: content-box;
@@ -550,14 +558,14 @@ smallres {
 
 .outerFrame {
   margin: 15px;
-  background: linear-gradient(to right, #dadada 2.5px, transparent 2.5px) 0 0,
-    linear-gradient(to right, #dadada 1px, transparent 2.5px) 0 100%,
-    linear-gradient(to left, #dadada 1px, transparent 2.5px) 100% 0,
-    linear-gradient(to left, #dadada 1px, transparent 2.5px) 100% 100%,
-    linear-gradient(to bottom, #dadada 1px, transparent 2.5px) 0 0,
-    linear-gradient(to bottom, #dadada 1px, transparent 2.5px) 100% 0,
-    linear-gradient(to top, #dadada 1px, transparent 2.5px) 0 100%,
-    linear-gradient(to top, #dadada 1px, transparent 2.5px) 100% 100%;
+  background: linear-gradient(to right, rgba(var(--defaultTextRGB), .7) 2.5px, transparent 2.5px) 0 0,
+    linear-gradient(to right, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 0 100%,
+    linear-gradient(to left, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 100% 0,
+    linear-gradient(to left, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 100% 100%,
+    linear-gradient(to bottom, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 0 0,
+    linear-gradient(to bottom, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 100% 0,
+    linear-gradient(to top, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 0 100%,
+    linear-gradient(to top, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 100% 100%;
   background-repeat: no-repeat;
   background-size: 20px 20px;
   padding: 5px;

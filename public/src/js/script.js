@@ -22,7 +22,7 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-3-5.21")
+$("#version").text("V. 01-4-0.21")
 //script variables
 var access
 var vcLoaded = false;
@@ -34,6 +34,11 @@ var localbackgroundColor = localStorage.getItem('backgroundColor');
 var localcolor = localStorage.getItem('color');
 var localtextColor = localStorage.getItem('textColor');
 var localtextContrastColor = localStorage.getItem('textContrastColor');
+
+//check if user on mobile
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+  popUp("NOTICE", "Browsing SCiPNET via desktop is recommended for the best experience")
+}
 
 function checkLocalStorageAndChange() {
   if (localbackgroundColor && localcolor && localtextColor && localtextContrastColor) {
@@ -270,9 +275,10 @@ function reply(val) {
       }
       break;
     case "language":
-      appendNormal("<div class='languageSelect'>Please click and select the language of the SCP documentation you wish to access below:<ol class='languageList'><li>Traditional Chinese</li><li>Simplified Chinese</li><li>Russian</li><li>Korean</li><li>French</li><li>Polish</li><li>Spanish</li><li>Thai</li><li>Japanese</li><li>German</li><li>Italian</li><li>Ukrainian</li><li>Portuguese</li><li>Czech</li><li>English</li></ol></div>")
+      appendNormal("<div>Please click and select the language of the SCP documentation you wish to access below:<ol class='languageSelect listClass'><li>Traditional Chinese</li><li>Simplified Chinese</li><li>Russian</li><li>Korean</li><li>French</li><li>Polish</li><li>Spanish</li><li>Thai</li><li>Japanese</li><li>German</li><li>Italian</li><li>Ukrainian</li><li>Portuguese</li><li>Czech</li><li>English</li></ol></div>")
       $d.find(".languageSelect li").unbind('click').bind('click', function() {
         var no = $(this).index() + 1
+        addLineDecoration("languageSelect", no)
         if (no == 1) {
           linkLanguage = "http://scp-wiki-cn.wikidot.com/"
           setCookie('trad', "true", 365);
@@ -309,8 +315,6 @@ function reply(val) {
           linkLanguage = "http://www.scpwiki.com/"
         }
         setCookie('language', linkLanguage, 365);
-        $d.append($(this).text())
-        appendNormal(`Target language selected: ${$(this).text()}`)
       });
       break;
     case "fullscreen":
@@ -401,6 +405,20 @@ function reply(val) {
         loginState = 1
       }
       break;
+    case "bgm":
+      appendNormal("Please click and select the type of background music you wish to play below:<ol class='bgmList listClass'><li>Ambience</li><li>Music</li><li>Turn off bgm</li></ol>")
+      $d.find(".bgmList li").unbind('click').bind('click', function() {
+        var no = $(this).index() + 1
+        addLineDecoration("bgmList", no)
+        if (no == 1) {
+          $("#bgm").attr("src", "https://www.youtube.com/embed/o6aHZejKCsw?autoplay=1&controls=0&showinfo=0&autohide=1")
+        } else if (no == 2) {
+          $("#bgm").attr("src", "https://www.youtube.com/embed/AfRmqGn-Nbs?autoplay=1&controls=0&showinfo=0&autohide=1")
+        } else {
+          $("#bgm").attr("src", "")
+        }
+      })
+      break;
     case "help":
       if (splitValue(val)[1] != undefined) {
         var helpVal = splitValue(val)[1]
@@ -413,7 +431,7 @@ function reply(val) {
           helpMess = "Lists out all the accessible artifacts."
           helpSyn = "LIST"
         } else if (helpVal == "language") {
-          helpMess = "Selects the language of the SCP file you wish to access."
+          helpMess = "Provides options to select the language of the SCP file you wish to access."
           helpSyn = "LANGUAGE"
         } else if (helpVal == "fullscreen") {
           helpMess = "Opens fullscreen."
@@ -454,13 +472,16 @@ function reply(val) {
         } else if (helpVal == "locate") {
           helpMess = "Locates user's location and reports details relating to the local area."
           helpSyn = "LOCKOUT"
+        } else if (helpVal == "bgm") {
+          helpMess = "Provides options to play music in the background."
+          helpSyn = "BGM"
         } else {
           helpMess = "Undefined command"
           helpSyn = "N/A"
         }
         appendNormal(`<div class="code"><b>${String(helpVal).toUpperCase()}: </b>${helpMess}<br><hr>Syntax: ${helpSyn}</div>`)
       } else {
-        appendNormal(`<h3>List of available commands</h3><blockquote>You can use the following commands by entering in the text box below<p><u>General</u></p><ul class="helpList"><li><strong>Access:</strong> Displays the Special Containment Procedures synopsis for a given artifact <br /><small style="opacity: 0.7;">&nbsp; Example: access 173 5</small></li><li><strong>List:</strong> Lists out all the accessible artifacts</li><li><strong>Language:</strong> Selects the language of the SCP file you wish to access</li><li><strong>Fullscreen:</strong> Opens fullscreen</li><li><strong>Fullquit:</strong> Exits fullscreen</li><li><strong>Clear:</strong> Clears the output of the terminal</li><li><strong>Theme:</strong> Provides options to change the theme of the terminal.</li><li><strong>Lockout:</strong> Initiates the emergency lockout protocol, securing all documents and preventing any access from the specified endpoint.</li><li><strong>Locate:</strong> Locates user's location and reports details relating to the local area.</li><li><strong>Help:</strong> Displays this message</li></ul><p><span style="text-decoration: underline;">Authentication</span></p><ul class="helpList"><li><strong>Login:</strong> Authenticates and login user</li><li><strong>Register:</strong> Logs and stores your information into the database</li><li><strong>Whoami:</strong> Displays user's information</li><li><strong>Edit:</strong> Edits user's information</li><li><strong>Resetpass:</strong> Reset user's password</li><li><strong>Logout:</strong> Logout user</li></ul><hr>Join our community here on<a onclick="window.open('https://discord.gg/rKsT8eEGXz', '_blank')">Discord</a>or support us on<a onclick="window.open('https://www.patreon.com/scipnet', '_blank')">Patreon</a>!<br><hr><small>Read more about our licensing & policies<a onclick="window.open('/src/html/license.html', '_blank')">Here</a>.</small></blockquote>`)
+        appendNormal(`<h3>List of available commands</h3><blockquote>You can use the following commands by entering in the text box below<p><u>General</u></p><ul class="helpList"><li><strong>Access:</strong> Displays the Special Containment Procedures synopsis for a given artifact <br /><small style="opacity: 0.7;">&nbsp; Example: access 173 5</small></li><li><strong>List:</strong> Lists out all the accessible artifacts</li><li><strong>Language:</strong> Provides options to select the language of the SCP file you wish to access</li><li><strong>Fullscreen:</strong> Opens fullscreen</li><li><strong>Fullquit:</strong> Exits fullscreen</li><li><strong>Clear:</strong> Clears the output of the terminal</li><li><strong>Theme:</strong> Provides options to change the theme of the terminal</li><li><strong>Lockout:</strong> Initiates the emergency lockout protocol, securing all documents and preventing any access from the specified endpoint</li><li><strong>Locate:</strong> Locates user's location and reports details relating to the local area</li><li><strong>Bgm:</strong> Provides options to play music in the background</li><li><strong>Help:</strong> Displays this message</li></ul><p><span style="text-decoration: underline;">Authentication</span></p><ul class="helpList"><li><strong>Login:</strong> Authenticates and login user</li><li><strong>Register:</strong> Logs and stores your information into the database</li><li><strong>Whoami:</strong> Displays user's information</li><li><strong>Edit:</strong> Edits user's information</li><li><strong>Resetpass:</strong> Reset user's password</li><li><strong>Logout:</strong> Logout user</li></ul><hr>Join our community here on<a onclick="window.open('https://discord.gg/rKsT8eEGXz', '_blank')">Discord</a>or support us on<a onclick="window.open('https://www.patreon.com/scipnet', '_blank')">Patreon</a>!<br><hr><small>Read more about our licensing & policies<a onclick="window.open('/src/html/license.html', '_blank')">Here</a>.</small></blockquote>`)
       }
       break;
     case "clear":
@@ -523,15 +544,14 @@ function reply(val) {
       }
       break;
     case "locate":
-      if (locationGet!=false) {
+      if (locationGet != false) {
         import('./locate.js').then((module) => {
           module.locate()
         })
         cmdHide()
         $d.append(`<blockquote id="waitingToAdd">Locating SCiPNET Portal (${ip})...</blockquote>`)
         addDot()
-      }
-      else {
+      } else {
         appendError(`FAILED TO FETCH YOUR LOCATION, USER'S BROWSER MIGHT HAVE BLOCKED THE REQUEST`)
       }
 
@@ -704,14 +724,8 @@ $("#chat").off('click').bind('click', function() {
     $(".close").css("opacity", "")
     $(".close").css("pointer-events", "auto")
     tab = 1
-    $("#cmdBtn").css({
-      background: '#333333',
-      color: 'white'
-    });
-    $("#chat").css({
-      background: color,
-      color: textContrastColor
-    });
+    $(this).removeClass("offTab")
+    $("#cmdBtn").addClass("offTab")
     $("#comIframe").css("z-index", "2")
     $("#cmdIframe").css("z-index", "1")
   }
@@ -728,14 +742,8 @@ $("#cmdBtn").off('click').bind('click', function() {
     if (isBtnHide == true) {
       btnHide()
     }
-    $("#chat").css({
-      background: '#333333',
-      color: 'white'
-    });
-    $("#cmdBtn").css({
-      background: color,
-      color: textContrastColor
-    });
+    $(this).removeClass("offTab")
+    $("#chat").addClass("offTab")
     $("#cmdIframe").css("z-index", "2")
     $("#comIframe").css("z-index", "1")
   }
@@ -783,6 +791,14 @@ function appendNoLogin() {
 sideBarFun()
 
 //command function
+function addLineDecoration(cla, index) {
+  var styles = `
+      .${cla} li:nth-child(${index}) {
+          text-decoration: underline
+      }`
+  $('#cmdIframe').contents().find(`head #${cla}S`).html(styles)
+}
+
 var elem = document.documentElement;
 
 function close() {
@@ -825,33 +841,42 @@ function closeFullscreen() {
   }
 }
 //theme functions
-function hex2rgb(hex) {
-  return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
-}
 
-function changeAll(condition) {
+window.changeAll = (condition) => {
+  function hex2rgb(hex) {
+    return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
+  }
   if (lockout == false) {
-    changeMainColour()
-    changeCmdColour()
-    if ($m == undefined) {
-      $('#comIframe').on('load', function() {
-        changeComColour()
-      })
-    } else {
-      changeComColour()
+    function changeCssVar() {
+      $("#cmdIframe").contents().find("body").add($("body")).add($("#comIframe").contents().find("body")).css({
+        '--defaultTheme': color,
+        '--defaultThemeRGB': hex2rgb(color),
+        '--defaultText': textColor,
+        '--defaultTextRGB': hex2rgb(textColor),
+        '--defaultContrast': textContrastColor,
+        '--defaultBackground': backgroundColor
+      });
     }
-    if ($d == undefined) {
-      $('#cmdIframe').on('load', function() {
-        changeCmdColour()
+    if ($d == undefined || $m == undefined) {
+      $("#cmdIframe").add($("#comIframe")).on('load', function() {
+        changeCssVar()
       })
-    } else {
-      changeCmdColour()
     }
+    changeCssVar()
+
     if (condition != true) {
-      saveTheme()
+      localStorage.setItem('backgroundColor', backgroundColor);
+      localStorage.setItem('color', color);
+      localStorage.setItem('textColor', textColor);
+      localStorage.setItem('textContrastColor', textContrastColor);
+      localbackgroundColor = localStorage.getItem('backgroundColor');
+      localcolor = localStorage.getItem('color');
+      localtextColor = localStorage.getItem('textColor');
+      localtextContrastColor = localStorage.getItem('textContrastColor');
     } else {
       defaultTheme = false
     }
+
     $d.find(".textPicker").each(function() {
       $(this).val(textColor)
     })
@@ -869,248 +894,6 @@ function changeAll(condition) {
   }
 }
 
-function changeComColour() {
-  $('#comIframe').contents().find("head #importantComSheet").html(`
-      h1, h3 {
-        background:${color};
-        border:1px ${color} solid;
-        color:${textContrastColor};
-        transition: 300ms all ease-out!important;
-      }
-      hr{
-        border-top: 1px solid rgba(${hex2rgb(textColor)}, 0.69);
-      }
-      body{
-        color:${textColor};
-      }
-      .applicationBtn{
-        outline:1px ${color} solid;
-        color: ${textColor};
-      }
-      #uploadBtn, .applicationBtn{
-        outline:1px ${color} solid;
-        color: ${textColor};
-      }
-      #uploadBtn:hover, .applicationBtn:hover {
-        color: ${textColor};
-        background-color: rgba(${hex2rgb(color)}, .5);
-      }
-      #uploadBtn:active, .applicationBtn:active {
-        border: 2px ${color} solid;
-        background-color: rgba(${hex2rgb(color)}, 1);
-        color: ${textContrastColor};
-      }
-      `)
-}
-
-function changeCmdColour() {
-  $d.find(".bothChange").each(function() {
-    $(this).css("background-color", textColor)
-    $(this).css("color", textColor)
-  })
-  $d.find(".colorChange").each(function() {
-    $(this).css("color", textColor)
-  })
-  $d.find(".borderChange").each(function() {
-    $(this).css("border-color", `rgba(${hex2rgb(textColor)}, .2)`)
-  })
-  $d.find(".backgroundChange").each(function() {
-    $(this).css("background-color", textColor)
-  })
-  $('#cmdIframe').contents().find("head #importantCmdSheet").html(
-    `
-    .highlight{
-      color:${color}!important;
-    }
-    p:not(.profile p) {
-      color:${textColor};
-    }
-    hr{
-      border-top: 1px solid rgba(${hex2rgb(textColor)}, 0.69);
-    }
-    .locationHead{
-      background:${textColor};
-      border:1px ${textColor} solid;
-      color:${textContrastColor};
-    }
-    h1, h3, .top-left-box {
-      background:${color};
-      border:1px ${color} solid;
-      color:${textContrastColor};
-    }
-    a:not(.image-box-link), .languageList li, .listClass li {
-      color: ${color};
-    }
-    .languageList li:hover, .listClass li:hover {
-      box-shadow: -2em 0 ${color};
-    }
-    a:not(.image-box-link):hover, .languageList li:hover, .listClass li:hover, ele-access {
-      background: ${color};
-      color: ${textContrastColor};
-    }
-    .disabledList {
-      background: ${color};
-      color: ${textContrastColor};
-      box-shadow: -2em 0 ${color};
-    }
-    .applicationBtn{
-      outline:1px ${color} solid;
-      color: ${textColor};
-    }
-    #uploadBtn, .applicationBtn{
-      outline:1px ${color} solid;
-      color: ${textColor};
-    }
-    #uploadBtn:hover, .applicationBtn:hover {
-      color: ${textColor};
-      background-color: rgba(${hex2rgb(color)}, .5);
-    }
-    #uploadBtn:active, .applicationBtn:active {
-      border: 2px ${color} solid;
-      background-color: rgba(${hex2rgb(color)}, 1);
-      color: ${textContrastColor};
-    }
-    .scp-image-caption {
-      border-top: 2px ${textColor} solid;
-      border-bottom: 2px ${textColor} solid;
-    }
-    .class1 {
-      border: solid 1px ${textColor};
-    }
-    .wiki-content-table, th, td, table, tr {
-      border: 1px ${textColor} solid;
-      color: ${textColor}
-    }
-    .profile, .applicationFrame, #opening, blockquote blockquote{
-      background: linear-gradient(to right, ${color} 2.5px, transparent 2.5px) 0 0,
-        linear-gradient(to right, ${color} 2.5px, transparent 2.5px) 0 100%,
-        linear-gradient(to left, ${color} 2.5px, transparent 2.5px) 100% 0,
-        linear-gradient(to left, ${color} 2.5px, transparent 2.5px) 100% 100%,
-        linear-gradient(to bottom, ${color} 2.5px, transparent 2.5px) 0 0,
-        linear-gradient(to bottom, ${color} 2.5px, transparent 2.5px) 100% 0,
-        linear-gradient(to top, ${color} 2.5px, transparent 2.5px) 0 100%,
-        linear-gradient(to top, ${color} 2.5px, transparent 2.5px) 100% 100%;
-      }
-    .scp-image-block, .blockquote, .accessPage blockquote, .infoCard blockquote, .location, .countryMap{
-      background: linear-gradient(to right, rgba(${hex2rgb(textColor)}, .7) 2.5px, transparent 2.5px) 0 0,
-        linear-gradient(to right, rgba(${hex2rgb(textColor)}, .7) 2.5px, transparent 2.5px) 0 100%,
-        linear-gradient(to left, rgba(${hex2rgb(textColor)}, .7) 2.5px, transparent 2.5px) 100% 0,
-        linear-gradient(to left, rgba(${hex2rgb(textColor)}, .7) 2.5px, transparent 2.5px) 100% 100%,
-        linear-gradient(to bottom, rgba(${hex2rgb(textColor)}, .7) 2.5px, transparent 2.5px) 0 0,
-        linear-gradient(to bottom, rgba(${hex2rgb(textColor)}, .7) 2.5px, transparent 2.5px) 100% 0,
-        linear-gradient(to top, rgba(${hex2rgb(textColor)}, .7) 2.5px, transparent 2.5px) 0 100%,
-        linear-gradient(to top, rgba(${hex2rgb(textColor)}, .7) 2.5px, transparent 2.5px) 100% 100%;
-        outline: 1px solid rgba(${hex2rgb(textColor)}, .2);
-      }
-    .profile{
-      background-color: rgb(78 78 78 / 21%);
-    }
-    body{
-      color: ${textColor}
-    }
-    #opening h1{
-      color: ${textColor}
-    }
-    #opening h2{
-      color: ${textColor}
-    }
-    `)
-}
-
-function changeMainColour() {
-  if (tab == 1) {
-    $("#chat").css({
-      background: color,
-      color: textContrastColor
-    });
-  } else if (tab == 0) {
-    $("#cmdBtn").css({
-      background: color,
-      color: textContrastColor
-    });
-  }
-  $("head #importantSheet").html(`
-    .columnExt, h1, h3, #cmdBtn {
-      background:${color};
-      color:${textContrastColor};
-    }
-    h1, h3, #cmd, .textbox #input{
-      border:1px ${color} solid;
-    }
-    hr{
-      border-top: 1px solid rgba(${hex2rgb(textColor)}, 0.69);
-    }
-    .modal-content{
-      background: linear-gradient(to right, ${color} 2.5px, transparent 2.5px) 0 0,
-        linear-gradient(to right, ${color} 2.5px, transparent 2.5px) 0 100%,
-        linear-gradient(to left, ${color} 2.5px, transparent 2.5px) 100% 0,
-        linear-gradient(to left, ${color} 2.5px, transparent 2.5px) 100% 100%,
-        linear-gradient(to bottom, ${color} 2.5px, transparent 2.5px) 0 0,
-        linear-gradient(to bottom, ${color} 2.5px, transparent 2.5px) 100% 0,
-        linear-gradient(to top, ${color} 2.5px, transparent 2.5px) 0 100%,
-        linear-gradient(to top, ${color} 2.5px, transparent 2.5px) 100% 100%;
-      outline: 1px solid rgba(${hex2rgb(textColor)}, .2);
-    }
-    .textbox #input{
-      border:1px ${color} solid;
-      color:${textColor};
-    }
-    a {
-      color: ${color};
-    }
-
-    a:hover {
-      background: ${color};
-      color: ${textContrastColor};
-    }
-    #callID{
-      border: 1px transparent solid;
-    }
-    #callID:focus {
-      outline: none;
-      border:1px ${color} solid;
-    }
-    #uploadBtn, .applicationBtn{
-      outline:1px ${color} solid;
-      color: ${textColor};
-    }
-    #uploadBtn:hover, .applicationBtn:hover {
-      color: ${textColor};
-      background-color: rgba(${hex2rgb(color)}, .5);
-    }
-    #uploadBtn:active, .applicationBtn:active {
-      border: 2px ${color} solid;
-      background-color: rgba(${hex2rgb(color)}, 1);
-      color: ${textContrastColor};
-    }
-    #cmdBtn{
-      background: ${color};
-      color: ${textContrastColor};
-    }
-    .modal-content{
-      color: #ffffff;
-    }
-    body{
-      color: ${textColor};
-      background-color: ${backgroundColor};
-    }
-    #comIframe, #cmdIframe{
-      background-color: ${backgroundColor};
-    }
-    `);
-}
-
-function saveTheme() {
-  localStorage.setItem('backgroundColor', backgroundColor);
-  localStorage.setItem('color', color);
-  localStorage.setItem('textColor', textColor);
-  localStorage.setItem('textContrastColor', textContrastColor);
-  localbackgroundColor = localStorage.getItem('backgroundColor');
-  localcolor = localStorage.getItem('color');
-  localtextColor = localStorage.getItem('textColor');
-  localtextContrastColor = localStorage.getItem('textContrastColor');
-}
-
 window.changeColor = (value) => {
   color = value
   textContrastColor = generator.generate(value).hexStr
@@ -1125,7 +908,6 @@ window.changeTerminalTextColor = (value) => {
   changeAll()
 }
 window.changeBackgroundColor = (value) => {
-  console.log(backgroundColor);
   backgroundColor = value
   changeAll()
 }
@@ -1548,6 +1330,7 @@ function lockoutProcessFun(val) {
         textColor = storedColor[2]
         textContrastColor = storedColor[3]
         changeAll()
+        $(".modal-content").attr("style", "")
         close()
         $('#dimmer').fadeOut("fast")
         $('.banners').fadeOut("fast")

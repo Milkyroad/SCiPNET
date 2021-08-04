@@ -115,12 +115,11 @@ export function access(accessNo, accessCl) {
             $(this).css("font-family", "Prompt,Trebuchet MS, sans-serif")
             $(this).css("font-weight", '500')
           });
-          $("div:not(.cdver2):not(.code):not(.orderwrapper):not(.discord):not(.discord *):not(.class-table-box):not(.snapchat):not(.top-left-box):not(.scp-image-block)").each(function() {
+          $("div:not(.cdver2):not(.code):not(.orderwrapper):not(.discord):not(.discord *):not(.class-table-box):not(.snapchat):not(.top-left-box):not(.scp-image-block):not(.content-panel)").each(function() {
             var $t = $(this);
             if ($t.css("background-image") != undefined) {
               $t.attr("class", "specimage")
             } else {
-              $t.css("border-color", textColor);
               $t.addClass("borderChange");
               $t.css("background", "");
               $t.css("background-color", "");
@@ -141,8 +140,6 @@ export function access(accessNo, accessCl) {
           $("span:not(.specimage)").each(function() {
             var $t = $(this);
             if ($t.css("background-color") == "black") {
-              $t.css("background-color", textColor)
-              $t.css("color", textColor)
               $t.addClass("bothChange")
             } else {
               $t.css("background", "");
@@ -155,7 +152,6 @@ export function access(accessNo, accessCl) {
             } else if ($t.css("color") == "green") {
               $t.css("color", "#95FF83")
             } else if ($t.css("color") == "black") {
-              $t.css("color", textColor)
               $t.addClass("colorChange")
             };
           });
@@ -181,7 +177,6 @@ export function access(accessNo, accessCl) {
           $("p:not(.specimage)").each(function() {
             var $t = $(this);
             if ($t.css("background-color") == "rgba(0, 0, 0, 0)" && $t.css("color") == "rgba(0, 0, 0, 0)") {
-              $t.css("background-color", textColor)
               $t.css("color", "")
               $t.addClass("backgroundChange")
             } else if ($t.css("color") == "#5b2f8e" || $t.css("color") == "purple") {
