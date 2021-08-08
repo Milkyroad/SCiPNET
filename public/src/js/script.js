@@ -22,7 +22,7 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-4-0.21")
+$("#version").text("V. 01-5-0.21")
 //script variables
 var access
 var vcLoaded = false;
@@ -406,16 +406,25 @@ function reply(val) {
       }
       break;
     case "bgm":
+      var audio = document.getElementById("bgm");
+
+      function playAudio(link) {
+        if (audio.src!=link) {
+          audio.volume = 0.2;
+          audio.src = link
+          audio.play();
+        }
+      }
       appendNormal("Please click and select the type of background music you wish to play below:<ol class='bgmList listClass'><li>Ambience</li><li>Music</li><li>Turn off bgm</li></ol>")
       $d.find(".bgmList li").unbind('click').bind('click', function() {
         var no = $(this).index() + 1
         addLineDecoration("bgmList", no)
         if (no == 1) {
-          $("#bgm").attr("src", "https://www.youtube.com/embed/o6aHZejKCsw?autoplay=1&controls=0&showinfo=0&autohide=1")
+          playAudio("https://drive.google.com/uc?export=download&id=1JoxpLuxQbhZ6bJNLosCmeBx4BEDQsmiE")
         } else if (no == 2) {
-          $("#bgm").attr("src", "https://www.youtube.com/embed/AfRmqGn-Nbs?autoplay=1&controls=0&showinfo=0&autohide=1")
+          playAudio("https://drive.google.com/uc?export=download&id=1nFS7yZbGoXQHGpbapBwdMHtc16JrZjpd")
         } else {
-          $("#bgm").attr("src", "")
+          audio.src = ""
         }
       })
       break;
@@ -545,7 +554,7 @@ function reply(val) {
       break;
     case "locate":
       if (locationGet != false) {
-        import('./locate.js').then((module) => {
+        import( /*webpackChunkName:'locate'*/ './locate.js').then((module) => {
           module.locate()
         })
         cmdHide()
@@ -1308,7 +1317,7 @@ function updateUsersInfo() {
 var passLock;
 
 function lockoutProcessFun(val) {
-  import('./lockout.js').then((module) => {
+  import( /*webpackChunkName:'lockout'*/ './lockout.js').then((module) => {
     if (lockoutProcess == 1) {
       passLock = val
       storedColor = [backgroundColor, color, textColor, textContrastColor]

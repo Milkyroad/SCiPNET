@@ -81,15 +81,14 @@ export function sideBarFun() {
       window.countryPopulation = data.country_population || unavaText
       window.countryTimezone = data.timezone || unavaText
       window.countryUtc = data.utc_offset || unavaText
-      window.countryCallingCode= data.country_calling_code || unavaText
+      window.countryCallingCode = data.country_calling_code || unavaText
       window.countryLanguages = data.languages || unavaText
-      if (data.longitude=="Sign up to access"||data.longitude==null) {
+      if (data.longitude == "Sign up to access" || data.longitude == null) {
         $.getJSON(`https://geocode.xyz/${countryRegion}?geoit=json`, function(data) {
           window.countrylong = data.longt
           window.countrylat = data.latt
         })
-      }
-      else {
+      } else {
         window.countrylong = data.longitude
         window.countrylat = data.latitude
       }
@@ -108,7 +107,16 @@ export function sideBarFun() {
           window.countryDemonym = data.demonym || unavaText
           window.countryCapital = data.capital || unavaText
           window.countrySubregion = data.subregion || unavaText
-          window.countryCurrency = `${data.currencies[0].name || unavaText}, ${data.currencies[0].symbol || unavaText} (${data.currencies[0].code || unavaText})<br>`
+          if (data.currencies[1]) {
+            var currencyData = data.currencies;
+            var currencyList = ``
+            currencyData.forEach((item) => {
+              currencyList += `<li>${item.name || unavaText}, ${item.symbol || unavaText} (${item.code || unavaText})</li>`
+            })
+            window.countryCurrency = `<ul>${currencyList}</ul>`
+          } else {
+            window.countryCurrency = `${data.currencies[0].name || unavaText}, ${data.currencies[0].symbol || unavaText} (${data.currencies[0].code || unavaText})<br>`
+          }
           window.countryGini = data.gini || unavaText
         })
         .fail(function(data) {
@@ -120,7 +128,8 @@ export function sideBarFun() {
       $("#ip").html('<span style="color:#EA3546"><span style="font-weight:bold">ⓘ</span> Error in fetching your IP address</span>')
       $("#location").html('<span style="color:#EA3546"><span style="font-weight:bold">ⓘ</span> Error in fetching your location</span>')
       $("#tel").html('<span style="color:#EA3546"><span style="font-weight:bold">ⓘ</span> Error in fetching your telecom</span>')
-      window.place = ""
+      window.place = "";
+      window.country = "";
     })
 
 
