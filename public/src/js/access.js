@@ -231,6 +231,7 @@ export function access(accessNo, accessCl) {
             $(this).css("padding", "15px 9px");
             $(this).css("margin", "15px auto");
             $(this).css("border-radius", "6px");
+            $(this).css("background", "none");
           });
           $('.pictures4mobile').each(function() {
             $(this).css("display", "none");
