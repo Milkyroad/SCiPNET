@@ -41,6 +41,16 @@
   z-index: 4;
 }
 
+.settingsCheckbox{
+  margin-right: 15px;
+}
+
+.darken {
+  background: rgb(78 78 78 / 21%) !important;
+  padding: 15px;
+  margin: 7px;
+}
+
 .banners {
   width: 100%;
   height: 18px;
@@ -161,9 +171,10 @@ hr {
   cursor: pointer;
   animation: entrance 400ms 1000ms linear backwards 1;
 }
-.offTab{
-  background: #333333!important;
-  color: white!important;
+
+.offTab {
+  background: #333333 !important;
+  color: white !important;
 }
 
 #bottomItems {

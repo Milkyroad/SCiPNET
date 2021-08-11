@@ -93,11 +93,10 @@ export function sideBarFun() {
         window.countrylat = data.latitude
       }
       window.ip = data.ip
-      $("#location").text(place)
-      $("#ip").html(`${ip}`)
-      $("#tel").text(`${data.org}`)
+      window.tele = data.org
+      window.displayLoc = place.toUpperCase()
       $.getJSON(`https://restcountries.eu/rest/v2/alpha/${data.country_code_iso3}`, function(data) {
-          window.locationGet = true
+          locationGet = true
           window.countryNativeName = data.nativeName || unavaText
           window.countryCode = data.alpha2Code || unavaText
           window.countryArea = data.area || unavaText
@@ -120,18 +119,20 @@ export function sideBarFun() {
           window.countryGini = data.gini || unavaText
         })
         .fail(function(data) {
-          window.locationGet = false
+          failedLocation()
         })
     })
     .fail(function(data) {
-      window.locationGet = false
-      $("#ip").html('<span style="color:#EA3546"><span style="font-weight:bold">ⓘ</span> Error in fetching your IP address</span>')
-      $("#location").html('<span style="color:#EA3546"><span style="font-weight:bold">ⓘ</span> Error in fetching your location</span>')
-      $("#tel").html('<span style="color:#EA3546"><span style="font-weight:bold">ⓘ</span> Error in fetching your telecom</span>')
-      window.place = "";
-      window.country = "";
+      failedLocation()
     })
 
+  function failedLocation() {
+    locationGet = false
+    $("#ip, #location, #tel").html('<span style="color:#EA3546"><span style="font-weight:bold">ⓘ</span> [REQUEST REFUSED]</span>')
+    window.place = "";
+    window.displayLoc = ""
+    window.country = "";
+  }
 
   function testConnectionSpeed() {
     $("#connection").text(`${randomInteger(70, 100)}.${randomInteger(0, 9)} MB/s`)

@@ -22,7 +22,7 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-5-0.21")
+$("#version").text("V. 01-6-0.21")
 //script variables
 var access
 var vcLoaded = false;
@@ -100,6 +100,13 @@ firebase.auth().onAuthStateChanged(function(user) {
         } else {
           checkLocalStorageAndChange()
         }
+        if (doc.data().Settings) {
+          //check the presence settings
+          if (doc.data().Settings.checkLocation != undefined) {
+            settings["checkLocation"] = doc.data().Settings.checkLocation
+            locationMasking(settings["checkLocation"])
+          }
+        }
         checkIframeLoaded()
       }
     })
@@ -112,6 +119,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     holder = defaultHolder
     checkIframeLoaded()
     checkLocalStorageAndChange()
+    locationMasking(localStorage.getItem('checkLocation'))
   }
   //ready the cmd by changing the placeholder in inital start
   function checkIframeLoaded() {
@@ -409,7 +417,7 @@ function reply(val) {
       var audio = document.getElementById("bgm");
 
       function playAudio(link) {
-        if (audio.src!=link) {
+        if (audio.src != link) {
           audio.volume = 0.2;
           audio.src = link
           audio.play();
@@ -425,6 +433,19 @@ function reply(val) {
           playAudio("https://drive.google.com/uc?export=download&id=1nFS7yZbGoXQHGpbapBwdMHtc16JrZjpd")
         } else {
           audio.src = ""
+        }
+      })
+      break;
+    case "control":
+      popUp(`${displayLoc} Main Site Control Unit`, "Under Development")
+      break;
+    case "settings":
+      appendNormal("Opening settings...")
+      popUp(`Settings`, `<blockquote class="darken">LOADING...</blockquote>`)
+      import( /*webpackChunkName:'locate'*/ './settings.js').then((module) => {
+        module.settings()
+        if (settings["checkLocation"] == true) {
+          $("#maskLocationBox").prop('checked', true);
         }
       })
       break;
@@ -484,13 +505,16 @@ function reply(val) {
         } else if (helpVal == "bgm") {
           helpMess = "Provides options to play music in the background."
           helpSyn = "BGM"
+        } else if (helpVal == "settings") {
+          helpMess = "Open the settings window"
+          helpSyn = "SETTINGS"
         } else {
           helpMess = "Undefined command"
           helpSyn = "N/A"
         }
         appendNormal(`<div class="code"><b>${String(helpVal).toUpperCase()}: </b>${helpMess}<br><hr>Syntax: ${helpSyn}</div>`)
       } else {
-        appendNormal(`<h3>List of available commands</h3><blockquote>You can use the following commands by entering in the text box below<p><u>General</u></p><ul class="helpList"><li><strong>Access:</strong> Displays the Special Containment Procedures synopsis for a given artifact <br /><small style="opacity: 0.7;">&nbsp; Example: access 173 5</small></li><li><strong>List:</strong> Lists out all the accessible artifacts</li><li><strong>Language:</strong> Provides options to select the language of the SCP file you wish to access</li><li><strong>Fullscreen:</strong> Opens fullscreen</li><li><strong>Fullquit:</strong> Exits fullscreen</li><li><strong>Clear:</strong> Clears the output of the terminal</li><li><strong>Theme:</strong> Provides options to change the theme of the terminal</li><li><strong>Lockout:</strong> Initiates the emergency lockout protocol, securing all documents and preventing any access from the specified endpoint</li><li><strong>Locate:</strong> Locates user's location and reports details relating to the local area</li><li><strong>Bgm:</strong> Provides options to play music in the background</li><li><strong>Help:</strong> Displays this message</li></ul><p><span style="text-decoration: underline;">Authentication</span></p><ul class="helpList"><li><strong>Login:</strong> Authenticates and login user</li><li><strong>Register:</strong> Logs and stores your information into the database</li><li><strong>Whoami:</strong> Displays user's information</li><li><strong>Edit:</strong> Edits user's information</li><li><strong>Resetpass:</strong> Reset user's password</li><li><strong>Logout:</strong> Logout user</li></ul><hr>Join our community here on<a onclick="window.open('https://discord.gg/rKsT8eEGXz', '_blank')">Discord</a>or support us on<a onclick="window.open('https://www.patreon.com/scipnet', '_blank')">Patreon</a>!<br><hr><small>Read more about our licensing & policies<a onclick="window.open('/src/html/license.html', '_blank')">Here</a>.</small></blockquote>`)
+        appendNormal(`<h3>List of available commands</h3><blockquote>You can use the following commands by entering in the text box below<p><u>General</u></p><ul class="helpList"><li><strong>Access:</strong> Displays the Special Containment Procedures synopsis for a given artifact <br /><small style="opacity: 0.7;">&nbsp; Example: access 173 5</small></li><li><strong>List:</strong> Lists out all the accessible artifacts</li><li><strong>Language:</strong> Provides options to select the language of the SCP file you wish to access</li><li><strong>Fullscreen:</strong> Opens fullscreen</li><li><strong>Fullquit:</strong> Exits fullscreen</li><li><strong>Clear:</strong> Clears the output of the terminal</li><li><strong>Theme:</strong> Provides options to change the theme of the terminal</li><li><strong>Lockout:</strong> Initiates the emergency lockout protocol, securing all documents and preventing any access from the specified endpoint</li><li><strong>Locate:</strong> Locates user's location and reports details relating to the local area</li><li><strong>Bgm:</strong> Provides options to play music in the background</li><li><strong>Settings:</strong> Open the settings window</li><li><strong>Help:</strong> Displays this message</li></ul><p><span style="text-decoration: underline;">Authentication</span></p><ul class="helpList"><li><strong>Login:</strong> Authenticates and login user</li><li><strong>Register:</strong> Logs and stores your information into the database</li><li><strong>Whoami:</strong> Displays user's information</li><li><strong>Edit:</strong> Edits user's information</li><li><strong>Resetpass:</strong> Reset user's password</li><li><strong>Logout:</strong> Logout user</li></ul><hr>Join our community here on<a onclick="window.open('https://discord.gg/rKsT8eEGXz', '_blank')">Discord</a>or support us on<a onclick="window.open('https://www.patreon.com/scipnet', '_blank')">Patreon</a>!<br><hr><small>Read more about our licensing & policies<a onclick="window.open('/src/html/license.html', '_blank')">Here</a>.</small></blockquote>`)
       }
       break;
     case "clear":
@@ -561,7 +585,7 @@ function reply(val) {
         $d.append(`<blockquote id="waitingToAdd">Locating SCiPNET Portal (${ip})...</blockquote>`)
         addDot()
       } else {
-        appendError(`FAILED TO FETCH YOUR LOCATION, USER'S BROWSER MIGHT HAVE BLOCKED THE REQUEST`)
+        appendError(`FAILED TO FETCH YOUR LOCATION, REQUEST REFUSED`)
       }
 
       break;
@@ -800,6 +824,26 @@ function appendNoLogin() {
 sideBarFun()
 
 //command function
+window.locationMasking = (con) => {
+  if (JSON.parse(con) == true) {
+    //set the location mask setting to true
+    settings["checkLocation"] = true
+    //variable for indicating no location available
+    locationGet = false
+    window.displayLoc = ""
+    $("#ip, #location, #tel").html('<span style="color:#EA3546"><span style="font-weight:bold">ⓘ</span> [REQUEST REFUSED]</span>')
+  } else {
+    settings["checkLocation"] = false
+    if (place != "") {
+      $("#location").text(place)
+      $("#ip").html(`${ip}`)
+      $("#tel").text(`${tele}`)
+      locationGet = true
+      window.displayLoc = place.toUpperCase()
+    }
+  }
+}
+
 function addLineDecoration(cla, index) {
   var styles = `
       .${cla} li:nth-child(${index}) {
@@ -1344,7 +1388,7 @@ function lockoutProcessFun(val) {
         $('#dimmer').fadeOut("fast")
         $('.banners').fadeOut("fast")
         module.unlock()
-        appendNormal(`Terminal unlocked, authorized by ${displayName} at <span class="highlight">${new Date().toLocaleString('en-US')} via SCiPNET ${place.toUpperCase()} SCP FOUNDATION PORTAL</span> [event no. ${Math.random().toString(36).slice(2).toUpperCase()}]`)
+        appendNormal(`Terminal unlocked, authorized by ${displayName} at <span class="highlight">${new Date().toLocaleString('en-US')} via SCiPNET ${displayLoc} SCP FOUNDATION PORTAL</span> [event no. ${Math.random().toString(36).slice(2).toUpperCase()}]`)
         lockoutProcess = 0
       } else {
         appendError("INCORRECT UNLOCK PASSCODE")
