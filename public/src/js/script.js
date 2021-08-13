@@ -437,12 +437,14 @@ function reply(val) {
       })
       break;
     case "control":
-      popUp(`${displayLoc} Main Site Control Unit`, "Under Development")
+      import( /*webpackChunkName:'control'*/ './control.js').then((module) => {
+        module.siteControl()
+      })
       break;
     case "settings":
       appendNormal("Opening settings...")
       popUp(`Settings`, `<blockquote class="darken">LOADING...</blockquote>`)
-      import( /*webpackChunkName:'locate'*/ './settings.js').then((module) => {
+      import( /*webpackChunkName:'settings'*/ './settings.js').then((module) => {
         module.settings()
         if (settings["checkLocation"] == true) {
           $("#maskLocationBox").prop('checked', true);
@@ -595,7 +597,7 @@ function reply(val) {
         cmdHide()
         $d.append(`<blockquote id="waitingToAdd">Accessing your profile...</blockquote>`)
         addDot()
-        import( /*webpackChunkName:'locate'*/ './profile.js').then((module) => {
+        import( /*webpackChunkName:'profile'*/ './profile.js').then((module) => {
           loadCroppie(function() {
             module.whoami()
           })
