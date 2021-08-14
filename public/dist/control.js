@@ -1,1 +1,1 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[5],{ZUUB:function(n,t,o){"use strict";o.r(t),o.d(t,"siteControl",(function(){return i}));var e=o("mUSF");const i=()=>{Object(e.c)("testing"),popUp(country+" Main Site Control Unit","Under Development")}}}]);
+(window.webpackJsonp=window.webpackJsonp||[]).push([[1],{ZUUB:function(n,o,t){"use strict";t.r(o),t.d(o,"siteControl",(function(){return i}));const i=()=>{var n;n=0!=locationGet?country:"",jQuery.get("/src/ex_file/controldash.html",(function(o){popUp(n+" Main Site Control Unit",o)}))}}}]);

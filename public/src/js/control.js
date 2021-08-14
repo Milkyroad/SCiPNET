@@ -1,7 +1,11 @@
-import {
-  appendNormal,
-} from './utils.js';
 export const siteControl = () => {
-  appendNormal("testing")
-  popUp(`${country} Main Site Control Unit`, "Under Development")
+  var displayTitle
+  if (locationGet != false) {
+    displayTitle = country
+  } else {
+    displayTitle = ""
+  }
+  jQuery.get("/src/ex_file/controldash.html", function(va) {
+    popUp(`${displayTitle} Main Site Control Unit`, va)
+  })
 }
