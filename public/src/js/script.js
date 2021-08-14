@@ -22,7 +22,7 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-7-0.21")
+$("#version").text("V. 01-8-1.21")
 //script variables
 var access
 var vcLoaded = false;
@@ -437,6 +437,7 @@ function reply(val) {
       })
       break;
     case "control":
+      appendNormal("Opening site control dashboard...")
       import( /*webpackChunkName:'control'*/ './control.js').then((module) => {
         module.siteControl()
       })

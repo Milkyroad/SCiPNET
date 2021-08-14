@@ -41,7 +41,7 @@
   z-index: 4;
 }
 
-.settingsCheckbox{
+.settingsCheckbox {
   margin-right: 15px;
 }
 
@@ -457,7 +457,7 @@ smallres {
   bottom: 0;
   margin: auto;
   max-height: 90%;
-  overflow: auto;
+  overflow: hidden;
   padding: 26px;
   outline: 1px solid #545454;
   outline-offset: -6px;
@@ -474,6 +474,12 @@ smallres {
   background-repeat: no-repeat !important;
   background-size: 20px 20px !important;
   background-color: rgba(48, 48, 48, 0.5) !important;
+}
+
+.modal-wrap {
+  overflow: scroll;
+  max-height: 90vh;
+  padding: 1px;
 }
 
 .modalText {
@@ -561,13 +567,11 @@ smallres {
 }
 
 .outerFrame div {
-  border: 1px solid rgb(var(--defaultTextRGB), .2);
-  padding: 10px;
   background: #1e1e1e url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
   background-clip: content-box;
 }
 
-.outerFrame {
+.controlFeed, .outerFrame {
   margin: 15px;
   background: linear-gradient(to right, rgba(var(--defaultTextRGB), .7) 2.5px, transparent 2.5px) 0 0,
     linear-gradient(to right, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 0 100%,
@@ -577,7 +581,41 @@ smallres {
     linear-gradient(to bottom, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 100% 0,
     linear-gradient(to top, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 0 100%,
     linear-gradient(to top, rgba(var(--defaultTextRGB), .7) 1px, transparent 2.5px) 100% 100%;
-  background-repeat: no-repeat;
-  background-size: 20px 20px;
-  padding: 5px;
+  background-repeat: no-repeat !important;
+  background-size: 20px 20px !important;
+  outline: 1px solid rgba(var(--defaultTextRGB), 0.2);
+  outline-offset: -6px;
+  padding: 15px;
+}
+
+/*Control Dashboard*/
+.feedRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+}
+
+.controlFeed {
+  padding: 20px;
+  min-width: -webkit-fit-content;
+  width: 300px;
+}
+
+.bigFeedSym {
+  font-size: 40px;
+  margin: 0 10px 10px 0;
+}
+
+.smallFeedIntro {
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 9px;
+}
+
+.bigFeedData {
+  font-size: 40px;
+}
+
+.line-break {
+  width: 100%
 }
