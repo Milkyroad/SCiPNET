@@ -82,9 +82,6 @@ export function access(accessNo, accessCl) {
           });
           $("div").each(function() {
             var $t = $(this);
-            if ($(this).css("margin") != null) {
-              $(this).css("margin", '15px auto');
-            }
             if ($(this).find("img") != null && $(this).find("img").hasClass("emoji") == false) {
               $(this).find("img").css("margin", '15px auto');
             }

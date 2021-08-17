@@ -22,7 +22,7 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-8-1.21")
+$("#version").text("V. 01-9-0.21")
 //script variables
 var access
 var vcLoaded = false;
@@ -286,7 +286,8 @@ function reply(val) {
       appendNormal("<div>Please click and select the language of the SCP documentation you wish to access below:<ol class='languageSelect listClass'><li>Traditional Chinese</li><li>Simplified Chinese</li><li>Russian</li><li>Korean</li><li>French</li><li>Polish</li><li>Spanish</li><li>Thai</li><li>Japanese</li><li>German</li><li>Italian</li><li>Ukrainian</li><li>Portuguese</li><li>Czech</li><li>English</li></ol></div>")
       $d.find(".languageSelect li").unbind('click').bind('click', function() {
         var no = $(this).index() + 1
-        addLineDecoration("languageSelect", no)
+        $d.append($(this).text())
+        appendNormal(`Target language selected: ${$(this).text()}`)
         if (no == 1) {
           linkLanguage = "http://scp-wiki-cn.wikidot.com/"
           setCookie('trad', "true", 365);
@@ -426,7 +427,8 @@ function reply(val) {
       appendNormal("Please click and select the type of background music you wish to play below:<ol class='bgmList listClass'><li>Ambience</li><li>Music</li><li>Turn off bgm</li></ol>")
       $d.find(".bgmList li").unbind('click').bind('click', function() {
         var no = $(this).index() + 1
-        addLineDecoration("bgmList", no)
+        $d.append($(this).text())
+        appendNormal(`Target bgm selected: ${$(this).text()}`)
         if (no == 1) {
           playAudio("https://drive.google.com/uc?export=download&id=1JoxpLuxQbhZ6bJNLosCmeBx4BEDQsmiE")
         } else if (no == 2) {
@@ -438,6 +440,11 @@ function reply(val) {
       break;
     case "control":
       appendNormal("Opening site control dashboard...")
+      window.displayTitle = ""
+      if (locationGet != false) {
+        displayTitle = country
+      }
+      popUp(`${displayTitle} Main Site Control Unit`, "LOADING...")
       import( /*webpackChunkName:'control'*/ './control.js').then((module) => {
         module.siteControl()
       })
@@ -764,19 +771,19 @@ window.locationMasking = (con) => {
   }
 }
 
-function addLineDecoration(cla, index) {
-  var styles = `
-      .${cla} li:nth-child(${index}) {
-          text-decoration: underline
-      }`
-  $('#cmdIframe').contents().find(`head #${cla}S`).html(styles)
-}
-
 var elem = document.documentElement;
+
+$(".close").unbind('click').bind('click', function() {
+  close()
+})
 
 function close() {
   if ($.isFunction($.fn.croppie)) {
     $("#previewBox").croppie('destroy');
+  }
+  if (typeof textRandom !== 'undefined') {
+    clearInterval(textRandom);
+    clearInterval(dataRandom);
   }
   $(".modal").hide()
   $("#previewBox").html('<img id="previewBox" />')
@@ -815,10 +822,11 @@ function closeFullscreen() {
 }
 //theme functions
 
+window.hex2rgb = (hex) => {
+  return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
+}
+
 window.changeAll = (condition) => {
-  function hex2rgb(hex) {
-    return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
-  }
   if (lockout == false) {
     function changeCssVar() {
       $("#cmdIframe").contents().find("body").add($("body")).add($("#comIframe").contents().find("body")).css({
