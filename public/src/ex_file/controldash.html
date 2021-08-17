@@ -1,38 +1,99 @@
 <body class="body">
   <div class="section">
-    <div class="feedRow">
+    <div class="feedRow" style="border-right: 1px solid #595959;border-top: 1px solid #595959;">
       <div class="controlFeed">
-        <div class="bigFeedSym"><b>☀</b></div>
-        <div class="smallFeedIntro">Temperature<br></div>
-        <div class="bigFeedData">27 °C<br></div>
+        <table style="border-collapse: collapse; border: none; border-spacing: 0px;">
+          <tr>
+            <td style="padding-right: 3pt; padding-left: 3pt;">
+              <div class="bigFeedSym"><b>☀</b></div>
+              <div class="smallFeedIntro">Local Temperature<br></div>
+              <div class="bigFeedData" id="feedTemp">- °C<br></div>
+            </td>
+            <td style="padding-right: 3pt; padding-left: 3pt;">
+              <canvas id="tempChart" class="smallChart lineChart" width="100" height="100"></canvas>
+            </td>
+          </tr>
+        </table>
       </div>
       <div class="controlFeed">
-        <div class="bigFeedSym">☴<br></div>
-        <div class="smallFeedIntro">Facilities Integrity&nbsp;</div>
-        <div class="bigFeedData"><span>97.3%</span><br></div>
+        <table style="border-collapse: collapse; border: none; border-spacing: 0px;">
+          <tr>
+            <td style="padding-right: 3pt; padding-left: 3pt;">
+              <div class="bigFeedSym">☴<br></div>
+              <div class="smallFeedIntro">Facilities Integrity</div>
+              <div class="bigFeedData" id="feedfac"><span>97.3%</span><br></div>
+            </td>
+            <td style="padding-right: 3pt; padding-left: 3pt;">
+              <canvas id="intChart" class="smallChart lineChart" width="100" height="100"></canvas>
+            </td>
+          </tr>
+        </table>
       </div>
       <div class="controlFeed">
-        <div class="bigFeedSym">☢<br></div>
-        <div class="smallFeedIntro">Electricity Supply</div>
-        <div class="bigFeedData"><span>STABLE</span><br></div>
+        <table style="border-collapse: collapse; border: none; border-spacing: 0px;">
+          <tr>
+            <td style="padding-right: 3pt; padding-left: 3pt;">
+              <div class="bigFeedSym">☢<br></div>
+              <div class="smallFeedIntro">Electricity Supply</div>
+              <div class="bigFeedData"><span>STABLE</span><br></div>
+            </td>
+            <td style="padding-right: 3pt; padding-left: 3pt;">
+              <canvas id="eleChart" class="smallChart lineChart" width="100" height="100"></canvas>
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
   </div>
   <div class="feedRow">
-    <div class="">
-      <ul role="list">
-        <li class="list-item">Power Control</li>
-        <li class="list-item">System Status</li>
-        <li class="list-item">Military Strategic Intelligence</li>
+    <div>
+      <ul role="list" style="padding: 0;">
+        <li class="feedItem">Power Control</li>
+        <li class="feedItem">System Status</li>
+        <li class="feedItem">Military Strategic Intelligence</li>
+        <li class="feedItem">Site Control</li>
       </ul>
+      <div class="controlFeed" style="margin: 50px 0 0 0">
+        <table style="border-collapse: collapse; border: none; border-spacing: 0px;">
+          <tr>
+            <td style="padding-right: 3pt; padding-left: 3pt;">
+              <div class="bigFeedSym"><b>☣</b></div>
+              <div class="smallFeedIntro">Hume Level<br></div>
+              <div class="bigFeedData" id="feedHume">1<br></div>
+            </td>
+            <td style="padding-right: 3pt; padding-left: 3pt;">
+              <canvas id="humeChart" class="smallChart lineChart" width="100" height="100"></canvas>
+            </td>
+          </tr>
+        </table>
+      </div>
     </div>
-    <div class="">Holder</div>
-  </div>
-  <div class="section"></div>
-  <div class="feedRow">
-    <div class="">Holder</div>
-    <div class="">
-      <div>Holder</div>
+    <div style="border-left: 1px solid #595959;border-bottom: 1px solid #595959;padding: 10px;margin: 0 10px;">
+      <div style="text-align:center;letter-spacing:1.5px;opacity:0.7">REAL-TIME SENSOR DATA</div>
+      <table style="border-collapse: collapse; border: none; border-spacing: 0px;">
+        <tr>
+          <td style="padding-right: 3pt; padding-left: 3pt;">
+            <canvas id="reactorChart" class="lineChart" width="200" height="200"></canvas>
+          </td>
+          <td style="padding-right: 3pt; padding-left: 3pt;">
+            <canvas id="signalChart" class="lineChart" width="200" height="200"></canvas>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding-right: 3pt; padding-left: 3pt;">
+            <canvas id="facChart" class="lineChart" width="200" height="200"></canvas>
+          </td>
+          <td style="padding-right: 3pt; padding-left: 3pt;">
+            <canvas id="radChart" class="lineChart" width="200" height="200"></canvas>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="controlFeed" style="margin: 20px 0 0 0;">
+      <div class="bigFeedSym"><b>⚠</b></div>
+      <div class="smallFeedIntro">Event Log<br></div>
+      <p style="width:250px">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas felis nulla, feugiat nec ultrices eget, vestibulum id eros. Nunc nec interdum arcu. Vestibulum semper pretium neque, et scelerisque sapien suscipit id.
+        Donec risus sapien, pretium ornare turpis mattis, pharetra vestibulum nunc. Fusce commodo augue vel felis laoreet, eget commodo enim volutpat. Pellentesque sed ultrices ante.</p>
     </div>
   </div>
 </body>

@@ -261,7 +261,7 @@ textarea:focus, input:focus {
 }
 
 /* title property */
-h1, h3, .top-left-box {
+h1, h3, .top-left-box, .feedItem {
   background-color: var(--defaultTheme);
   padding: 5px 3px;
   color: var(--defaultContrast);
@@ -461,7 +461,7 @@ smallres {
   padding: 26px;
   outline: 1px solid #545454;
   outline-offset: -6px;
-  width: 80%;
+  width: 90%;
   height: fit-content;
   background: linear-gradient(to right, var(--defaultTheme) 2.5px, transparent 2.5px) 0 0,
     linear-gradient(to right, var(--defaultTheme) 2.5px, transparent 2.5px) 0 100%,
@@ -598,11 +598,12 @@ smallres {
 .controlFeed {
   padding: 20px;
   min-width: -webkit-fit-content;
-  width: 300px;
+  min-width: -moz-fit-content;
+  width: 250px;
 }
 
 .bigFeedSym {
-  font-size: 40px;
+  font-size: 20px;
   margin: 0 10px 10px 0;
 }
 
@@ -618,4 +619,30 @@ smallres {
 
 .line-break {
   width: 100%
+}
+
+.lineChart {
+  width: 200px !important;
+  height: 200px !important;
+}
+
+.smallChart {
+  width: 100px !important;
+  height: 100px !important;
+}
+
+.feedItem {
+  font-size: 20px;
+  padding: 10px;
+  list-style: none;
+  cursor: pointer;
+}
+
+.feedItem:hover {
+  transform: scale(1.05);
+}
+
+#feedfac {
+  table-layout: fixed;
+  width: 130px;
 }
