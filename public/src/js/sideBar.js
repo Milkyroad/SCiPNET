@@ -96,7 +96,6 @@ export function sideBarFun() {
       window.tele = data.org
       window.displayLoc = place.toUpperCase()
       $.getJSON(`https://restcountries.eu/rest/v2/alpha/${data.country_code_iso3}`, function(data) {
-          locationGet = true
           window.countryNativeName = data.nativeName || unavaText
           window.countryCode = data.alpha2Code || unavaText
           window.countryArea = data.area || unavaText

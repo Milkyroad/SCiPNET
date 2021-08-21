@@ -22,11 +22,13 @@ export const siteControl = () => {
   //append modules
   if (htmlLoaded == false) {
     htmlLoaded = true
-    $("head").append(`<script src="/src/ex_file/chart.js"></script><script src="/src/ex_file/luxon.js"></script><script src="/src/ex_file/chartjs-adapter-luxon.js"></script><script src="/src/ex_file/chartjs-plugin-streaming.js"></script>`)
+    $("head").append(`<link rel="stylesheet" href="/src/css/controlStyle.min.css"><script src="/src/ex_file/scripts/chart.js"></script><script src="/src/ex_file/scripts/luxon.js"></script><script src="/src/ex_file/scripts/chartjs-adapter-luxon.js"></script><script src="/src/ex_file/scripts/chartjs-plugin-streaming.js"></script>`)
   }
 
-  jQuery.get("/src/ex_file/controldash.html", function(va) { //get control html code
+  jQuery.get("/src/ex_file/html/controldash.html", function(va) { //get control html code
     popUp(`${displayTitle} Main Site Control Unit`, va)
+    playSound('/src/ex_file/audio/dashEntrance.mp3')
+    playSound('/src/ex_file/audio/dashNormal.mp3')
     //get local temperature if location masking is disabled
     if (loaded == false && locationGet != false) {
       $.getJSON("http://api.openweathermap.org/data/2.5/weather", {
@@ -214,7 +216,7 @@ export const siteControl = () => {
       FacConfig
     );
     Chart.defaults.font.family = "'Barlow'";
-    
+
     //random value
     window.textRandom = setInterval(function() {
       $("#feedfac").text(`${randomVa(99.7,99.65).toFixed(2)}%`)
@@ -226,5 +228,10 @@ export const siteControl = () => {
       facChart.update();
     }, 1000);
 
+    //event log
+    for (var i = 0; i < eventLogArray.length; i++) {
+      $("#eventLog ul").append(`<li>${eventLogArray[i]}</li>`)
+      $("#eventLog").scrollTop($("#eventLog")[0].scrollHeight);
+    }
   })
 }
