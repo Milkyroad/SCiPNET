@@ -15,7 +15,7 @@
   <span class="applicationBtn" id="vc">Encrypted communication system</span>
   <span class="applicationBtn" id="updateLog">Update Log</span>
   <span class="applicationBtn" id="patreon">Credit</span>
-  <script src="/src/ex_file/jquery-3.6.0.min.js"></script>
+  <script src="/src/ex_file/scripts/jquery-3.6.0.min.js"></script>
   <script type="text/javascript">
     $("#vc").off('click').bind('click', function() {
       checkauthLoaded()
@@ -41,13 +41,13 @@
     })
     $("#updateLog").off('click').bind('click', function() {
       parent.popUp("TERMINAL UPDATE LOG", "LOADING...")
-      $.get("/src/ex_file/updatelog.html", function(va) {
+      $.get("/src/ex_file/html/updatelog.html", function(va) {
         parent.popUp("TERMINAL UPDATE LOG", va)
       })
     })
     $("#patreon").off('click').bind('click', function() {
       parent.popUp("CREDIT", "LOADING...")
-      $.get("/src/ex_file/patreon.html", function(va) {
+      $.get("/src/ex_file/html/patreon.html", function(va) {
         parent.popUp("CREDIT", va)
       })
     })

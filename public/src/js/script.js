@@ -22,13 +22,14 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-7-0.21")
+$("#version").text("V. 01-10-0.21")
 //script variables
 var access
 var vcLoaded = false;
 var fsLoaded = false;
 var init = false;
 var defaultTheme;
+window.eventLogArray = []
 //change theme according to local storage
 var localbackgroundColor = localStorage.getItem('backgroundColor');
 var localcolor = localStorage.getItem('color');
@@ -38,6 +39,20 @@ var localtextContrastColor = localStorage.getItem('textContrastColor');
 //check if user on mobile
 if (/Mobi|Android/i.test(navigator.userAgent)) {
   popUp("NOTICE", "Browsing SCiPNET via desktop is recommended for the best experience")
+}
+window.addEventLog = (text, warn) => {
+  if (warn == true) {
+    eventLogArray.push(`<span class='warning'>${text}<br><br><small>${new Date().toLocaleTimeString('en-US')}</small></span>`);
+  } else {
+    eventLogArray.push(`${text}<br><br><small>${new Date().toLocaleTimeString('en-US')}</small>`);
+  }
+}
+
+window.playSound = (link) => {
+  if (setting["audioStatus"] == true) {
+    var audio = new Audio(link);
+    audio.play();
+  }
 }
 
 function checkLocalStorageAndChange() {
@@ -103,9 +118,19 @@ firebase.auth().onAuthStateChanged(function(user) {
         if (doc.data().Settings) {
           //check the presence settings
           if (doc.data().Settings.checkLocation != undefined) {
-            settings["checkLocation"] = doc.data().Settings.checkLocation
-            locationMasking(settings["checkLocation"])
+            setting["checkLocation"] = doc.data().Settings.checkLocation
+            locationMasking(setting["checkLocation"])
+          } else {
+            locationMasking(localStorage.getItem('checkLocation'))
           }
+          if (doc.data().Settings.audioStatus != undefined) {
+            setting["audioStatus"] = doc.data().Settings.audioStatus
+          } else {
+            checkAudioSetting()
+          }
+        } else {
+          locationMasking(localStorage.getItem('checkLocation'))
+          checkAudioSetting()
         }
         checkIframeLoaded()
       }
@@ -114,12 +139,17 @@ firebase.auth().onAuthStateChanged(function(user) {
 
     userLoggedIn = true
     holder = `<span class="highlight">root@${displayName}</span>:<span style="color:#6495ED">~</span>$ `
+    addEventLog(`${displayName} authenticated, unlocking system's encryption algorithm`)
+    addEventLog(`Encryption algorithm unlocked`)
   } else {
     userLoggedIn = false
     holder = defaultHolder
     checkIframeLoaded()
     checkLocalStorageAndChange()
+    checkAudioSetting()
     locationMasking(localStorage.getItem('checkLocation'))
+    addEventLog(`Accessing database in Guest mode`)
+    addEventLog(`Successfully cancelled user credentials`)
   }
   //ready the cmd by changing the placeholder in inital start
   function checkIframeLoaded() {
@@ -246,6 +276,7 @@ checkall()
 function reply(val) {
   val = val.toLowerCase().trim()
   //check the user input
+  addEventLog(`Command -${splitValue(val)[0]}- accessed`)
   switch (splitValue(val)[0]) {
     case "access":
       cmdHide()
@@ -286,7 +317,8 @@ function reply(val) {
       appendNormal("<div>Please click and select the language of the SCP documentation you wish to access below:<ol class='languageSelect listClass'><li>Traditional Chinese</li><li>Simplified Chinese</li><li>Russian</li><li>Korean</li><li>French</li><li>Polish</li><li>Spanish</li><li>Thai</li><li>Japanese</li><li>German</li><li>Italian</li><li>Ukrainian</li><li>Portuguese</li><li>Czech</li><li>English</li></ol></div>")
       $d.find(".languageSelect li").unbind('click').bind('click', function() {
         var no = $(this).index() + 1
-        addLineDecoration("languageSelect", no)
+        $d.append($(this).text())
+        appendNormal(`Target language selected: ${$(this).text()}`)
         if (no == 1) {
           linkLanguage = "http://scp-wiki-cn.wikidot.com/"
           setCookie('trad', "true", 365);
@@ -426,7 +458,8 @@ function reply(val) {
       appendNormal("Please click and select the type of background music you wish to play below:<ol class='bgmList listClass'><li>Ambience</li><li>Music</li><li>Turn off bgm</li></ol>")
       $d.find(".bgmList li").unbind('click').bind('click', function() {
         var no = $(this).index() + 1
-        addLineDecoration("bgmList", no)
+        $d.append($(this).text())
+        appendNormal(`Target bgm selected: ${$(this).text()}`)
         if (no == 1) {
           playAudio("https://drive.google.com/uc?export=download&id=1JoxpLuxQbhZ6bJNLosCmeBx4BEDQsmiE")
         } else if (no == 2) {
@@ -437,6 +470,12 @@ function reply(val) {
       })
       break;
     case "control":
+      appendNormal("Opening site control dashboard...")
+      window.displayTitle = ""
+      if (locationGet != false) {
+        displayTitle = country
+      }
+      popUp(`${displayTitle} Main Site Control Unit`, "LOADING...")
       import( /*webpackChunkName:'control'*/ './control.js').then((module) => {
         module.siteControl()
       })
@@ -446,7 +485,7 @@ function reply(val) {
       popUp(`Settings`, `<blockquote class="darken">LOADING...</blockquote>`)
       import( /*webpackChunkName:'settings'*/ './settings.js').then((module) => {
         module.settings()
-        if (settings["checkLocation"] == true) {
+        if (setting["checkLocation"] == true) {
           $("#maskLocationBox").prop('checked', true);
         }
       })
@@ -630,6 +669,7 @@ function reply(val) {
       }
       break;
     default:
+      addEventLog(`Undefined command -${splitValue(val)[0]}-`, true)
       appendError("INCORRECT FORMAT OR UNKNOWN COMMAND")
   }
 }
@@ -735,16 +775,24 @@ function appendNoLogin() {
 sideBarFun()
 
 //command function
+function checkAudioSetting() {
+  if (JSON.parse(localStorage.getItem('audioStatus')) == false) {
+    setting["audioStatus"] = false
+  } else {
+    setting["audioStatus"] = true
+  }
+}
+
 window.locationMasking = (con) => {
   if (JSON.parse(con) == true) {
     //set the location mask setting to true
-    settings["checkLocation"] = true
+    setting["checkLocation"] = true
     //variable for indicating no location available
     locationGet = false
     window.displayLoc = ""
     $("#ip, #location, #tel").html('<span style="color:#EA3546"><span style="font-weight:bold">ⓘ</span> [REQUEST REFUSED]</span>')
   } else {
-    settings["checkLocation"] = false
+    setting["checkLocation"] = false
     checkPlaceLoaded()
 
     function checkPlaceLoaded() {
@@ -763,19 +811,19 @@ window.locationMasking = (con) => {
   }
 }
 
-function addLineDecoration(cla, index) {
-  var styles = `
-      .${cla} li:nth-child(${index}) {
-          text-decoration: underline
-      }`
-  $('#cmdIframe').contents().find(`head #${cla}S`).html(styles)
-}
-
 var elem = document.documentElement;
+
+$(".close").off('click').bind('click', function() {
+  close()
+})
 
 function close() {
   if ($.isFunction($.fn.croppie)) {
     $("#previewBox").croppie('destroy');
+  }
+  if (typeof textRandom !== 'undefined') {
+    clearInterval(textRandom);
+    clearInterval(dataRandom);
   }
   $(".modal").hide()
   $("#previewBox").html('<img id="previewBox" />')
@@ -814,10 +862,11 @@ function closeFullscreen() {
 }
 //theme functions
 
+window.hex2rgb = (hex) => {
+  return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
+}
+
 window.changeAll = (condition) => {
-  function hex2rgb(hex) {
-    return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
-  }
   if (lockout == false) {
     function changeCssVar() {
       $("#cmdIframe").contents().find("body").add($("body")).add($("#comIframe").contents().find("body")).css({
@@ -904,8 +953,8 @@ function loadCroppie(callback) {
         isProfileLoaded = true
       }
     });
-    $('head').append('<link rel="stylesheet" href="/src/ex_file/croppie.min.css" />');
-    $('head').append('<script src="/src/ex_file/croppie.min.js"></script>');
+    $('head').append('<link rel="stylesheet" href="/src/ex_file/css/croppie.min.css" />');
+    $('head').append('<script src="/src/ex_file/scripts/croppie.min.js"></script>');
   } else {
     callback()
   }
@@ -918,7 +967,7 @@ function accessLoad(a, b) {
     addDot()
     setTimeout(function() {
       var verifyLinkLoaded = false
-      $('#cmdIframe').contents().find("head").append('<link rel="stylesheet" href="/src/ex_file/discord.min.css" />');
+      $('#cmdIframe').contents().find("head").append('<link rel="stylesheet" href="/src/ex_file/css/discord.min.css" />');
       checkall(function() {
         verifyLinkLoaded = true
       })
@@ -1495,6 +1544,7 @@ function personnellistEditClick() {
 
 //error effect during Level 5 registration
 function errorEffect() {
+  addEventLog("Level 5 Security Warning: An anomaly was detected, internal system crash may have occurred.", true)
   cmdHide()
   setTimeout(function() {
     $d.append(`<div class="errorCmd"><span style="background:black">EEEEERRRRRR::::::::::</span> [DATA EXPUUUGGGEEEEED]</div>`)
@@ -1511,7 +1561,7 @@ function errorEffect() {
     $d.css({
       overflow: 'hidden',
     });
-    jQuery.get("/src/ex_file/codeText.html", function(va) {
+    jQuery.get("/src/ex_file/html/codeText.html", function(va) {
       $d.append(`<div style="display:none">${va}</div>`)
       $d.append(`<div id="codePage" class="codePageStyle"></div>`)
       var lines = va.split("\n");
