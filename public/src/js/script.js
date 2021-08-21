@@ -813,7 +813,7 @@ window.locationMasking = (con) => {
 
 var elem = document.documentElement;
 
-$(".close").unbind('click').bind('click', function() {
+$(".close").off('click').bind('click', function() {
   close()
 })
 
