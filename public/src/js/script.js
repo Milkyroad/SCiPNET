@@ -234,7 +234,7 @@ function statusCheck(url, callback) {
 
 //check the available proxy server and find the one that can be used
 function checkall(callback) {
-  statusCheck("https://api.allorigins.win/", function(data) {
+  statusCheck("https://api.allorigins.win/raw?url=", function(data) {
     if (data == true) {
       link = "https://api.allorigins.win/raw?url="
       callback()
