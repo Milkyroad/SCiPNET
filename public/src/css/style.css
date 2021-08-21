@@ -477,7 +477,7 @@ smallres {
 }
 
 .modal-wrap {
-  overflow: scroll;
+  overflow: auto;
   max-height: 90vh;
   padding: 1px;
 }

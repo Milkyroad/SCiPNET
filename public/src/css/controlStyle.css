@@ -76,7 +76,7 @@
   display: inline-block;
   letter-spacing: 2px;
   height: 302px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 #eventLog ul {
