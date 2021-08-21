@@ -14,9 +14,11 @@ export function access(accessNo, accessCl) {
   cmdHide()
   $d.append(`<blockquote id='fileSize'></blockquote>`)
   loadFile(`Downloading file`,`Decrypting document`)
+  addEventLog(`Accessing ${accessNo} documentation...`)
   if (link == undefined) {
     btnShow()
     cmdShow()
+    addEventLog(`Failed to access ${accessNo}`, true)
     appendWarn("SCiPNET FAILED TO CONNECT WITH THE SCP FOUNDATION DATABASE.")
     showWarning("SCiPNET failed to connect with the SCP Foundation database, please reload the page or try again later.")
   } else {
@@ -281,6 +283,7 @@ export function access(accessNo, accessCl) {
                 btnShow()
                 cmdShow()
               }
+              addEventLog(`Access to ${accessNo} granted`)
               AccessLink()
               getFrame()
               setImageWidth()
@@ -295,9 +298,9 @@ export function access(accessNo, accessCl) {
 
         } else {
           checkLinkLoaded()
-
           function checkLinkLoaded() {
             if (inBar == false) {
+              addEventLog(`Failed to access ${accessNo}`, true)
               appendError("THE CORRESPONDING FILE WITH THE CURRENT LANGUAGE SETTING COULD NOT BE FOUND IN THE DATABASE")
               btnShow()
               cmdShow()
@@ -321,6 +324,7 @@ export function access(accessNo, accessCl) {
         } else {
           msg = String(jqXHR.responseText).toUpperCase();
         }
+        addEventLog(`Failed to access ${accessNo}<br> Error: ${msg}`, true)
         appendError(`${msg}`)
         btnShow()
         cmdShow()
@@ -383,12 +387,6 @@ function getFrame() {
           var $c = cheerio.load(data.replace(`window.open("//`, `window.open("http://`).replace(`window.open('//`, `window.open('http://`).replace(`window.open("/`, `window.open("${domain}/`).replace(`window.open('/`, `window.open('${domain}/`), {
             decodeEntities: false
           });
-          $c("script").each(function() {
-            var link = $c(this).attr("src")
-            if (link != undefined) {
-              $c(this).attr("src", new URL(link, domain).toString())
-            }
-          });
           $c('[onclick]').each(function() {
             $c(this).attr("onclick", $c(this).attr("onclick").replace(/"/g, "&#039;"))
           })
@@ -407,13 +405,7 @@ function getFrame() {
               $c(this).replaceWith(`<ele-access data-link="${$c(this).attr("href")}">${$c(this).html()}</ele-access>`)
             }
           });
-          $c("img").each(function() {
-            var link = $c(this).attr("src")
-            if (link != undefined) {
-              $c(this).attr("src", new URL(link, domain).toString())
-            }
-          });
-          $c("source").each(function() {
+          $c("img, audio, script, source").each(function() {
             var link = $c(this).attr("src")
             if (link != undefined) {
               $c(this).attr("src", new URL(link, domain).toString())
@@ -422,17 +414,11 @@ function getFrame() {
           $c('*[src^="http://scp-wiki.wdfiles.com/"]').each(function() {
             $c(this).attr("src", $c(this).attr("src").replace(/^http:\/\//i, 'https://'))
           });
-          $c('*[href^="http://scp-wiki.wdfiles.com/"]').each(function() {
-              console.log($c(this).attr("href"));
-          });
-          $c('*[src^="http://www.scp-wiki.net/"]').each(function() {
-            $c(this).attr("src", $c(this).attr("src").replace(/^http:\/\//i, 'https://'))
-          });
-          $c('script[src^="https://www.scp-wiki.net/"]').each(function() {
+          $c('*[src^="https://www.scp-wiki.net/"]').each(function() {
             var newUrl = `https://scp-wiki.wdfiles.com/local--files/${$c(this).attr("src").split('https://www.scp-wiki.net/local--files/')[1]}`;
             $c(this).attr("src", newUrl)
           });
-          $c("head").append(`<script src="/src/ex_file/jquery-3.6.0.min.js"></script><link type="text/css" rel="stylesheet" href="/src/css/innerIframe.min.css" />`)
+          $c("head").append(`<script src="/src/ex_file/scripts/jquery-3.6.0.min.js"></script><link type="text/css" rel="stylesheet" href="/src/css/innerIframe.min.css" />`)
           var frameSrc = $c.html();
           if (isTrad) {
             frameSrc = he.decode(opencc.simplifiedToHongKong(frameSrc))
