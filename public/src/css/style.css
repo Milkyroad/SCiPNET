@@ -456,12 +456,12 @@ smallres {
   top: 0;
   bottom: 0;
   margin: auto;
-  max-height: 90%;
   overflow: hidden;
   padding: 26px;
   outline: 1px solid #545454;
   outline-offset: -6px;
-  width: 90%;
+  max-height: calc(100vh - 80px);
+  width: calc(100vw - 100px);
   height: fit-content;
   background: linear-gradient(to right, var(--defaultTheme) 2.5px, transparent 2.5px) 0 0,
     linear-gradient(to right, var(--defaultTheme) 2.5px, transparent 2.5px) 0 100%,
@@ -478,7 +478,7 @@ smallres {
 
 .modal-wrap {
   overflow: auto;
-  max-height: 90vh;
+  max-height: calc(100vh - 80px);
   padding: 1px;
 }
 
