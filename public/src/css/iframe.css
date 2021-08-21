@@ -631,10 +631,29 @@ iframe {
   width: 50px;
 }
 
-.code, .accessPage, .infoCard, .danke, .logbox, .logbox-audio, .collapsible-block-content, div[id^="wiki-tab-"], #toc-list, .pager-no, .bannerimage .image, .email, .scale, .helpList {
+.code, .accessPage, .infoCard, .danke, .logbox, .logbox-audio, .interview, .colmod-block, .collapsible-block, div[id^="wiki-tab-"], #toc-list, .pager-no, .bannerimage .image, .email, .emailchiang, .emailokami, .scale, .helpList {
   background: rgb(78 78 78 / 21%) !important;
   padding: 15px;
   margin: 7px;
+}
+
+.warning-box {
+  text-align: center;
+}
+
+.warning-box .text-number {
+  animation: fade 1s infinite;
+  color: red;
+}
+
+@keyframes fade {
+  0%, 100% {
+    opacity: 0
+  }
+
+  50% {
+    opacity: 1
+  }
 }
 
 .helpList {
