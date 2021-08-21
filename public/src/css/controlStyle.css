@@ -56,11 +56,11 @@
 }
 
 .feedItem:hover {
-  background: rgb(245, 213, 70, 0.5);
+  background: rgb(var(--defaultThemeRGB), 0.5);
 }
 
 .feedItem:active {
-  background: rgb(245, 213, 70);
+  background: var(--defaultTheme);
   opacity: 1;
   border: 2px var(--defaultTheme) solid;
   background-color: rgba(var(--defaultThemeRGB), 1);
