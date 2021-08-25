@@ -13,7 +13,7 @@ var he = require('he');
 export function access(accessNo, accessCl) {
   cmdHide()
   $d.append(`<blockquote id='fileSize'></blockquote>`)
-  loadFile(`Downloading file`,`Decrypting document`)
+  loadFile(`Downloading file`, `Decrypting document`)
   addEventLog(`Accessing ${accessNo} documentation...`)
   if (link == undefined) {
     btnShow()
@@ -215,8 +215,18 @@ export function access(accessNo, accessCl) {
           })
           $('img').each(function() {
             var url = $(this).attr('src')
-            if (url!=undefined) {
-              $(this).attr('src',`//${new URL(url).host}${new URL(url).pathname}`)
+            var host = new URL(url).host
+            var path = new URL(url).pathname
+            if (url != undefined) {
+              if (host == "www.scp-wiki.net") {
+                $(this).attr('src', `https://scp-wiki.wdfiles.com${path}`)
+              }
+              else if (host == "scp-wiki-cn.wdfiles.com") {
+                $(this).attr('src', `https://scp-wiki.wdfiles.com${path}`)
+              }
+              else {
+                $(this).attr('src', `//${host}${path}`)
+              }
             }
           });
           $('table').each(function() {
@@ -298,6 +308,7 @@ export function access(accessNo, accessCl) {
 
         } else {
           checkLinkLoaded()
+
           function checkLinkLoaded() {
             if (inBar == false) {
               addEventLog(`Failed to access ${accessNo}`, true)
