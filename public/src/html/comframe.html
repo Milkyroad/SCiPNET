@@ -35,18 +35,18 @@
             return;
           }
         }
-        parent.popUp("Encrypted communication system", "<div>Loading...</div><br>")
+        parent.popUp("Encrypted communication system", "<div class='pulse'></div><div class='loadText'>Loading Communication System...</div><br>")
         window.setTimeout(checkauthLoaded, 100);
       }
     })
     $("#updateLog").off('click').bind('click', function() {
-      parent.popUp("TERMINAL UPDATE LOG", "LOADING...")
+      parent.popUp("TERMINAL UPDATE LOG", "<div class='pulse'></div><div class='loadText'>Loading Update Log...</div>")
       $.get("/src/ex_file/html/updatelog.html", function(va) {
         parent.popUp("TERMINAL UPDATE LOG", va)
       })
     })
     $("#patreon").off('click').bind('click', function() {
-      parent.popUp("CREDIT", "LOADING...")
+      parent.popUp("CREDIT", "<div class='pulse'></div><div class='loadText'>Loading Credit...</div>")
       $.get("/src/ex_file/html/patreon.html", function(va) {
         parent.popUp("CREDIT", va)
       })

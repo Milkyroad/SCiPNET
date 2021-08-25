@@ -22,7 +22,7 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-12-0.21")
+$("#version").text("V. 01-12-1.21")
 //script variables
 var access
 var vcLoaded = false;
@@ -475,14 +475,14 @@ function reply(val) {
       if (locationGet != false) {
         displayTitle = country
       }
-      popUp(`${displayTitle} Main Site Control Unit`, "LOADING...")
+      popUp(`${displayTitle} Main Site Control Unit`, "<div class='pulse'></div><div class='loadText'>Loading Dashboard...</div>")
       import( /*webpackChunkName:'control'*/ './control.js').then((module) => {
         module.siteControl()
       })
       break;
     case "settings":
       appendNormal("Opening settings...")
-      popUp(`Settings`, `<blockquote class="darken">LOADING...</blockquote>`)
+      popUp(`Settings`, `<div class='pulse'></div><div class='loadText'>Loading Settings...</div>`)
       import( /*webpackChunkName:'settings'*/ './settings.js').then((module) => {
         module.settings()
         if (setting["checkLocation"] == true) {

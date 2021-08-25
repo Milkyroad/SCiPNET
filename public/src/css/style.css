@@ -587,3 +587,55 @@ smallres {
   outline-offset: -6px;
   padding: 15px;
 }
+
+/*pulse credit: https://codepen.io/comehope/pen/erRzzR*/
+.pulse {
+  margin: 40px auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: black;
+}
+
+.pulse {
+  width: calc(0.5em * 2);
+  height: calc(0.5em * 2);
+  background-color: var(--defaultTheme);
+  border-radius: 50%;
+  box-shadow: 0 0 0 calc(0.5em - 0.4em) black,
+    0 0 0 0.5em var(--defaultTheme);
+  position: relative;
+}
+
+.pulse::before,
+.pulse::after {
+  content: '';
+  position: absolute;
+  width: calc(0.5em * 2 * 2);
+  height: calc(0.5em * 2 * 2);
+  border: 2px solid var(--defaultTheme);
+  border-radius: 50%;
+  animation: pulse 2s ease-out infinite;
+}
+
+.pulse::after {
+  animation-delay: 1s;
+}
+
+.loadText {
+  text-align: center;
+  opacity: 0.7;
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    filter: opacity(0.9);
+  }
+
+  to {
+    transform: scale(2);
+    filter: opacity(0);
+  }
+}
