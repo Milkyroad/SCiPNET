@@ -519,7 +519,9 @@ function reply(val) {
       appendNormal("Fullscreen mode disabled")
       break;
     case "edit":
+      cmdHide()
       import( /*webpackChunkName:'edit'*/ './edit.js').then((module) => {
+        cmdShow()
         module.edit()
         window.editProcess = module.editProcess
       })
@@ -963,6 +965,18 @@ window.changeAll = (condition) => {
         '--defaultContrast': textContrastColor,
         '--defaultBackground': backgroundColor
       });
+      $d.find(".textPicker").each(function() {
+        $(this).val(textColor)
+      })
+      $d.find(".contrastPicker").each(function() {
+        $(this).val(textContrastColor)
+      })
+      $d.find(".themePicker").each(function() {
+        $(this).val(color)
+      })
+      $d.find(".backgroundPicker").each(function() {
+        $(this).val(backgroundColor)
+      })
     }
     if ($d == undefined || $m == undefined) {
       $("#cmdIframe").add($("#comIframe")).on('load', function() {
@@ -983,19 +997,6 @@ window.changeAll = (condition) => {
     } else {
       defaultTheme = false
     }
-
-    $d.find(".textPicker").each(function() {
-      $(this).val(textColor)
-    })
-    $d.find(".contrastPicker").each(function() {
-      $(this).val(textContrastColor)
-    })
-    $d.find(".themePicker").each(function() {
-      $(this).val(color)
-    })
-    $d.find(".backgroundPicker").each(function() {
-      $(this).val(backgroundColor)
-    })
   } else {
     storedColor = [backgroundColor, color, textColor, textContrastColor]
   }
