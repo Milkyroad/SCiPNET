@@ -9,6 +9,16 @@
   --defaultBackground: #1e1e1e;
 }
 
+::-webkit-scrollbar {
+  width:3px;height:0;
+}
+::-webkit-scrollbar-thumb {
+  background:var(--defaultTheme);
+}
+::-webkit-scrollbar-corner {
+  background:transparent;
+}
+
 @-webkit-keyframes entrance {
   to, 20%, 40%, 60%, 80% {
     opacity: 1;
@@ -106,7 +116,7 @@ body {
   color: var(--defaultText);
   margin: 0;
   padding: 0;
-  overflow: hidden;
+  overflow: scroll;
   transition: 100ms all ease-out;
 }
 
