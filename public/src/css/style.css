@@ -137,7 +137,6 @@ hr {
   left: 60px;
   position: relative;
   top: 15px;
-  width: calc(100vw - 250px);
 }
 
 #cmd {
@@ -157,7 +156,6 @@ hr {
   animation: entrance 400ms 800ms linear backwards 1;
   position: relative;
   transition: 100ms all ease-out;
-  height: calc(100vh - 220px);
 }
 
 #shot .description {
@@ -193,8 +191,6 @@ hr {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
   width: 3px;
-  height: calc(100vh * .85);
-  top: calc(100vh * .5);
   background: var(--defaultTheme);
   left: 30px;
   animation: entrance 400ms 1200ms linear backwards 1;
@@ -253,7 +249,6 @@ textarea:focus, input:focus {
 
 /* Iframe Panel */
 #comIframe, #cmdIframe {
-  height: calc(100vh - 220px);
   background: linear-gradient(0deg, rgba(245, 213, 70, 0.05) 0%, rgba(17, 17, 17, 0) 100%), var(--defaultBackground) url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
   border: none !important;
   width: 100%;
@@ -383,19 +378,6 @@ smallres {
 
   #cmd {
     word-wrap: break-word;
-    height: calc(100vh - 210px);
-  }
-}
-
-@media screen and (max-width: 471px) {
-  #cmd {
-    height: calc(100vh - 250px);
-  }
-}
-
-@media screen and (max-width: 223px) {
-  #cmd {
-    height: calc(100vh - 270px);
   }
 }
 

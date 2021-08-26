@@ -22,7 +22,7 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-13-0.21")
+$("#version").text("V. 01-13-1.21")
 //script variables
 var access
 var vcLoaded = false;
@@ -944,7 +944,6 @@ function loadCroppie(callback) {
         $(deferred.resolve);
       })
     ).done(function() {
-      console.log(1);
       //appCheck setup
       const appCheck = firebase.appCheck();
       appCheck.activate('6Lch95QbAAAAAKydxDgt3zyqBGtAt9WWQ2-qafVi');

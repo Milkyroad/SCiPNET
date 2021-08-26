@@ -172,6 +172,19 @@
         $(".description h1").text("SCiPNET")
         $("#tinyDes").text("SCP Foundation")
       }
+      if (window.innerWidth > 728) {
+        $("#shot").width(window.innerWidth - 250)
+        $("#cmd").height(window.innerHeight - 220)
+      } else if (window.innerWidth > 471) {
+        $("#shot").width(window.innerWidth - 20)
+      } else if (window.innerWidth > 223) {
+        $("#shot").width(window.innerWidth - 20)
+        $("#cmd").height(window.innerHeight - 270)
+      }
+      $(".columnExt").height(window.innerHeight * .85)
+      $(".columnExt").css("top", window.innerHeight * .5)
+      $("#cmdIframe").height(window.innerHeight - 220)
+      $("#comIframe").height(window.innerHeight - 220)
     }
 
     var $d;
