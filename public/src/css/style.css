@@ -71,6 +71,10 @@
   bottom: 0;
 }
 
+.nameTitle {
+  word-break: break-all;
+}
+
 @keyframes barberpole {
   100% {
     background-position: 100% 100%;
@@ -133,6 +137,7 @@ hr {
   left: 60px;
   position: relative;
   top: 15px;
+  width: calc(100vw - 250px);
 }
 
 #cmd {
@@ -152,6 +157,7 @@ hr {
   animation: entrance 400ms 800ms linear backwards 1;
   position: relative;
   transition: 100ms all ease-out;
+  height: calc(100vh - 220px);
 }
 
 #shot .description {
@@ -187,6 +193,8 @@ hr {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
   width: 3px;
+  height: calc(100vh * .85);
+  top: calc(100vh * .5);
   background: var(--defaultTheme);
   left: 30px;
   animation: entrance 400ms 1200ms linear backwards 1;
@@ -245,6 +253,7 @@ textarea:focus, input:focus {
 
 /* Iframe Panel */
 #comIframe, #cmdIframe {
+  height: calc(100vh - 220px);
   background: linear-gradient(0deg, rgba(245, 213, 70, 0.05) 0%, rgba(17, 17, 17, 0) 100%), var(--defaultBackground) url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
   border: none !important;
   width: 100%;
@@ -322,8 +331,8 @@ h1, p, .columnExt::before {
 
 /*data tag*/
 #dataContain {
-  height: -webkit-fit-content;
-  height: -moz-fit-content;
+  height: calc(100vh - 100px);
+  overflow: scroll;
   width: 170px;
   right: 10px;
   top: 50px;
@@ -361,7 +370,7 @@ smallres {
     left: 0px;
     top: 0 !important;
     margin: 10px;
-    width: calc(100% - 20px);
+    width: calc(100vw - 20px);
   }
 
   #dataContain {
@@ -369,11 +378,24 @@ smallres {
   }
 
   .textbox #input {
-    width: 80% !important;
+    width: calc(100vw - 70px);
   }
 
   #cmd {
     word-wrap: break-word;
+    height: calc(100vh - 210px);
+  }
+}
+
+@media screen and (max-width: 471px) {
+  #cmd {
+    height: calc(100vh - 250px);
+  }
+}
+
+@media screen and (max-width: 223px) {
+  #cmd {
+    height: calc(100vh - 270px);
   }
 }
 

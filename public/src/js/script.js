@@ -22,7 +22,7 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-12-1.21")
+$("#version").text("V. 01-13-0.21")
 //script variables
 var access
 var vcLoaded = false;
@@ -936,22 +936,20 @@ window.changeBackgroundColor = (value) => {
 //load the extension croppie and firebase storage for the profile picture function
 function loadCroppie(callback) {
   if (isProfileLoaded == false) {
-    $.getScript("/__/firebase/8.6.3/firebase-storage.js", function() {
-      if (isProfileLoaded == true) {
-        callback()
-      } else {
-        isProfileLoaded = true
-      }
-    });
-    $.getScript("/__/firebase/8.8.0/firebase-app-check.js", function() {
+    $.when(
+      $.getScript("/__/firebase/8.6.3/firebase-storage.js"),
+      $.getScript("/__/firebase/8.8.0/firebase-app-check.js"),
+      $.getScript("/src/js/upload.js"),
+      $.Deferred(function(deferred) {
+        $(deferred.resolve);
+      })
+    ).done(function() {
+      console.log(1);
       //appCheck setup
       const appCheck = firebase.appCheck();
       appCheck.activate('6Lch95QbAAAAAKydxDgt3zyqBGtAt9WWQ2-qafVi');
-      if (isProfileLoaded == true) {
-        callback()
-      } else {
-        isProfileLoaded = true
-      }
+      callback()
+      isProfileLoaded = true
     });
     $('head').append('<link rel="stylesheet" href="/src/ex_file/css/croppie.min.css" />');
     $('head').append('<script src="/src/ex_file/scripts/croppie.min.js"></script>');
