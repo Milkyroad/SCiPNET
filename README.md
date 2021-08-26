@@ -1,6 +1,9 @@
 
 # SCiPNET Terminal
- 
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/O4O35OQ7U)
+
+[![Support me on Patreon](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fshieldsio-patreon.vercel.app%2Fapi%3Fusername%3Dscipnet%26type%3Dpatrons&style=for-the-badge)](https://patreon.com/scipnet)
+
 Official SCiPNET Direct Access Terminal Github repository
 
 <img width="1440" alt="Screenshot 2021-08-23 at 3 07 38 PM" src="https://user-images.githubusercontent.com/68321568/130405018-f7feeea1-3fcb-49d9-9e7d-6b8384766db1.png">
