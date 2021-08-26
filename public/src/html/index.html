@@ -168,23 +168,19 @@
     matchHeight()
 
     function matchHeight() {
-      if (screen.width < 472) {
-        $(".description h1").text("SCiPNET")
-        $("#tinyDes").text("SCP Foundation")
-      }
-      if (window.innerWidth > 728) {
-        $("#shot").width(window.innerWidth - 250)
-        $("#cmd").height(window.innerHeight - 220)
-      } else if (window.innerWidth > 471) {
-        $("#shot").width(window.innerWidth - 20)
-      } else if (window.innerWidth > 223) {
-        $("#shot").width(window.innerWidth - 20)
-        $("#cmd").height(window.innerHeight - 270)
-      }
-      $(".columnExt").height(window.innerHeight * .85)
-      $(".columnExt").css("top", window.innerHeight * .5)
-      $("#cmdIframe").height(window.innerHeight - 220)
-      $("#comIframe").height(window.innerHeight - 220)
+      $("#cmd, #cmdIframe, #comIframe").height(window.innerHeight - 220)
+      $(".columnExt").height(window.innerHeight*.85).css("top",window.innerHeight*.5)
+      if (window.innerWidth < 472) {
+           $(".description h1").text("SCiPNET")
+           $("#tinyDes").text("SCP Foundation")
+           $("#cmd, #cmdIframe, #comIframe").height(window.innerHeight - 270)
+       }
+       if (window.innerWidth > 728) {
+           $("#shot").width(window.innerWidth - 250)
+       }
+       else {
+         $("#shot").width(window.innerWidth - 20)
+       }
     }
 
     var $d;

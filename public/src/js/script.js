@@ -1,6 +1,6 @@
 import {
   loginConvert
-} from './login.js';
+} from './loginConvert.js';
 import {
   sideBarFun
 } from './sideBar.js';
@@ -22,7 +22,7 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-13-1.21")
+$("#version").text("V. 01-13-2.21")
 //script variables
 var access
 var vcLoaded = false;
@@ -40,6 +40,8 @@ var localtextContrastColor = localStorage.getItem('textContrastColor');
 if (/Mobi|Android/i.test(navigator.userAgent)) {
   popUp("NOTICE", "Browsing SCiPNET via desktop is recommended for the best experience")
 }
+
+//global functions
 window.addEventLog = (text, warn) => {
   if (warn == true) {
     eventLogArray.push(`<span class='warning'>${text}<br><br><small>${new Date().toLocaleTimeString('en-US')}</small></span>`);
@@ -47,14 +49,159 @@ window.addEventLog = (text, warn) => {
     eventLogArray.push(`${text}<br><br><small>${new Date().toLocaleTimeString('en-US')}</small>`);
   }
 }
-
 window.playSound = (link) => {
   if (setting["audioStatus"] == true) {
     var audio = new Audio(link);
     audio.play();
   }
 }
+window.appendNoLogin = () => {
+  appendError("CURRENT USER IS NOT AUTHENTICATED, PLEASE LOGIN OR REGISTER FIRST TO ACCESS THIS COMMAND.")
+}
+window.reloadInfo = () => {
+  if (firebase.auth().currentUser != null) {
+    userLoggedIn = true
+    firebase.firestore().doc(`users/${firebase.auth().currentUser.uid}`).get().then((doc) => {
+      if (doc.exists) {
+        tag = doc.data().Tag
+        tagNo = tag.slice(tag.lastIndexOf('#') + 1);
+      } else {
+        tag = "Not yet registered"
+        tagNo = "N/A"
+      }
+    }).catch((error) => {
+      console.log("Error getting document:", error);
+    });
+    var user = firebase.auth().currentUser
+    var parts = loginConvert(user.photoURL, user.displayName);
+    displayName = parts.name;
+    classification = parts.classification;
+    clearance = parts.clearance;
+    title = parts.title;
+    site = parts.site;
+    keyphrase = parts.key;
+    holder = `<span class="highlight">root@${displayName}</span>:<span style="color:#6495ED">~</span>$ `
+  } else {
+    userLoggedIn = false
+    displayName = ""
+    classification = ""
+    clearance = ""
+    title = ""
+    site = ""
+    keyphrase = ""
+  }
+}
+//global define the function to pop up an error modal window
+window.showWarning = (text) => {
+  $("#WarningModalId .modalText").html(text)
+  $("#WarningModalId").show()
+}
+//send the updated user information to the server through firebase auth
+window.updateUsersInfo = () => {
+  firebase.auth().currentUser.updateProfile({
+      displayName: displayName,
+      photoURL: `${clearance}|-|${title}|-|${classification}|-|${site}|-|${keyphrase}`
+    })
+    .then(function() {
+      reloadInfo()
+      appendNormal(`<span style="color:#98FB98">[✓] </span>Updated successfully`)
+      editState = 0
+      cmdShow()
+      btnShow()
+    }, function(error) {
+      appendError(`${error.message.toUpperCase()}, EDITING PROCESS EXCITED.`)
+      editState = 0
+      cmdShow()
+      btnShow()
+    })
+}
+//function to check if username exist in the firestore database
+window.checkUsernameAva = async (con, callback) => {
+  var userNameDoc = await firebase.firestore().collection("users").where("Tag", "==", UserTag).get()
+  if (!userNameDoc.empty) {
+    UserTag = `${userReg}#${Math.ceil(Math.random()*10000)}`
+    checkUsernameAva("normal", function() {
+      console.log("loop")
+    })
+  } else {
+    firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).set({
+        Tag: UserTag,
+      }, {
+        merge: true
+      })
 
+      .then(() => {
+        if (con == "normal") {
+          reloadInfo()
+          cmdShow()
+          btnShow()
+          registerState = 0
+          appendNormal(`<span style="color:#98FB98">[✓] </span>Procedure completed. <span class="highlight">Welcome, ${displayName}</span>`)
+        } else {
+          $d.append(`<blockquote id='waitingToAdd'>Your unique User ID was successfully generated, now updating your information...</blockquote>`)
+          addDot()
+        }
+        callback()
+      })
+      .catch(function(error) {
+        callback()
+        reloadInfo()
+        appendError(`ERROR OCCURED: ${String(error).toUpperCase()} YOUR ACCOUNT WAS SUCCESSFULLY CREATED OR UPDATED, BUT WE WERE UNABLE TO GENERATE A UNIQUE USERNAME FOR YOU. PLEASE TRY AGAIN LATER BY EDITING YOUR USERNAME.`)
+        cmdShow()
+        btnShow()
+        registerState = 0
+      })
+  }
+}
+//error effect during Level 5 registration
+window.errorEffect = () => {
+  addEventLog("Level 5 Security Warning: An anomaly was detected, internal system crash may have occurred.", true)
+  cmdHide()
+  setTimeout(function() {
+    $d.append(`<div class="errorCmd"><span style="background:black">EEEEERRRRRR::::::::::</span> [DATA EXPUUUGGGEEEEED]</div>`)
+    scroll()
+  }, 1000);
+  setTimeout(function() {
+    $d.append(`<div class="errorCmd">SCiPNET detected a fatal error..;d;;sdl23D34&^#&87ui</div>`)
+    $d.append(`<div class="errorCmd">INTERNAL DATA CRASHED..:::::::::: SCiPNET V.01 OS HAS STOPPED WORKINGG::::::</div>`)
+    scroll()
+    $("#ok").css('color', '#EA3546')
+    $("#ok").text('INSECURE')
+  }, 1300);
+  setTimeout(function() {
+    $d.css({
+      overflow: 'hidden',
+    });
+    jQuery.get("/src/ex_file/html/codeText.html", function(va) {
+      $d.append(`<div style="display:none">${va}</div>`)
+      $d.append(`<div id="codePage" class="codePageStyle"></div>`)
+      var lines = va.split("\n");
+      var displayLine = function() {
+        var nextLine = lines.shift();
+        if (nextLine) {
+          var newLine = $('<li>' + nextLine + '</li>');
+          $d.find('#codePage').append(newLine);
+          newLine.show()
+          scroll()
+          setTimeout(displayLine, 70);
+        } else {
+          $("#ok").css('color', '')
+          $("#ok").text('OK (Abnormal conditions detected)')
+          appendNormal(`<h3>O-5 Council Registration Panel (unlockedddddddddd)</h3><blockquote><blockquote>SYSTEM INFO:<br><br>It is strictly forbidden to register for Level 5 Security Clearance without the consenting permission of the full O-5 Council. Please confirm that you have received approval before proceeding as failure to comply may result in summary execution. (INFO CODE 4855)</blockquote>As you have selected Level 5 Security Clearance (Highest Level), you are required to set up a personal authorization keyphrase for security purpose and the confidentiality of our confidential information.<br><br><span><div style="background-color:#000000; color:#ff0000">FINAL WARNING: You should not see this message without the permission of the O-5 Council. If you have successfully accessed this page without proper permission, you must report this to The Recordkeeping and Information Security Administration (RAISA) immediately. Failure to comply will result in immediate revocation and termination of all positions in the Foundation and the cancellation of all educational, medical, retirement and mortality benefits from your regional government, and the Foundation.</div></span><hr><small style='opacity:0.7'>The personal authorization keyphrase is an additional login credential to gain account access. (e.g. Now is the time for all good men to come to the aid of their party.)<br>You can choose the content of your personal authorization keyphrase as you wish.</small></blockquote>`)
+          $d.css({
+            overflow: 'auto',
+          });
+          $d.find("#codePage").attr("id", "")
+          scroll()
+          cmdShow()
+        }
+      }
+      setTimeout(displayLine, 70);
+    });
+  }, 1400);
+}
+
+//change values according to storage items
 function checkLocalStorageAndChange() {
   if (localbackgroundColor && localcolor && localtextColor && localtextContrastColor) {
     backgroundColor = localbackgroundColor;
@@ -65,6 +212,14 @@ function checkLocalStorageAndChange() {
     defaultTheme = false
   } else {
     defaultTheme = true
+  }
+}
+
+function checkAudioSetting() {
+  if (JSON.parse(localStorage.getItem('audioStatus')) == false) {
+    setting["audioStatus"] = false
+  } else {
+    setting["audioStatus"] = true
   }
 }
 
@@ -200,7 +355,6 @@ function fetchVisitorCount() {
     $('#visitors').text(error).css('color', '#EA3546');
   });
 }
-
 if (localStorage.getItem('count') == null) {
   firebase.firestore().collection('general').doc('count').update({
     count: firebase.firestore.FieldValue.increment(1)
@@ -231,7 +385,6 @@ function statusCheck(url, callback) {
     timeout: 5000
   });
 }
-
 //check the available proxy server and find the one that can be used
 function checkall(callback) {
   statusCheck("https://api.allorigins.win/raw?url=", function(data) {
@@ -269,7 +422,7 @@ function checkall(callback) {
   });
 }
 
-//check the availability of the current server every 300 seconds
+//check the availability of the current server
 checkall()
 
 //main control unit that identify the user input and allocate command
@@ -366,69 +519,10 @@ function reply(val) {
       appendNormal("Fullscreen mode disabled")
       break;
     case "edit":
-      if (userLoggedIn) {
-        appendNormal(`Please click and select one of the following editing actions<ul class='editList listClass'><li>Username</li><li>Security Clearance Level</li><li>Personnel Classification</li><li>Staff Title</li><li>Working Site</li><li>Profile Picture</li></ul>`)
-        $d.find(".editList li").unbind('click').bind('click', function() {
-          if (userLoggedIn) {
-            btnHide()
-            editState = $(this).index() + 1
-            $d.append($(this).text())
-            if (editState != 2 && editState != 3 && editState != 6) {
-              appendNormal(`Please enter your new ${$(this).text().toLowerCase()}`)
-            } else {
-              if (editState == 2) {
-                var clearanceText = "Please click and select your Foundation security clearance (Available Security Clearance Level is 0 - 5)<br><ul id='clearanceEditList' class='listClass'><li>Level 0 (For Official Use Only)</li><li>Level 1 (Confidential)</li><li>Level 2 (Restricted)</li><li>Level 3 (Secret)</li><li>Level 4 (Top Secret)</li><li style='color:red'>Level 5 (Thaumiel)</li></ul><hr><small style='opacity:0.7'>Foundation security clearances granted to personnel represent the highest level or type of information to which they can be granted access. </small>"
-                appendNormal(clearanceText)
-                clearanceEditListClick()
-
-                function clearanceEditListClick() {
-                  $d.find("#clearanceEditList li").unbind('click').bind('click', function() {
-                    $(this).parent("#clearanceEditList").find("li").unbind("click") //disable all clicking
-                    $(this).parent("#clearanceEditList").attr("id", "") //remove the id so it won't cause error
-                    $(this).parent("ul").attr("class", "") //fade the option
-                    $(this).addClass("disabledList") //fade the option
-                    if ($(this).index() > 5 || $(this).index() < 0) {
-                      appendError("ERROR OCCURED, PLEASE TRY AGAIN")
-                      appendNormal(clearanceText)
-                      clearanceEditListClick()
-                    } else {
-                      clearance = $(this).index()
-                      if (clearance == 5) {
-                        errorEffect()
-                      } else {
-                        keyphrase = ""
-                        $d.append(`Foundation security clearance selected: <span class="highlight">Level ${clearance}</span>`)
-                        updateUsersInfo()
-                      }
-                    }
-                  });
-                }
-              } else if (editState == 3) {
-                cmdHide()
-                var classText = `Please click and select your personnel classifications<br><ul id='personnelEditList' class='listClass'><li>Class A (Deemed essential to Foundation strategic operations)</li><li>Class B (Deemed essential to local Foundation operations)</li><li>Class C (Personnel with direct access to most anomalies not deemed strictly hostile or dangerous)</li><li>Class D (expendable personnel used to handle extremely hazardous anomalies)</li><li>Class E (Provisional classification applied to field agents and containment personnel)</li></ul><hr><small style='opacity:0.7'>Classifications are assigned to personnel based on their proximity to potentially dangerous anomalous objects, entities, or phenomena. </small>`
-                appendNormal(classText)
-                personnellistEditClick()
-              } else {
-                if (firebase.auth().getUid() != null) {
-                  loadCroppie(function() {
-                    console.log("loaded")
-                  })
-                  appendNormal(`<blockquote class="editingPfp editPhoto" data-uid="${firebase.auth().getUid()}"><div class="upload" style="margin:0">Click to add a profile picture<br><b>+</b><br><small>File should not exceed 20 MB</small><input class="file_upload" type="file" accept="image/*" onchange="parent.uploadfile(this)" onclick="this.value=null;" /></div></blockquote>`)
-                } else {
-                  appendError("PLEASE LOGIN FIRST AND CHECK YOUR INTERNET CONNECTION")
-                }
-                cmdShow()
-                btnShow()
-                editState = 0
-              }
-            }
-          } else {
-            appendNoLogin()
-          }
-        });
-      } else {
-        appendNoLogin()
-      }
+      import( /*webpackChunkName:'edit'*/ './edit.js').then((module) => {
+        module.edit()
+        window.editProcess = module.editProcess
+      })
       break;
     case "login":
       if (userLoggedIn) {
@@ -438,12 +532,13 @@ function reply(val) {
         cmdHide()
         $d.append("<blockquote id='waitingToAdd'>Sending request to the database...</blockquote>")
         addDot()
-        setTimeout(function() {
-          cmdShow();
-          appendNormal(`<span style="color:#98FB98">[✓] </span>Authentication request accepted at <span class="highlight">${new Date().toLocaleString('en-US')}</span><br><hr><small style='opacity:0.7'>Please enter your email address, you can always enter "Quit" to exit the login process</small>`)
-        }, 1000);
-        loginState = 1
       }
+      import( /*webpackChunkName:'login'*/ './login.js').then((module) => {
+        loginState = 1
+        cmdShow();
+        appendNormal(`<span style="color:#98FB98">[✓] </span>Authentication request accepted at <span class="highlight">${new Date().toLocaleString('en-US')}</span><br><hr><small style='opacity:0.7'>Please enter your email address, you can always enter "Quit" to exit the login process</small>`)
+        window.loginProcess = module.loginProcess
+      })
       break;
     case "bgm":
       var audio = document.getElementById("bgm");
@@ -666,7 +761,12 @@ function reply(val) {
         appendNormal(`Your request to register with our foundation (SCP Foundation) via the SCiPNET terminal at <span class="highlight">${new Date().toLocaleString('en-US')}</span> has been approved. We hereby grant you the right to select positions within the foundation. However, you must undertake to maintain the highest level of confidentiality with respect to our foundation's internal documents and commit not to disclose the foundation's documents in any form.<br><hr> <small style='opacity:0.7'>Enter "Y" to continue and indicate that you agree to our<a onclick="window.open('/src/html/license.html', '_blank')">licensing & policies</a>or "N" to abort, you can always enter "Quit" to exit the registration process.</small>`)
         registerState = 1
         btnHide()
+        cmdHide()
       }
+      import( /*webpackChunkName:'register'*/ './register.js').then((module) => {
+        cmdShow()
+        window.registerProcess = module.registerProcess
+      })
       break;
     default:
       addEventLog(`Undefined command -${splitValue(val)[0]}-`, true)
@@ -674,11 +774,43 @@ function reply(val) {
   }
 }
 
+//distrube the input according to the variables
+$("#input").on('keyup', function(e) {
+  if (e.key === 'Enter' || e.keyCode === 13) {
+    if ($("#input").val() != "") {
+      inputVal = $("#input").val();
+      if (tab == 0) {
+        if ([3, 4].includes(loginState) || [6, 7].includes(registerState) || lockoutProcess != 0 || editState == 2) {
+          $d.append(`**-[SENSITIVE INFO - AUTO MASKED]-**<br>`)
+        } else {
+          $d.append(`${$("#input").val()}<br>`)
+        }
+        if (registerState == 0 && loginState == 0 && editState == 0 && resetState == 0 && lockoutProcess == 0) {
+          reply(inputVal)
+        } else if (registerState != 0) {
+          registerProcess(inputVal)
+        } else if (loginState != 0) {
+          loginProcess(inputVal)
+        } else if (editState != 0) {
+          editProcess(inputVal)
+        } else if (resetState != 0) {
+          cmdHide()
+          resetPassword(inputVal)
+        } else {
+          lockoutProcessFun(inputVal)
+        }
+        scroll()
+        $("#input").val('')
+      }
+    }
+  }
+});
+
+//values handling
 //function to split user input by spaces
 function splitValue(val) {
   return val.split(" ");
 }
-
 //check is the string a number
 function isNumber(n) {
   return /^-?[\d.]+(?:e-?\d+)?$/.test(n);
@@ -733,56 +865,10 @@ $("#cmdBtn").off('click').bind('click', function() {
   }
 })
 
-
-//distrube the input according to the variables
-$("#input").on('keyup', function(e) {
-  if (e.key === 'Enter' || e.keyCode === 13) {
-    if ($("#input").val() != "") {
-      inputVal = $("#input").val();
-      if (tab == 0) {
-        if ([3, 4].includes(loginState) || [6, 7].includes(registerState) || lockoutProcess != 0 || editState == 2) {
-          $d.append(`**-[SENSITIVE INFO - AUTO MASKED]-**<br>`)
-        } else {
-          $d.append(`${$("#input").val()}<br>`)
-        }
-        if (registerState == 0 && loginState == 0 && editState == 0 && resetState == 0 && lockoutProcess == 0) {
-          reply(inputVal)
-        } else if (registerState != 0) {
-          registerProcess(inputVal)
-        } else if (loginState != 0) {
-          loginProcess(inputVal)
-        } else if (editState != 0) {
-          editProcess(inputVal)
-        } else if (resetState != 0) {
-          cmdHide()
-          resetPassword(inputVal)
-        } else {
-          lockoutProcessFun(inputVal)
-        }
-        scroll()
-        $("#input").val('')
-      }
-    }
-  }
-});
-
-//append when user haven't logged in
-function appendNoLogin() {
-  appendError("CURRENT USER IS NOT AUTHENTICATED, PLEASE LOGIN OR REGISTER FIRST TO ACCESS THIS COMMAND.")
-}
-
 //sidebar function
 sideBarFun()
 
-//command function
-function checkAudioSetting() {
-  if (JSON.parse(localStorage.getItem('audioStatus')) == false) {
-    setting["audioStatus"] = false
-  } else {
-    setting["audioStatus"] = true
-  }
-}
-
+//location masking function
 window.locationMasking = (con) => {
   if (JSON.parse(con) == true) {
     //set the location mask setting to true
@@ -811,8 +897,7 @@ window.locationMasking = (con) => {
   }
 }
 
-var elem = document.documentElement;
-
+//close button
 $(".close").off('click').bind('click', function() {
   close()
 })
@@ -837,6 +922,8 @@ function close() {
 }
 
 //functions for open and close fullscreen
+var elem = document.documentElement;
+
 function openFullscreen() {
   if (elem.requestFullscreen) {
     elem.requestFullscreen();
@@ -860,12 +947,11 @@ function closeFullscreen() {
     document.msExitFullscreen();
   }
 }
-//theme functions
 
+//theme functions
 window.hex2rgb = (hex) => {
   return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
 }
-
 window.changeAll = (condition) => {
   if (lockout == false) {
     function changeCssVar() {
@@ -914,7 +1000,6 @@ window.changeAll = (condition) => {
     storedColor = [backgroundColor, color, textColor, textContrastColor]
   }
 }
-
 window.changeColor = (value) => {
   color = value
   textContrastColor = generator.generate(value).hexStr
@@ -934,7 +1019,7 @@ window.changeBackgroundColor = (value) => {
 }
 
 //load the extension croppie and firebase storage for the profile picture function
-function loadCroppie(callback) {
+window.loadCroppie = (callback) => {
   if (isProfileLoaded == false) {
     $.when(
       $.getScript("/__/firebase/8.6.3/firebase-storage.js"),
@@ -957,7 +1042,7 @@ function loadCroppie(callback) {
   }
 }
 
-//load and import the access component at the inital access
+//load and import the access component on inital access
 function accessLoad(a, b) {
   if (init == false) {
     $d.append(`<blockquote id="waitingToAdd">Initializing connection...`)
@@ -986,47 +1071,6 @@ function accessLoad(a, b) {
   } else {
     access(a, b)
   }
-}
-
-//reload and refresh the user information
-function reloadInfo() {
-  if (firebase.auth().currentUser != null) {
-    userLoggedIn = true
-    firebase.firestore().doc(`users/${firebase.auth().currentUser.uid}`).get().then((doc) => {
-      if (doc.exists) {
-        tag = doc.data().Tag
-        tagNo = tag.slice(tag.lastIndexOf('#') + 1);
-      } else {
-        tag = "Not yet registered"
-        tagNo = "N/A"
-      }
-    }).catch((error) => {
-      console.log("Error getting document:", error);
-    });
-    var user = firebase.auth().currentUser
-    var parts = loginConvert(user.photoURL, user.displayName);
-    displayName = parts.name;
-    classification = parts.classification;
-    clearance = parts.clearance;
-    title = parts.title;
-    site = parts.site;
-    keyphrase = parts.key;
-    holder = `<span class="highlight">root@${displayName}</span>:<span style="color:#6495ED">~</span>$ `
-  } else {
-    userLoggedIn = false
-    displayName = ""
-    classification = ""
-    clearance = ""
-    title = ""
-    site = ""
-    keyphrase = ""
-  }
-}
-
-//global define the function to pop up an error modal window
-window.showWarning = (text) => {
-  $("#WarningModalId .modalText").html(text)
-  $("#WarningModalId").show()
 }
 
 //setup a listener for access button click
@@ -1063,266 +1107,7 @@ function AccessLink() {
   }
 }
 
-//authentication variables
-var userReg;
-var clrReg;
-var classReg;
-var titleReg;
-var emailReg;
-var siteReg;
-var passReg;
-var keyReg = "";
-
-var emailLog;
-var passLog;
-var keyLog;
-
-//register user through firebase auth
-function registerProcess(val) {
-  var valCase = val;
-  val = val.toLowerCase().trim()
-  if (val == "quit") {
-    btnShow()
-    appendNormal("Registration process exited")
-    registerState = 0
-    userReg = "";
-    clrReg = "";
-    titleReg = "";
-    emailReg = "";
-    passReg = "";
-    classReg = "";
-    siteReg = "";
-    keyReg = ""
-  } else {
-    if (val.includes("|-|") || val.includes("/")) {
-      appendError('INPUT CONTAINS ILLEGAL STRING "|-|" or "/", PLEASE AVOID INCLUDING THIS STRING IN YOUR INPUT AND TRY AGAIN')
-    } else {
-      if (registerState == 1) {
-        if (val == "y") {
-          appendNormal(`<span style="color:#98FB98">[✓] </span>Registration confirmed<br>Please enter your username as your identity in the Foundation's database`)
-          registerState = 2
-        } else if (val == "n") {
-          appendNormal("Registration aborted, request for registration has been discarded")
-          btnShow()
-          registerState = 0
-        } else {
-          appendError(`UNRECOGNISED INPUT, PLEASE ENTER "Y", "N" OR "Quit"`)
-        }
-      } else if (registerState == 2) {
-        if (valCase.length < 101) {
-          userReg = valCase
-          appendNormal("Please enter your email address you wish to register with")
-          registerState = 2.5
-        } else {
-          appendError("USERNAME TOO LONG, PLEASE CHOOSE ANOTHER ONE.")
-          registerState = 2
-        }
-      } else if (registerState == 2.5) {
-        cmdHide()
-        firebase.auth().fetchSignInMethodsForEmail(valCase)
-          .then((signInMethods) => {
-            if (signInMethods.length) {
-              cmdShow()
-              registerState = 2.5
-              appendError('WE ALREADY HAVE AN USER WITH A CORRESPONDING EMAIL ADDRESS IN OUR DATABASE. PLEASE USE ANOTHER EMAIL OR TRY LOGGING IN<br><hr><small style="opacity:0.7">If you wish to login, enter "Quit" to exit the registration process. After that, enter "Login" to login yourself.</small>')
-            } else {
-              emailReg = val
-              registerState = 3
-              registerProcess("clearance")
-            }
-          })
-          .catch((error) => {
-            cmdShow()
-            appendError(`${String(error).toUpperCase()}<br><hr> <small style='opacity:0.7'>PLEASE TRY AGAIN.</small>`)
-            registerState = 2.5
-          });
-      } else if (registerState == 3) {
-        appendNormal("Please click and select your Foundation security clearance (Available Security Clearance Level is 0 - 5)<br><ul id='clearanceList' class='listClass'><li>Level 0 (For Official Use Only)</li><li>Level 1 (Confidential)</li><li>Level 2 (Restricted)</li><li>Level 3 (Secret)</li><li>Level 4 (Top Secret)</li><li style='color:red'>Level 5 (Thaumiel)</li></ul><hr><small style='opacity:0.7'>Foundation security clearances granted to personnel represent the highest level or type of information to which they can be granted access. </small>")
-        $d.find("#clearanceList li").unbind('click').bind('click', function() {
-          $(this).parent("#clearanceList").find("li").unbind("click") //disable all clicking
-          $(this).parent("#clearanceList").attr("id", "") //remove the id so it won't cause error
-          $(this).parent("ul").attr("class", "") //fade the option
-          $(this).addClass("disabledList") //fade the option
-          if ($(this).index() > 5 || $(this).index() < 0) {
-            appendError("ERROR OCCURED, PLEASE TRY AGAIN")
-            registerState = 3
-            registerProcess("error")
-          } else {
-            clrReg = $(this).index()
-            $d.append($(this).text())
-            appendNormal(`Foundation security clearance selected: <span class="highlight">Level ${$(this).index()}</span><br><br><hr>Please click and select your personnel classification<br><ul id='personnelList' class='listClass'><li>Class A (Deemed essential to Foundation strategic operations)</li><li>Class B (Deemed essential to local Foundation operations)</li><li>Class C (Personnel with direct access to most anomalies not deemed strictly hostile or dangerous)</li><li>Class D (expendable personnel used to handle extremely hazardous anomalies)</li><li>Class E (Provisional classification applied to field agents and containment personnel)</li></ul><hr><small style='opacity:0.7'>Classifications are assigned to personnel based on their proximity to potentially dangerous anomalous objects, entities, or phenomena. </small>`)
-            personnellistClick()
-          }
-        });
-      } else if (registerState == 4) {
-        if (valCase.length < 101) {
-          titleReg = valCase;
-          appendNormal("Please enter your working site<br><hr><small style='opacity:0.7'>The location where you work. (e.g. Site-103, Site-56)</small>")
-          registerState = 5
-        } else {
-          appendError("INPUTTED STAFF TITLE TOO LONG, PLEASE CHOOSE ANOTHER ONE.")
-          registerState = 4
-        }
-      } else if (registerState == 5) {
-        if (valCase.length < 101) {
-          siteReg = valCase;
-          appendNormal("Please now enter a password for your new account")
-          registerState = 6
-        } else {
-          appendError("INPUTTED WORKING SITE TOO LONG, PLEASE CHOOSE ANOTHER ONE.")
-          registerState = 5
-        }
-      } else if (registerState == 6) {
-        if (valCase.length < 6) {
-          appendError("ERROR: PASSWORD SHOULD BE AT LEAST 6 CHARACTERS")
-        } else {
-          cmdHide()
-          passReg = valCase;
-          $d.append(`<blockquote id="waitingToAdd">Registering and encrypting user's information...</blockquote>`)
-          addDot()
-          if (clrReg == 5) {
-            errorEffect()
-            registerState = 7
-          } else {
-            registerUserWithInfo()
-          }
-        }
-      } else if (registerState == 7) {
-        keyReg = valCase;
-        if (keyReg.length > 500) {
-          appendError("KEYPHRASE MUST NOT EXCEED 500 CHARACTERS, PLEASE CHOOSE ANOTHER ONE.")
-          registerState = 7
-        } else {
-          cmdHide()
-          $d.append(`<blockquote id="waitingToAdd">Keyphrase received, now registering and encrypting user's information...</blockquote>`)
-          addDot()
-          registerUserWithInfo()
-        }
-      } else if (registerState == 8) {
-        emailReg = valCase;
-        registerUserWithInfo()
-      }
-    }
-  }
-}
-
-//login user through firebase auth
-function loginProcess(val) {
-  if (val.trim().toLowerCase() == "quit") {
-    emailLog = "";
-    passLog = "";
-    keyLog = "";
-    btnShow()
-    appendNormal("Login process exited")
-    loginState = 0
-  } else {
-    if (loginState == 1) {
-      cmdHide()
-      firebase.auth().fetchSignInMethodsForEmail(val)
-        .then((signInMethods) => {
-          if (signInMethods.length) {
-            emailLog = val
-            appendNormal(`The email address you have entered is:<span class='highlight'> ${val}</span><br><hr><small style='opacity:0.7'>Enter "Y" to continue or "N" to re-enter your email. You can exit the login process at any time by entering "Quit".</small>`)
-            loginState = 2
-          } else {
-            appendError(`THIS EMAIL IS NOT REGISTERED. PLEASE ENTER ANOTHER EMAIL OR YOU CAN CHOOSE TO REGISTER <br><hr><small style='opacity:0.7'>If you wish to register, enter "Quit" to exit the login process. After that, enter "Register" to register.</small>`)
-            loginState = 1
-          }
-          cmdShow()
-        })
-        .catch((error) => {
-          cmdShow()
-          appendError(`${String(error).toUpperCase()}<br><hr><small style='opacity:0.7'>PLEASE TRY AGAIN.</small>`)
-          loginState = 1
-        });
-    } else if (loginState == 2) {
-      if (val.trim().toLowerCase() == "y") {
-        appendNormal("Please enter your password")
-        loginState = 3
-      } else if (val.trim().toLowerCase() == "n") {
-        appendNormal("Please enter your email again")
-        loginState = 1
-      } else {
-        appendError(`UNRECOGNISED INPUT, PLEASE ENTER "Y", "N" OR "Quit"`)
-        loginState = 2
-      }
-    } else if (loginState == 3) {
-      cmdHide()
-      passLog = val
-      $d.append('<blockquote id="waitingToAdd">Authenticating user...</blockquote>')
-      addDot()
-      firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(() => {
-          return firebase.auth().signInWithEmailAndPassword(emailLog, passLog)
-            .then((userCredential) => {
-              reloadInfo()
-              if (clearance == 5 && keyphrase != "") {
-                keyphraseLogin()
-              } else {
-                appendNormal(`Login successful - <span class="highlight">Welcome back, ${displayName}</span>`)
-                cmdShow()
-                btnShow()
-                loginState = 0
-              }
-            })
-            .catch((error) => {
-              if (error.code == "auth/wrong-password") {
-                appendError(`PASSWORD INVALID, PLEASE ENTER YOUR PASSWORD AGAIN`)
-                loginState = 3
-              } else {
-                appendError(`${error.message.toUpperCase()}<br><hr><small style='opacity:0.7'>PLEASE ENTER YOUR EMAIL AGAIN OR YOU CAN CHOOSE TO EXIT BY ENTERING "Quit".</small>`)
-                loginState = 1
-              }
-              cmdShow()
-            });
-        })
-    } else if (loginState == 4) {
-      if (val == keyLog) {
-        cmdHide()
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-          .then(() => {
-            return firebase.auth().signInWithEmailAndPassword(emailLog, passLog)
-              .then((userCredential) => {
-                reloadInfo()
-                appendNormal(`Authentication accepted. <span class="highlight">Welcome back, ${displayName}</span>`)
-                cmdShow()
-                btnShow()
-                loginState = 0
-                keyLog = ""
-              })
-          })
-      } else {
-        if (val.toLowerCase().trim() == "answer") {
-          appendNormal(`Your personal authorization keyphrase is: <span class="highlight">${keyLog}</span>`)
-          $("#input").val(keyLog)
-        } else {
-          appendError(`INCORRECT AUTHENTICATION KEYPHRASE`)
-        }
-      }
-    }
-  }
-}
-
-//send the updated user information to the server through firebase auth
-function updateUsersInfo() {
-  firebase.auth().currentUser.updateProfile({
-      displayName: displayName,
-      photoURL: `${clearance}|-|${title}|-|${classification}|-|${site}|-|${keyphrase}`
-    })
-    .then(function() {
-      reloadInfo()
-      appendNormal(`<span style="color:#98FB98">[✓] </span>Updated successfully`)
-      editState = 0
-      cmdShow()
-      btnShow()
-    }, function(error) {
-      appendError(`${error.message.toUpperCase()}, EDITING PROCESS EXCITED.`)
-      editState = 0
-      cmdShow()
-      btnShow()
-    })
-}
-
+//lockout function loading
 var passLock;
 
 function lockoutProcessFun(val) {
@@ -1362,110 +1147,6 @@ function lockoutProcessFun(val) {
   })
 }
 
-//open and set menu for editing user information
-function editProcess(val) {
-  if (val.length < 501) {
-    if (editState != 2 && val.length > 100) {
-      appendError("INPUT MUST NOT EXCEED 100 CHARACTERS, PLEASE TRY AGAIN.")
-    } else {
-      cmdHide()
-      if (editState == 1) {
-        displayName = val
-        UserTag = `${displayName}#${Math.ceil(Math.random()*10000)}`
-        checkUsernameAva("edit", function() {
-          updateUsersInfo()
-        })
-      }
-      if (editState == 2) {
-        keyphrase = val
-        updateUsersInfo()
-      } else if (editState == 4) {
-        title = val
-        updateUsersInfo()
-      } else if (editState == 5) {
-        site = val
-        updateUsersInfo()
-      }
-    }
-  } else {
-    appendError("INPUT TOO LONG, PLEASE TRY AGAIN.")
-  }
-}
-
-//additional login auth function when user have Level 5 Security Clearance
-function keyphraseLogin() {
-  keyLog = keyphrase
-  firebase.auth().signOut().then(() => {
-    holder = defaultHolder
-    appendWarn(`You are attempting to log into an account with a Level 5 Security Clearance. To safeguard the Foundation's internal confidential documents, SCiPNET has blocked your request. Please enter the corresponding personal authorization keyphrase to unlock and access your account.<br><hr><small style="opacity:0.7">Hack: Enter "Answer" to retrieve your personal authorization keyphrase.</small>`)
-    cmdShow()
-    loginState = 4
-  })
-}
-
-//setup listener for the personnel login or register menu
-function personnellistClick() {
-  $d.find("#personnelList li").unbind('click').bind('click', function() {
-    $(this).parent("#personnelList").find("li").unbind("click") //disable all clicking
-    $(this).parent("#personnelList").attr("id", "") //remove the id so it won't cause error
-    $(this).parent("ul").attr("class", "") //fade the option
-    $(this).addClass("disabledList") //fade the option
-    if (/^[A-E]$/i.test($(this).text().charAt(6))) {
-      classReg = $(this).text().charAt(6)
-      $d.append($(this).text())
-      appendNormal(`Personnel classification selected: <span class="highlight">${$(this).text()}</span><br><br><hr>Please now enter your staff title</span><hr><small style='opacity:0.7'>General occupational titles that are typically used in the Foundation. (e.g. Containment Specialist, Researcher)</small>`)
-      cmdShow()
-      registerState = 4
-    } else {
-      appendError("ERROR OCCURED, PLEASE TRY AGAIN")
-      appendNormal(`Please click and select your personnel classifications<br><ul id='personnelList' class='listClass'><li>Class A (Deemed essential to Foundation strategic operations)</li><li>Class B (Deemed essential to local Foundation operations)</li><li>Class C (Personnel with direct access to most anomalies not deemed strictly hostile or dangerous)</li><li>Class D (expendable personnel used to handle extremely hazardous anomalies)</li><li>Class E (Provisional classification applied to field agents and containment personnel)</li></ul><hr><small style='opacity:0.7'>Classifications are assigned to personnel based on their proximity to potentially dangerous anomalous objects, entities, or phenomena. </small>`)
-      personnellistClick()
-    }
-  });
-}
-
-//register user with local auth variables
-function registerUserWithInfo() {
-  cmdHide()
-  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    .then(() => {
-      return firebase.auth().createUserWithEmailAndPassword(emailReg, passReg)
-        .then(function() {
-          firebase.auth().currentUser.updateProfile({
-              displayName: userReg,
-              photoURL: `${clrReg}|-|${titleReg}|-|${classReg}|-|${siteReg}|-|${keyReg}`
-            })
-            .then(function() {
-              UserTag = `${userReg}#${Math.ceil(Math.random()*10000)}`
-              checkUsernameAva("normal", function() {
-                "check"
-              })
-            }, function(error) {
-              appendError(`${String(error).toUpperCase()}<br><hr> <small style="opacity:0.7">Please enter your password again or you can enter "Quit" to exit the registration process.</small>`)
-              cmdShow()
-              if (keyReg == "") {
-                registerState = 6
-              } else {
-                registerState = 7
-              }
-            })
-        })
-        .catch(function(error) {
-          cmdShow()
-          if (error.code == "auth/invalid-email") {
-            appendError(`PLEASE ENTER A VALID EMAIL (The email you have entered: <span class="highlight">${emailReg}</span>)<br><hr> <small style="opacity:0.7">Please enter your email again or you can enter "Quit" to exit the registration process.</small>`)
-            registerState = 8
-          } else if (error.code == "auth/email-already-in-use") {
-            appendError(`THE PROVIDED EMAIL IS ALREADY IN USE BY AN EXISTING USER (The email you have entered: <span class="highlight">${emailReg}</span>)<br><hr> <small style="opacity:0.7">Please enter your email again or you can enter "Quit" to exit the registration process.</small>`)
-            registerState = 8
-          } else {
-            appendError(`${String(error).toUpperCase()}<br><hr> <small style="opacity:0.7">Please enter your password again or you can enter "Quit" to exit the registration process.</small>`)
-            registerState = 6
-          }
-        });
-    })
-}
-
 //function to reset password
 function resetPassword(emailAddress) {
   firebase.auth().sendPasswordResetEmail(emailAddress).then(function() {
@@ -1479,110 +1160,4 @@ function resetPassword(emailAddress) {
     cmdShow()
     btnShow()
   });
-}
-
-//function to check if username exist in the firestore database
-async function checkUsernameAva(con, callback) {
-  var userNameDoc = await firebase.firestore().collection("users").where("Tag", "==", UserTag).get()
-  if (!userNameDoc.empty) {
-    UserTag = `${userReg}#${Math.ceil(Math.random()*10000)}`
-    checkUsernameAva("normal", function() {
-      console.log("loop")
-    })
-  } else {
-    firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).set({
-        Tag: UserTag,
-      }, {
-        merge: true
-      })
-
-      .then(() => {
-        if (con == "normal") {
-          reloadInfo()
-          cmdShow()
-          btnShow()
-          registerState = 0
-          appendNormal(`<span style="color:#98FB98">[✓] </span>Procedure completed. <span class="highlight">Welcome, ${displayName}</span>`)
-        } else {
-          $d.append(`<blockquote id='waitingToAdd'>Your unique User ID was successfully generated, now updating your information...</blockquote>`)
-          addDot()
-        }
-        callback()
-      })
-      .catch(function(error) {
-        callback()
-        reloadInfo()
-        appendError(`ERROR OCCURED: ${String(error).toUpperCase()} YOUR ACCOUNT WAS SUCCESSFULLY CREATED OR UPDATED, BUT WE WERE UNABLE TO GENERATE A UNIQUE USERNAME FOR YOU. PLEASE TRY AGAIN LATER BY EDITING YOUR USERNAME.`)
-        cmdShow()
-        btnShow()
-        registerState = 0
-      })
-  }
-}
-
-//setup listener for the personnel edit menu
-function personnellistEditClick() {
-  $d.find("#personnelEditList li").unbind('click').bind('click', function() {
-    $(this).parent("#personnelEditList").find("li").unbind("click") //disable all clicking
-    $(this).parent("#personnelEditList").attr("id", "") //remove the id so it won't cause error
-    $(this).parent("ul").attr("class", "") //fade the option
-    $(this).addClass("disabledList") //fade the option
-    if (/^[A-E]$/i.test($(this).text().charAt(6))) {
-      classification = $(this).text().charAt(6)
-      $d.append(`Personnel classification selected: <span class="highlight">${$(this).text()}</span>`)
-      updateUsersInfo()
-    } else {
-      appendError("ERROR OCCURED, PLEASE TRY AGAIN")
-      appendNormal(classText)
-      personnellistEditClick()
-    }
-  });
-}
-
-//error effect during Level 5 registration
-function errorEffect() {
-  addEventLog("Level 5 Security Warning: An anomaly was detected, internal system crash may have occurred.", true)
-  cmdHide()
-  setTimeout(function() {
-    $d.append(`<div class="errorCmd"><span style="background:black">EEEEERRRRRR::::::::::</span> [DATA EXPUUUGGGEEEEED]</div>`)
-    scroll()
-  }, 1000);
-  setTimeout(function() {
-    $d.append(`<div class="errorCmd">SCiPNET detected a fatal error..;d;;sdl23D34&^#&87ui</div>`)
-    $d.append(`<div class="errorCmd">INTERNAL DATA CRASHED..:::::::::: SCiPNET V.01 OS HAS STOPPED WORKINGG::::::</div>`)
-    scroll()
-    $("#ok").css('color', '#EA3546')
-    $("#ok").text('INSECURE')
-  }, 1300);
-  setTimeout(function() {
-    $d.css({
-      overflow: 'hidden',
-    });
-    jQuery.get("/src/ex_file/html/codeText.html", function(va) {
-      $d.append(`<div style="display:none">${va}</div>`)
-      $d.append(`<div id="codePage" class="codePageStyle"></div>`)
-      var lines = va.split("\n");
-      var displayLine = function() {
-        var nextLine = lines.shift();
-        if (nextLine) {
-          var newLine = $('<li>' + nextLine + '</li>');
-          $d.find('#codePage').append(newLine);
-          newLine.show()
-          scroll()
-          setTimeout(displayLine, 70);
-        } else {
-          $("#ok").css('color', '')
-          $("#ok").text('OK (Abnormal conditions detected)')
-          appendNormal(`<h3>O-5 Council Registration Panel (unlockedddddddddd)</h3><blockquote><blockquote>SYSTEM INFO:<br><br>It is strictly forbidden to register for Level 5 Security Clearance without the consenting permission of the full O-5 Council. Please confirm that you have received approval before proceeding as failure to comply may result in summary execution. (INFO CODE 4855)</blockquote>As you have selected Level 5 Security Clearance (Highest Level), you are required to set up a personal authorization keyphrase for security purpose and the confidentiality of our confidential information.<br><br><span><div style="background-color:#000000; color:#ff0000">FINAL WARNING: You should not see this message without the permission of the O-5 Council. If you have successfully accessed this page without proper permission, you must report this to The Recordkeeping and Information Security Administration (RAISA) immediately. Failure to comply will result in immediate revocation and termination of all positions in the Foundation and the cancellation of all educational, medical, retirement and mortality benefits from your regional government, and the Foundation.</div></span><hr><small style='opacity:0.7'>The personal authorization keyphrase is an additional login credential to gain account access. (e.g. Now is the time for all good men to come to the aid of their party.)<br>You can choose the content of your personal authorization keyphrase as you wish.</small></blockquote>`)
-          $d.css({
-            overflow: 'auto',
-          });
-          $d.find("#codePage").attr("id", "")
-          scroll()
-          cmdShow()
-        }
-      }
-      setTimeout(displayLine, 70);
-    });
-  }, 1400);
 }
