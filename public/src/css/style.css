@@ -249,7 +249,7 @@ textarea:focus, input:focus {
 
 /* Iframe Panel */
 #comIframe, #cmdIframe {
-  background: linear-gradient(0deg, rgba(245, 213, 70, 0.05) 0%, rgba(17, 17, 17, 0) 100%), var(--defaultBackground) url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
+  background: linear-gradient(0deg, rgba(var(--defaultThemeRGB), 0.05) 0%, rgba(17, 17, 17, 0) 100%), var(--defaultBackground) url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
   border: none !important;
   width: 100%;
   position: absolute;
