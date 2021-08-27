@@ -22,7 +22,14 @@ let generator = new Generator(180, {
   minimumRatio: 3.1
 });
 //update version
-$("#version").text("V. 01-13-2.21")
+function updateVersionText() {
+  $("#version").text("V. 01-14-0.21")
+}
+updateVersionText()
+$(window).resize(function() {
+  matchHeight()
+  updateVersionText()
+});
 //script variables
 var access
 var vcLoaded = false;

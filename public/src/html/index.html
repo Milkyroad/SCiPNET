@@ -54,7 +54,7 @@
     <div id="bottomItems">
       <div class="description">
         <h1 style="text-transform: none">SCiPNET DASHBOARD</h1>
-        <p id="tinyDes">SCP Foundation <small>Engineering and Technical Service Department • <spa id="version"></span></small></p>
+        <p id="tinyDes">SCP Foundation <small>Engineering and Technical Service Department • <span id="version"></span></small></p>
       </div>
       <div class="textbox">
         <input type="text" name="" placeholder="Connecting to SCP Foundation database..." style="opacity:0.5" disabled="disabled" id="input" autocomplete="off">
@@ -162,18 +162,17 @@
     function popUp(o, l) {
       $("#NormalModalId h1").text(o), $("#NormalModalId .modalText").html(l), $("#NormalModalId").show()
     }
-    $(window).resize(function() {
-      matchHeight()
-    });
-    matchHeight()
-
-    function matchHeight() {
+    window.matchHeight = () => {
       $("#cmd, #cmdIframe, #comIframe").height(window.innerHeight - 220)
       $(".columnExt").height(window.innerHeight*.85).css("top",window.innerHeight*.5)
       if (window.innerWidth < 472) {
            $(".description h1").text("SCiPNET")
            $("#tinyDes").text("SCP Foundation")
-           $("#cmd, #cmdIframe, #comIframe").height(window.innerHeight - 270)
+           $("#cmd, #cmdIframe, #comIframe").height(window.innerHeight - 240)
+       }
+       else {
+         $(".description h1").text("SCiPNET DASHBOARD")
+         $("#tinyDes").html(`SCP Foundation <small>Engineering and Technical Service Department • <span id="version"></span></small>`)
        }
        if (window.innerWidth > 728) {
            $("#shot").width(window.innerWidth - 250)
@@ -182,6 +181,7 @@
          $("#shot").width(window.innerWidth - 20)
        }
     }
+    matchHeight()
 
     var $d;
     var $m;
