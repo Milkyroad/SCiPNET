@@ -23,7 +23,7 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-14-0.21")
+  $("#version").text("V. 01-14-1.21")
 }
 updateVersionText()
 $(window).resize(function() {
@@ -529,6 +529,7 @@ function reply(val) {
       cmdHide()
       import( /*webpackChunkName:'edit'*/ './edit.js').then((module) => {
         cmdShow()
+        btnShow()
         module.edit()
         window.editProcess = module.editProcess
       })
