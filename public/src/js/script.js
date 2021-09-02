@@ -23,7 +23,7 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-15-0.21")
+  $("#version").text("V. 01-16-0.21")
 }
 updateVersionText()
 $(window).resize(function() {
@@ -542,13 +542,13 @@ function reply(val) {
         cmdHide()
         $d.append("<blockquote id='waitingToAdd'>Sending request to the database...</blockquote>")
         addDot()
+        import( /*webpackChunkName:'login'*/ './login.js').then((module) => {
+          loginState = 1
+          cmdShow();
+          appendNormal(`<span style="color:#98FB98">[✓] </span>Authentication request accepted at <span class="highlight">${new Date().toLocaleString('en-US')}</span><br><hr><small style='opacity:0.7'>Please enter your email address, you can always enter "Quit" to exit the login process</small>`)
+          window.loginProcess = module.loginProcess
+        })
       }
-      import( /*webpackChunkName:'login'*/ './login.js').then((module) => {
-        loginState = 1
-        cmdShow();
-        appendNormal(`<span style="color:#98FB98">[✓] </span>Authentication request accepted at <span class="highlight">${new Date().toLocaleString('en-US')}</span><br><hr><small style='opacity:0.7'>Please enter your email address, you can always enter "Quit" to exit the login process</small>`)
-        window.loginProcess = module.loginProcess
-      })
       break;
     case "bgm":
       var audio = document.getElementById("bgm");
@@ -580,7 +580,7 @@ function reply(val) {
       if (locationGet != false) {
         displayTitle = country
       }
-      popUp(`${displayTitle} Main Site Control Unit`, "<div class='pulse'></div><div class='loadText'>Loading Dashboard...</div>")
+      popUp(`${displayTitle} Main Site Control Unit`, "<div class='pulse'></div><div class='loadText'>Loading Dashboard...<br><small>This might take a while depending on your internet speed</small></div>")
       import( /*webpackChunkName:'control'*/ './control.js').then((module) => {
         module.siteControl()
       })
@@ -772,11 +772,11 @@ function reply(val) {
         registerState = 1
         btnHide()
         cmdHide()
+        import( /*webpackChunkName:'register'*/ './register.js').then((module) => {
+          cmdShow()
+          window.registerProcess = module.registerProcess
+        })
       }
-      import( /*webpackChunkName:'register'*/ './register.js').then((module) => {
-        cmdShow()
-        window.registerProcess = module.registerProcess
-      })
       break;
     default:
       addEventLog(`Undefined command -${splitValue(val)[0]}-`, true)
@@ -919,6 +919,7 @@ function close() {
   if (typeof textRandom !== 'undefined') {
     clearInterval(textRandom);
     clearInterval(dataRandom);
+    clearInterval(dnaRandom);
   }
   $(".modal").hide()
   $("#previewBox").html('<img id="previewBox" />')
@@ -965,6 +966,7 @@ window.hex2rgb = (hex) => {
 window.changeAll = (condition) => {
   if (lockout == false) {
     function changeCssVar() {
+      var $d = $("#cmdIframe").contents().find("body")
       $("#cmdIframe").contents().find("body").add($("body")).add($("#comIframe").contents().find("body")).css({
         '--defaultTheme': color,
         '--defaultThemeRGB': hex2rgb(color),

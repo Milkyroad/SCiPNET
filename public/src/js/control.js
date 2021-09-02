@@ -14,19 +14,36 @@ export const siteControl = () => {
       "Signal (dBm)": randomVa(-30, -67),
       "Radiation Level (μSv/h)": randomVa(0.15, 0.1),
       "Temperature": randomVa(temperature, temperature - 2),
-      "Integrity": $("#feedfac").text().slice(0, -1),
       "Stability": randomVa(100, 90)
     }
   }, 1000);
 
   //append modules
-  if (htmlLoaded == false) {
-    htmlLoaded = true
-    $("head").append(`<link rel="stylesheet" href="/src/css/controlStyle.min.css"><script src="/src/ex_file/scripts/chart.js"></script><script src="/src/ex_file/scripts/luxon.js"></script><script src="/src/ex_file/scripts/chartjs-adapter-luxon.js"></script><script src="/src/ex_file/scripts/chartjs-plugin-streaming.js"></script>`)
-  }
-
   jQuery.get("/src/ex_file/html/controldash.html", function(va) { //get control html code
-    popUp(`${displayTitle} Main Site Control Unit`, va)
+    if (htmlLoaded == false) {
+      htmlLoaded = true
+      $("head").append(`
+        <link rel="stylesheet" href="/src/css/controlStyle.min.css">
+        <script src="/src/ex_file/scripts/chart.js"></script>
+        <script src="/src/ex_file/scripts/luxon.js"></script>
+        <script src="/src/ex_file/scripts/chartjs-adapter-luxon.js"></script>
+        <script src="/src/ex_file/scripts/chartjs-plugin-streaming.js"></script>`)
+      $.getScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.min.js", function () {
+        $.getScript("https://unpkg.com/three@0.85.0/examples/js/controls/OrbitControls.js", function () {
+          popUp(`${displayTitle} Main Site Control Unit`, va)
+          $("head").append('<script src="/src/js/dna.js"></script>')
+          runDNA()
+          mainHTMLFun()
+        })
+      })
+    }
+    else {
+      popUp(`${displayTitle} Main Site Control Unit`, va)
+      runDNA()
+      mainHTMLFun()
+    }
+  })
+  function mainHTMLFun() {
     playSound('/src/ex_file/audio/dashEntrance.mp3')
     playSound('/src/ex_file/audio/dashNormal.mp3')
     //get local temperature if location masking is disabled
@@ -200,10 +217,6 @@ export const siteControl = () => {
       configLine("Temperature", 50, 0, false)
     )
     new Chart(
-      document.getElementById('intChart'),
-      configLine("Integrity", 100, 70, false)
-    )
-    new Chart(
       document.getElementById('eleChart'),
       configLine("Stability", 100, 70, false)
     )
@@ -218,6 +231,27 @@ export const siteControl = () => {
     Chart.defaults.font.family = "'Barlow'";
 
     //random value
+    function DNAStrand(dna) {
+      let sequence = {
+        "A": "T",
+        "T": "A",
+        "G": "C",
+        "C": "G"
+      }
+      return dna.replace(/A|T|G|C/g, function(matched) {
+        return sequence[matched];
+      });
+    }
+
+    function generateDNA() {
+      var result = '';
+      var characters = 'ATGC';
+      for (var i = 0; i < 15; i++) {
+        result += characters.charAt(Math.floor(Math.random() *
+          4));
+      }
+      return result;
+    }
     window.textRandom = setInterval(function() {
       $("#feedfac").text(`${randomVa(99.7,99.65).toFixed(2)}%`)
       for (var i = 0; i < humeChart.data.datasets[0].data.length; i++) {
@@ -227,11 +261,14 @@ export const siteControl = () => {
       humeChart.update();
       facChart.update();
     }, 1000);
-
+    window.dnaRandom = setInterval(function() {
+      var data = generateDNA()
+      $("#dnaData").html(`DECODED TEST SUBJECT DNA SEGMENT: ${data}:${DNAStrand(data)}`)
+    }, 10);
     //event log
     for (var i = 0; i < eventLogArray.length; i++) {
       $("#eventLog ul").append(`<li>${eventLogArray[i]}</li>`)
       $("#eventLog").scrollTop($("#eventLog")[0].scrollHeight);
     }
-  })
+  }
 }
