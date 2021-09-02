@@ -15,6 +15,6 @@ All the source files are located in the `public/src` folder. The index html is l
 As the project is hosted on Firebase, all source files are minified and packaged by Webpack, with the minified files located in the `public/dist` folder. The Webpack configuration is located in `public/webpack.config.js`.
 
 ## Credit and licensing
-_Thanks to inVoltag for the SCi-FI design! Any use of the user inferface design in question is subject to the license listed in codepen.txt_
+_Thanks to inVoltag for the SCi-FI design! Any use of the user inferface design or the CSS design in question is subject to the license listed in codepen.txt_
 
-_Scripts and other assets not including the user interface design are licensed under Creative Commons 3.0_
+_Scripts and other assets not including the CSS design licensed in codepen.txt are licensed under Creative Commons 3.0_
