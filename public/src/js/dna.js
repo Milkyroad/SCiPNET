@@ -60,7 +60,7 @@ window.runDNA = () => {
       y,
       z
     } = p;
-    return range(100).map(() => ({
+    return range(15).map(() => ({
       x: x + getRandomPoint(),
       y: y + getRandomPoint(),
       z: z + getRandomPoint()
