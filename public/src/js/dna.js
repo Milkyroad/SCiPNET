@@ -44,7 +44,7 @@ window.runDNA = () => {
       geometry.vertices.push(particle)
     });
     const material = new THREE.PointsMaterial({
-      size: 2,
+      size: 0.2,
       opacity: 0.9,
       alphaTest: 0.4,
       transparent: true
@@ -60,7 +60,7 @@ window.runDNA = () => {
       y,
       z
     } = p;
-    return range(15).map(() => ({
+    return range(10).map(() => ({
       x: x + getRandomPoint(),
       y: y + getRandomPoint(),
       z: z + getRandomPoint()
