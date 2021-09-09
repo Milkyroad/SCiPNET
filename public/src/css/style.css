@@ -265,7 +265,7 @@ textarea:focus, input:focus {
 }
 
 /* title property */
-h1, h3, .top-left-box, .feedItem {
+h1, h3, .top-left-box {
   background-color: var(--defaultTheme);
   padding: 5px 3px;
   color: var(--defaultContrast);
