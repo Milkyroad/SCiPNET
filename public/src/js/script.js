@@ -23,7 +23,7 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-16-0.21")
+  $("#version").text("V. 01-17-0.21")
 }
 updateVersionText()
 $(window).resize(function() {
@@ -716,6 +716,7 @@ function reply(val) {
           appendWarn("YOU DO NOT HAVE SUFFICIENT CLEARANCE TO INSTRUCT A LOCKOUT PROTOCOL, A MINIMUM OF LEVEL 2 CLEARANCE IS REQUIRED")
         } else {
           appendNormal("Instruction received, please enter a passcode for unlocking the terminal")
+          btnHide()
           lockoutProcess = 1;
         }
       } else {
@@ -1122,7 +1123,11 @@ function AccessLink() {
 var passLock;
 
 function lockoutProcessFun(val) {
+  $d.append("<blockquote>Validating credentials...</blockquote>")
+  cmdHide()
   import( /*webpackChunkName:'lockout'*/ './lockout.js').then((module) => {
+    cmdShow()
+    btnShow()
     if (lockoutProcess == 1) {
       passLock = val
       storedColor = [backgroundColor, color, textColor, textContrastColor]
