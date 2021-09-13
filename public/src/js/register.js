@@ -3,7 +3,6 @@ import {
   appendNormal,
   cmdHide,
   cmdShow,
-  btnHide,
   btnShow,
   addDot,
 } from './utils.js';
@@ -40,7 +39,7 @@ export const registerProcess = (val) => {
     } else {
       if (registerState == 1) {
         if (val == "y") {
-          appendNormal(`<span style="color:#98FB98">[✓] </span>Registration confirmed<br>Please enter your username as your identity in the Foundation's database`)
+          appendNormal(`<hr><span class="redLabels">Registration Protocol initiated</span><br><span style="color:#98FB98">[✓] </span>Registration confirmed<br>Please enter your username as your identity in the Foundation's database<hr>`)
           registerState = 2
         } else if (val == "n") {
           appendNormal("Registration aborted, request for registration has been discarded")

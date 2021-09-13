@@ -122,6 +122,17 @@ p:not(.profile p), .wiki-content-table {
   color: var(--defaultTheme) !important;
 }
 
+.redLabels {
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border-top: 1px solid #ea3546;
+  border-bottom: 1px solid #ea3546;
+  color: #ea3546;
+  padding: 1px 5px;
+  margin: 10px;
+  line-height: 3;
+}
+
 .codePageStyle {
   font-smooth: never;
   -webkit-font-smoothing: none;

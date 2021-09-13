@@ -23,7 +23,7 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-17-0.21")
+  $("#version").text("V. 01-18-0.21")
 }
 updateVersionText()
 $(window).resize(function() {
@@ -545,7 +545,7 @@ function reply(val) {
         import( /*webpackChunkName:'login'*/ './login.js').then((module) => {
           loginState = 1
           cmdShow();
-          appendNormal(`<span style="color:#98FB98">[✓] </span>Authentication request accepted at <span class="highlight">${new Date().toLocaleString('en-US')}</span><br><hr><small style='opacity:0.7'>Please enter your email address, you can always enter "Quit" to exit the login process</small>`)
+          appendNormal(`<hr><span class="redLabels">Login Protocol initiated</span><br><span style="color:#98FB98">[✓] </span>Authentication request accepted at <span class="highlight">${new Date().toLocaleString('en-US')}</span>. Please enter your registered email for identity matching.<br><hr><small style='opacity:0.7'>Please enter your email address, you can always enter "Quit" to exit the login process</small>`)
           window.loginProcess = module.loginProcess
         })
       }
