@@ -81,6 +81,7 @@ export const siteControl = () => {
         },
         options: {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             title: {
               display: show,
@@ -242,7 +243,6 @@ export const siteControl = () => {
         return sequence[matched];
       });
     }
-
     function generateDNA() {
       var result = '';
       var characters = 'ATGC';

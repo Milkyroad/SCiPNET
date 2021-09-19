@@ -217,6 +217,17 @@ hr {
   transition: none !important;
 }
 
+@media screen and (max-width:395px) {
+  #callID {
+    margin-bottom: 30px;
+    width: calc(100% - 50px)!important;
+  }
+
+  #callBtn {
+    margin-left: 15px;
+  }
+}
+
 #callID:focus {
   outline: none;
   border: 1px var(--defaultTheme) solid;

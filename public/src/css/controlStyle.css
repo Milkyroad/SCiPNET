@@ -32,9 +32,25 @@
   width: 100%
 }
 
-.lineChart {
+.lineChart:not(#signalChart, #radChart, .smallChart) {
   width: 200px !important;
   height: 200px !important;
+}
+
+#signalChart, #radChart {
+  height: 200px !important;
+  width: 100% !important;
+  min-width: 200px;
+}
+
+#DataHolder {
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  border-left: 1px solid #595959;
+  border-bottom: 1px solid #595959;
+  padding: 20px;
+  margin: 0 20px;
+  flex: 1
 }
 
 .smallChart {
