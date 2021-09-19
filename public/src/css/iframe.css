@@ -154,6 +154,14 @@ h1, h3, .top-left-box {
   transition: 100ms all ease-out;
 }
 
+.styleh3 {
+  width: fit-content;
+  padding: 5px 10px;
+  margin: 15px auto;
+  font-weight: lighter;
+  box-shadow: 11px -9px 0 #000;
+}
+
 h1, .top-left-box {
   font-size: 32px;
 }

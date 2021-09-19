@@ -23,7 +23,7 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-19-0.21")
+  $("#version").text("V. 01-19-1.21")
 }
 updateVersionText()
 $(window).resize(function() {
@@ -442,7 +442,14 @@ function reply(val) {
       cmdHide()
       var accessNo = splitValue(val)[1];
       var accessCl = splitValue(val)[2];
-      if (accessNo != undefined && accessCl != undefined) {
+      if (accessCl == undefined) {
+        if (userLoggedIn) {
+          accessCl = clearance
+        } else {
+          accessCl = 0
+        }
+      }
+      if (accessNo != undefined) {
         if (accessCl > 5 || accessCl < 0 || isNumber(accessCl) == false) {
           cmdShow()
           btnShow()
@@ -470,7 +477,7 @@ function reply(val) {
       } else {
         cmdShow()
         btnShow()
-        appendWarn("PLEASE ENTER THE SCP NUMBER AND THE CLEARANCE LEVEL VERSION OF THE DOCUMENT YOU WISH TO CONSULT<br><hr><small style='opacity:0.7'> Example: access 173 5</small>")
+        appendWarn("PLEASE ENTER THE SCP NUMBER OF THE DOCUMENT YOU WISH TO CONSULT<br><hr><small style='opacity:0.7'> Example: <b>access 173 </b><small>[Required]</small> <b>5</b> <small>[Optional]</small></small>")
       }
       break;
     case "language":
@@ -601,8 +608,8 @@ function reply(val) {
         var helpMess = ""
         var helpSyn = ""
         if (helpVal == "access") {
-          helpMess = "Displays the Special Containment Procedures synopsis for a given artifact."
-          helpSyn = "ACCESS <u>SCP Number</u> <u>Clearance Level</u>"
+          helpMess = "Displays the Special Containment Procedures synopsis for a given artifact. Omitting the clearance level will automatically access the version of the file with the highest clearance level you own."
+          helpSyn = "ACCESS <u>SCP Number</u> <u>Clearance Level (Optional)</u>"
         } else if (helpVal == "list") {
           helpMess = "Lists out all the accessible artifacts."
           helpSyn = "LIST"
@@ -660,7 +667,13 @@ function reply(val) {
         }
         appendNormal(`<div class="code"><b>${String(helpVal).toUpperCase()}: </b>${helpMess}<br><hr>Syntax: ${helpSyn}</div>`)
       } else {
-        appendNormal(`<h3>List of available commands</h3><blockquote>You can use the following commands by entering in the text box below<p><u>General</u></p><ul class="helpList"><li><strong>Access:</strong> Displays the Special Containment Procedures synopsis for a given artifact <br /><small style="opacity: 0.7;">&nbsp; Example: access 173 5</small></li><li><strong>List:</strong> Lists out all the accessible artifacts</li><li><strong>Language:</strong> Provides options to select the language of the SCP file you wish to access</li><li><strong>Fullscreen:</strong> Opens fullscreen</li><li><strong>Fullquit:</strong> Exits fullscreen</li><li><strong>Clear:</strong> Clears the output of the terminal</li><li><strong>Theme:</strong> Provides options to change the theme of the terminal</li><li><strong>Lockout:</strong> Initiates the emergency lockout protocol, securing all documents and preventing any access from the specified endpoint</li><li><strong>Locate:</strong> Locates user's location and reports details relating to the local area</li><li><strong>Bgm:</strong> Provides options to play music in the background</li><li><strong>Settings:</strong> Opens the settings window</li><li><strong>Help:</strong> Displays this message</li></ul><p><span style="text-decoration: underline;">Authentication</span></p><ul class="helpList"><li><strong>Login:</strong> Authenticates and login user</li><li><strong>Register:</strong> Logs and stores your information into the database</li><li><strong>Whoami:</strong> Displays user's information</li><li><strong>Edit:</strong> Edits user's information</li><li><strong>Resetpass:</strong> Reset user's password</li><li><strong>Logout:</strong> Logout user</li></ul><hr>Join our community here on<a onclick="window.open('https://discord.gg/rKsT8eEGXz', '_blank')">Discord</a>or support us on<a onclick="window.open('https://www.patreon.com/scipnet', '_blank')">Patreon</a>/<a onclick="window.open('https://ko-fi.com/scipnet', '_blank')">Ko-fi</a>!<br><hr><small>Read more about our licensing & policies<a onclick="window.open('/src/html/license.html', '_blank')">Here</a>.</small></blockquote>`)
+        cmdHide()
+        $d.append('<blockquote>Loading help...</blockquote>')
+        jQuery.get("/src/ex_file/html/help.html", function(va) {
+          appendNormal(va)
+          cmdShow()
+          btnShow()
+        })
       }
       break;
     case "clear":
