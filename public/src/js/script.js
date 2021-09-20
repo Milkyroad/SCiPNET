@@ -23,7 +23,7 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-20-0.21")
+  $("#version").text("V. 01-20-1.21")
 }
 updateVersionText()
 $(window).resize(function() {
