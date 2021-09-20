@@ -337,7 +337,7 @@ h1, p, .columnExt::before {
 
 /*data tag*/
 #dataContain {
-  height: calc(100vh - 110px);
+  height: calc(100vh - 80px);
   overflow: auto;
   width: 170px;
   right: 10px;

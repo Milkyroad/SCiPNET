@@ -318,7 +318,6 @@ firebase.auth().onAuthStateChanged(function(user) {
   function checkIframeLoaded() {
     if ($d != undefined) {
       $d.find("#defaultHolder").replaceWith(holder);
-      $("#input").attr("placeholder", "Enter Command, or Try Entering 'ACCESS 173'...")
       cmdShow()
       return;
     }
@@ -370,7 +369,9 @@ if (localStorage.getItem('count') == null) {
     fetchVisitorCount()
   })
   localStorage.setItem('count', "logged");
+  $("#input").attr("placeholder", "Try Entering 'ACCESS 173' or Enter Command...")
 } else {
+  $("#input").attr("placeholder", "Enter Command...")
   fetchVisitorCount()
 }
 
