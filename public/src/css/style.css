@@ -220,7 +220,7 @@ hr {
 @media screen and (max-width:395px) {
   #callID {
     margin-bottom: 30px;
-    width: calc(100% - 50px)!important;
+    width: calc(100% - 50px) !important;
   }
 
   #callBtn {
@@ -337,7 +337,7 @@ h1, p, .columnExt::before {
 
 /*data tag*/
 #dataContain {
-  height: calc(100vh - 100px);
+  height: calc(100vh - 110px);
   overflow: auto;
   width: 170px;
   right: 10px;

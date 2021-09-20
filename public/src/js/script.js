@@ -23,7 +23,7 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-20-1.21")
+  $("#version").text("V. 01-20-2.21")
 }
 updateVersionText()
 $(window).resize(function() {
@@ -318,7 +318,7 @@ firebase.auth().onAuthStateChanged(function(user) {
   function checkIframeLoaded() {
     if ($d != undefined) {
       $d.find("#defaultHolder").replaceWith(holder);
-      $("#input").attr("placeholder", "Enter Command...")
+      $("#input").attr("placeholder", "Enter Command, or Try Entering 'ACCESS 173'...")
       cmdShow()
       return;
     }
@@ -437,6 +437,7 @@ checkall()
 function reply(val) {
   val = val.toLowerCase().trim()
   //check the user input
+  $("#input").attr("placeholder", "Enter Command...")
   addEventLog(`Command -${splitValue(val)[0]}- accessed`)
   switch (splitValue(val)[0]) {
     case "access":
