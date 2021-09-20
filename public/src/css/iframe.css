@@ -138,6 +138,49 @@ p:not(.profile p), .wiki-content-table {
   -webkit-font-smoothing: none;
 }
 
+/* help box */
+.helpList {
+  list-style-type: decimal;
+}
+
+.helpList li {
+  border-bottom: 0.5px solid rgba(var(--defaultTextRGB), .5);
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 0;
+}
+
+.helpAccess {
+  border: 1px solid var(--defaultTheme) !important;
+  padding: 15px;
+  border-radius: 5px;
+  background: rgba(var(--defaultThemeRGB), .05);
+  margin: 5px !important;
+}
+
+.helpBlock {
+  max-width: 600px;
+  margin: auto;
+}
+
+@media screen and (max-width:404px) {
+  .helpBlock {
+    background: none;
+    padding: 0;
+  }
+
+  .helpList {
+    list-style-type: none;
+    padding-left: 9px;
+  }
+}
+
+@media screen and (max-width:349px) {
+  .styleh3 {
+    font-size: 14px
+  }
+}
+
 /* titles */
 h1, h3, .top-left-box {
   background-color: var(--defaultTheme);
@@ -668,7 +711,7 @@ iframe {
   width: 50px;
 }
 
-.code, .accessPage, .infoCard, .danke, .logbox, .logbox-audio, .interview, .colmod-block, .collapsible-block, div[id^="wiki-tab-"], #toc-list, .pager-no, .bannerimage .image, .email, .emailchiang, .emailokami, .scale, .helpList {
+.code, .accessPage, .infoCard, .danke, .logbox, .logbox-audio, .interview, .colmod-block, .collapsible-block, div[id^="wiki-tab-"], #toc-list, .pager-no, .bannerimage .image, .email, .emailchiang, .emailokami, .scale {
   background: rgb(78 78 78 / 21%) !important;
   padding: 15px;
   margin: 7px;
@@ -691,12 +734,6 @@ iframe {
   50% {
     opacity: 1
   }
-}
-
-.helpList {
-  list-style-type: decimal;
-  padding: 20px 40px;
-  margin: 20px;
 }
 
 .yui-content {

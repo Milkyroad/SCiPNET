@@ -23,7 +23,7 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-19-1.21")
+  $("#version").text("V. 01-20-0.21")
 }
 updateVersionText()
 $(window).resize(function() {
@@ -34,6 +34,7 @@ $(window).resize(function() {
 var access
 var vcLoaded = false;
 var fsLoaded = false;
+var helpLoaded = false;
 var init = false;
 var defaultTheme;
 window.eventLogArray = []
@@ -477,7 +478,7 @@ function reply(val) {
       } else {
         cmdShow()
         btnShow()
-        appendWarn("PLEASE ENTER THE SCP NUMBER OF THE DOCUMENT YOU WISH TO CONSULT<br><hr><small style='opacity:0.7'> Example: <b>access 173 </b><small>[Required]</small> <b>5</b> <small>[Optional]</small></small>")
+        appendWarn("PLEASE ENTER THE SCP NUMBER OF THE DOCUMENT YOU WISH TO CONSULT<br><hr><small style='opacity:0.7'> Example: <b>access 173 </b><small>[SCP No. Required]</small> <b>5</b> <small>[Clearance Lvl. Optional]</small></small>")
       }
       break;
     case "language":
@@ -667,13 +668,20 @@ function reply(val) {
         }
         appendNormal(`<div class="code"><b>${String(helpVal).toUpperCase()}: </b>${helpMess}<br><hr>Syntax: ${helpSyn}</div>`)
       } else {
-        cmdHide()
-        $d.append('<blockquote>Loading help...</blockquote>')
-        jQuery.get("/src/ex_file/html/help.html", function(va) {
-          appendNormal(va)
-          cmdShow()
-          btnShow()
-        })
+        if (helpLoaded != true) {
+          cmdHide()
+          $d.append('<blockquote>Loading help module...</blockquote>')
+          jQuery.get("/src/ex_file/html/help.html", function(va) {
+            helpLoaded = true;
+            window.helpHtml = va
+            appendNormal(helpHtml)
+            cmdShow()
+            btnShow()
+          })
+        }
+        else {
+          appendNormal(helpHtml)
+        }
       }
       break;
     case "clear":
