@@ -585,6 +585,7 @@ function reply(val) {
       })
       break;
     case "control":
+      $("#NormalModalId h1").attr("class", "controlTitle")
       appendNormal("Opening site control dashboard...")
       window.displayTitle = ""
       if (locationGet != false) {
@@ -680,8 +681,7 @@ function reply(val) {
             cmdShow()
             btnShow()
           })
-        }
-        else {
+        } else {
           appendNormal(helpHtml)
         }
       }
@@ -948,6 +948,7 @@ function close() {
   $(".modal").hide()
   $("#previewBox").html('<img id="previewBox" />')
   $(".modalText:not(#previewText)").html('')
+  $("#NormalModalId h1").attr("class", "")
   $(".modal-content").addClass("tem")
   $(".tem").removeClass("modal-content")
   setTimeout(function() {

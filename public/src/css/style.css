@@ -307,6 +307,21 @@ h3 {
   margin: 15px;
 }
 
+.controlTitle {
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+  color: #454545 !important;
+  padding-top: 0 !important;
+  margin: 0 !important;
+  background: 0;
+  border: 0;
+  font-size: 12px !important;
+}
+
+.controlTitle+.modalText {
+  margin-top: 0;
+}
+
 .description h1 {
   padding: 0 5px 3px 5px;
 }

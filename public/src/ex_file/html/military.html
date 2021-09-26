@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <script src="/src/ex_file/scripts/jquery-3.6.0.min.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="/src/ex_file/scripts/t3-rs-geo.umd-es2015.min.js"></script>
+</head>
+
+<body>
+  <div id="NormalModalId" class="modal" style="display:block;background: #1e1e1e url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;">
+    <div class="modal-content">
+      <div class="modal-wrap">
+        <div class="militaryDash">
+          <div class="militaryDash-left">
+            <div style="display: flex; align-items: center;">
+              <div class="warheadCount">
+                <div>
+                  <div>
+                    <p class="bold-text">SCP FOUNDATION</p>
+                  </div>
+                  <div class="small-dash-font">ESTIMATED</div>
+                  <div class="big-font" id="warheadNum">13132</div>
+                  <div class="small-dash-font">READY FOR DEPLOYMENT</div>
+                  <div class="warheadWarn">
+                    <div id="warheadCircle"></div>
+                    <div>ACTIVE ---------<br>WARHEADS-----</div>
+                  </div>
+                </div>
+              </div>
+              <div class="warheadLines"></div>
+              <div class="warheadLines" style="height: 200px;"></div>
+            </div>
+            <div class="securityOverview">
+              <div>
+                <div class="overviewDisplayWrap">
+                  <div class="small-dash-font alignLeft">
+                    ON-SITE ACTIVE PERSONNEL
+                  </div>
+                  <div class="overviewData" id="personnelCount">121</div>
+                </div>
+                <hr>
+                <div class="overviewDisplayWrap" style="padding: 0 5px 0 15px;">
+                  <div class="small-dash-font alignLeft">
+                    SITE SECURITY SYSTEM STATUS
+                  </div>
+                  <div class="overviewData" id="securityStatus">SAFE</div>
+                </div>
+                <div>
+                  <ul class="overviewList">
+                    <li class="site-status-text">EAST GATE <small>1-58</small>: <site-text>INTACT (100%)</site-text>
+                    </li>
+                    <li class="site-status-text">NORTH GATE <small>59-104</small>: <site-text>INTACT (100%)</site-text>
+                    </li>
+                    <li class="site-status-text">BACKGATE <small>1</small>: <site-text>INTACT (100%)</site-text>
+                    </li>
+                    <li class="site-status-text">ELECTRICITY GEN <small>1-3</small>: <site-text>INTACT (100%)</site-text>
+                    </li>
+                  </ul>
+                  <hr>
+                  <p class="small-dash-font alignLeft" style="padding: 0 5px 0 15px;letter-spacing:1px;margin: 0;"><b>15</b> SATELLITES <small>ONLINE</small>: <site-text>STREAMING DATA</site-text>
+                  </p>
+                  <hr>
+                </div>
+                <div style="text-align:center"><span class="big-font" id="overviewDisplayTime">16:00:00</span><span><small style="letter-spacing: 0.265em;font-size: 8px;">(SYNC)</small></span></div>
+                <small style="font-size: 8px; line-height: 12px; letter-spacing: 0.265em;margin-left:5px">USER LOGGED IN AS: <span id="overviewDisplayName"></span></small>
+              </div>
+            </div>
+          </div>
+          <div class="militaryDash-middle">
+            <div id="militaryDashEarth"></div>
+          </div>
+          <div class="militaryDash-right">
+            <div class="userDetails nuclearHide">
+              <div class="small-dash-font alignLeft">
+                CURRENT AUTHENTICATED USER:
+              </div>
+              <div class="bold-text alignLeft">
+                Iddd
+              </div>
+            </div>
+            <div class="map nuclearHide">
+              <div class="small-dash-font alignLeft">
+                ENTER YOUR TARGET LOCATION:
+              </div>
+              <div style="display: flex;align-items: center;">
+                <input type="text" id="nuclearSearch">
+                <img src="/src/images/target.svg" class="targetButton" id="targetSearch">
+              </div>
+              <p id="locationRes">LOCATION: WAITING FOR INPUT...</p>
+              <hr>
+              <img src="/src/images/eraser.svg" class="targetButton" id="eraseButton" title="remove all target markers"></img>
+            </div>
+            <div class="weaponDetails">
+              <div class="small-dash-font alignLeft">
+                ESTIMATED HUMAN POPULATION
+              </div>
+              <div class="overviewData greenColour" id="humanPopulation">-</div>
+              <hr>
+              <div class="small-dash-font alignLeft">
+                ESTIMATED FATALITIES
+              </div>
+              <div class="overviewData redColour" id="fatalities">0</div>
+            </div>
+            <div class="nuclearButton">
+              <div class="nuclearBanner"></div>
+              <p class="bold-text" id="nuclearText">NUCLEAR WARHEAD DEPLOYMENT</p>
+              <img src="/src/images/radiation.svg" id="radiationImg"></img>
+              <div class="nuclearBanner">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <link rel="stylesheet" href="/src/css/style.min.css">
+    <link rel="stylesheet" href="/src/css/military.min.css">
+    <script src="/src/js/military.js"></script>
+</body>
+
+</html>
