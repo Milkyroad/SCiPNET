@@ -31,7 +31,7 @@ export const siteControl = () => {
       $.getScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.min.js", function () {
         $.getScript("https://unpkg.com/three@0.85.0/examples/js/controls/OrbitControls.js", function () {
           popUp(`${displayTitle} Main Site Control Unit`, va)
-          $("head").append('<script src="/src/js/dna.js"></script>')
+          $("head").append('<script src="/src/ex_file/scripts/dna.min.js"></script>')
           runDNA()
           mainHTMLFun()
         })

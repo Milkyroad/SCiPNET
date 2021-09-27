@@ -1,4 +1,3 @@
-//3D Globe
 var initialData = [{
     lat: 48.724812,
     lng: 7.084500,
@@ -32,14 +31,38 @@ var initialData = [{
 ];
 var globe;
 var searchRecord = [];
+var init = false;
+var worldData;
+var population = 7895488415
+var fatalities = 0;
+var preInput = ""
+
+function addLaunch() {
+  // TODO: add location detection variable
+  if (false) {
+    globe.addMarker(countrylong, countrylat, "LOCAL LAUNCH STATION");
+  } else {
+    globe.addMarker(17.9160, -33.6975, "NUCLEAR LAUNCH STATION");
+  }
+}
 
 function createGlobe() {
-  d3.json('/src/ex_file/json/grid-mq.json', function(world) {
+  if (init == false) {
+    d3.json('/src/ex_file/json/grid-mq.json', function(world) {
+      worldData = world
+      readyGlobe()
+    });
+  } else {
+    readyGlobe()
+  }
+
+
+  function readyGlobe() {
     const node = d3.select('#militaryDashEarth').node();
     globe = new t3_rs_geo.Globe(document.getElementById('militaryDashEarth').clientWidth, 600, {
       data: initialData,
       background: '#1e1e1e',
-      tiles: world.tiles,
+      tiles: worldData.tiles,
       globeColor: 'black',
       font: 'Barlow',
       schemeColor: d3.interpolateRainbow,
@@ -78,18 +101,12 @@ function createGlobe() {
         }
         globe.addConstellation(constellation, opts);
         setTimeout(function() {
-          if (false) {
-            globe.addMarker(countrylong, countrylat, "LOCAL LAUNCH STATION");
-          } else {
-            globe.addMarker(17.9160, -33.6975, "NUCLEAR LAUNCH STATION");
-          }
+          addLaunch()
         }, 2000);
-
         // Handle window resize events
         window.addEventListener('resize',
           (onWindowResize) => globe.resize(node.clientWidth, node.clientHeight), false);
 
-        globe.dayLength = 58000
         let autoRotate;
         let autoDayLength = globe.dayLength
         // Handle dragging
@@ -122,11 +139,10 @@ function createGlobe() {
           );
       })
       .catch(e => console.error(e));
-  });
+  }
 }
 createGlobe()
 
-var population = 7895488415
 
 function animateValue(id, start, end, duration) {
   // assumes integer values for start and end
@@ -181,26 +197,36 @@ $(".nuclearButton").unbind('click').bind('click', function() {
               $("#locationRes").html(`LOCATION: <span class="redColour">INVALID LOCATION</span>`)
             } else {
               //add location text
-              $("#locationRes").text(`LOCATION: ${data[0].lon}, ${data[0].lat}`)
-              var fatalities;
-
-              if (searchRecord.find(x => x.key == data[0].osm_id) != undefined) {
-                var index = searchRecord.findIndex(function(pos) {
-                  return pos.key == data[0].osm_id
-                });
-                fatalities = searchRecord[index].fatalities
-              } else {
-                //new search
-                fatalities = Math.floor(Math.random() * 30000)
-                searchRecord.push({
-                  key: data[0].osm_id,
-                  fatalities: fatalities
-                });
+              if (preInput != data[0].osm_id) {
+                preInput = data[0].osm_id
+                var preFat = fatalities
+                var prePop = population
+                $("#locationRes").text(`LOCATION: ${data[0].lon}, ${data[0].lat}`)
+                if (searchRecord.find(x => x.key == data[0].osm_id) != undefined) {
+                  var index = searchRecord.findIndex(function(pos) {
+                    return pos.key == data[0].osm_id
+                  });
+                  fatalities += searchRecord[index].fatalities
+                  population -= searchRecord[index].fatalities
+                } else {
+                  //new search
+                  var generatedFat = Math.floor(Math.random() * 30000)
+                  searchRecord.push({
+                    key: data[0].osm_id,
+                    fatalities: generatedFat
+                  });
+                  fatalities += generatedFat
+                  population -= generatedFat
+                }
 
                 //position marker
                 globe.addMarker(data[0].lat, data[0].lon, "TARGET", true);
+                animateValue("fatalities", preFat, fatalities, 3000);
+                animateValue("humanPopulation", prePop, population, 3000)
               }
-              animateValue("fatalities", 0, fatalities, 3000);
+              else {
+                $("#locationRes").text("LOCATION: PREVIOUS LOCATION")
+              }
             }
           }).fail(function() {
             $("#locationRes").html(`LOCATION: <span class="redColour">FAILED TO FETCH LOCATION</span>`);
@@ -211,10 +237,8 @@ $(".nuclearButton").unbind('click').bind('click', function() {
 });
 
 $("#eraseButton").unbind('click').bind('click', function() {
-  globe.destroy(function() {
-    $("#militaryDashEarth").html("")
-    setTimeout(function () {
-      createGlobe();
-    }, 100);
-  });
+  globe.setMaxMarkers(0)
+  globe.setMaxMarkers(900)
+  $("#fatalities").text("0")
+  addLaunch()
 });
