@@ -52,7 +52,7 @@ export const siteControl = () => {
         lat: countrylat,
         lon: countrylong,
         units: 'metric',
-        APPID: '80ade9055c570497d679aefed70a839a'
+        APPID: config.WEATHER_KEY
       }).done(function(weather) {
         loaded = true //log for second time loading
         temperature = weather.main.temp || "27"

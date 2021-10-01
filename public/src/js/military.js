@@ -30,12 +30,20 @@ var initialData = [{
   }
 ];
 var globe;
+//record fatalities for each search
 var searchRecord = [];
 var init = false;
 var worldData;
+var initalPopulation = 7895488415;
 var population = 7895488415
 var fatalities = 0;
-var preInput = ""
+var preInput = "";
+var faTimer;
+var popTimer;
+var speed = 10;
+var mapProvider = 1;
+//record location and coordinates
+var targetList = [];
 
 function addLaunch() {
   // TODO: add location detection variable
@@ -64,7 +72,6 @@ function createGlobe() {
       background: '#1e1e1e',
       tiles: worldData.tiles,
       globeColor: 'black',
-      font: 'Barlow',
       schemeColor: d3.interpolateRainbow,
     });
 
@@ -143,10 +150,28 @@ function createGlobe() {
 }
 createGlobe()
 
+function type(id, txt, callback) {
+  var i = 0;
+  typeWriter(id, txt, function() {
+    callback()
+  })
+
+  function typeWriter(id, txt, callback) {
+    if (i < txt.length) {
+      let text = txt.charAt(i);
+      document.getElementById(id).innerHTML += text === "\n" ? "<br/>" : text;
+      i++;
+      setTimeout(function() {
+        typeWriter(id, txt, callback)
+      }, speed);
+    } else {
+      callback()
+    }
+  }
+}
 
 function animateValue(id, start, end, duration) {
   // assumes integer values for start and end
-
   var obj = document.getElementById(id);
   var range = end - start;
   // no timer shorter than 50ms (not really visible any way)
@@ -160,7 +185,6 @@ function animateValue(id, start, end, duration) {
   // get current time and calculate desired end time
   var startTime = new Date().getTime();
   var endTime = startTime + duration;
-  var timer;
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -172,73 +196,174 @@ function animateValue(id, start, end, duration) {
     var value = Math.round(end - (remaining * range));
     obj.innerHTML = numberWithCommas(value);
     if (value == end) {
-      clearInterval(timer);
+      if (id == "humanPopulation") {
+        clearInterval(popTimer);
+      } else if (id == "fatalities") {
+        clearInterval(faTimer);
+      }
     }
   }
-
-  timer = setInterval(run, stepTime);
+  if (id == "humanPopulation") {
+    clearInterval(popTimer);
+    popTimer = setInterval(run, stepTime);
+  } else if (id == "fatalities") {
+    clearInterval(faTimer);
+    faTimer = setInterval(run, stepTime);
+  }
   run();
 }
 
-animateValue("humanPopulation", 0, population, 4000);
+animateValue("humanPopulation", 0, initalPopulation, 4000);
 
-$(".nuclearButton").unbind('click').bind('click', function() {
-  $.when($(".militaryDash-left").fadeOut(500))
-    .done(function() {
-      globe.resize($("#militaryDashEarth").width(), $("#militaryDashEarth").height())
-      $(".nuclearHide").fadeIn(500)
-      $("#nuclearText").text("ACTIVATE LAUNCHING PROTOCOL")
-      $("#targetSearch").unbind('click').bind('click', function() {
-        var search = $("#nuclearSearch").val().trim()
-        if (search != "") {
-          $("#locationRes").text("LOCATION: LOCATING...")
-          $.getJSON(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(search)}&format=json`, function(data) {
-            if (data == '') {
-              $("#locationRes").html(`LOCATION: <span class="redColour">INVALID LOCATION</span>`)
-            } else {
-              //add location text
-              if (preInput != data[0].osm_id) {
-                preInput = data[0].osm_id
-                var preFat = fatalities
-                var prePop = population
-                $("#locationRes").text(`LOCATION: ${data[0].lon}, ${data[0].lat}`)
-                if (searchRecord.find(x => x.key == data[0].osm_id) != undefined) {
-                  var index = searchRecord.findIndex(function(pos) {
-                    return pos.key == data[0].osm_id
-                  });
-                  fatalities += searchRecord[index].fatalities
-                  population -= searchRecord[index].fatalities
-                } else {
-                  //new search
-                  var generatedFat = Math.floor(Math.random() * 30000)
-                  searchRecord.push({
-                    key: data[0].osm_id,
-                    fatalities: generatedFat
-                  });
-                  fatalities += generatedFat
-                  population -= generatedFat
-                }
-
-                //position marker
-                globe.addMarker(data[0].lat, data[0].lon, "TARGET", true);
-                animateValue("fatalities", preFat, fatalities, 3000);
-                animateValue("humanPopulation", prePop, population, 3000)
-              }
-              else {
-                $("#locationRes").text("LOCATION: PREVIOUS LOCATION")
-              }
-            }
+//nuclear button event handlers
+function deploymentButtonFun() {
+  $(".nuclearButton:not(#nuclearCancel)").on('click.deploy', function() {
+    $("#nuclearWarningOuter, .nuclearHide").fadeIn(500)
+    //typing function
+    type("deploymentTitle", "NUCLEAR DEPLOYMENT PROTOCOL INITIATED (CODE: 38D42 RED)", function() {
+      // TODO: Add username
+      // TODO: Add sound effect
+      type("deploymentContent", `validating action.....Success - Code: 38D42 RED initiated from SCiPNET Local Portal\nunLocking DX-SCP Nuclear Protection System.....Success\nRemoving local cache.....Success\nChecking nuclear weapon status.....all values normal\nConfirming satellites signal.....Success, 15 signal found\n.\n.\n.\n.\n.\nOpening Nuclear Planning Dashboard.....`, function() {
+        setTimeout(function() {
+          $("#nuclearWarningOuter").fadeOut(500)
+          $(".nuclearBannerContent").text("")
+        }, 1000);
+      });
+    });
+    $("#showDash").hide()
+    $("#hiddenDash").show()
+    globe.resize($("#militaryDashEarth").width(), $("#militaryDashEarth").height())
+    //setup new launching button
+    $("#nuclearText").text("ACTIVATE LAUNCHING PROTOCOL")
+    $(".nuclearButton:not(#nuclearCancel)").attr("id", "launchBtn")
+    //remove previous clicking handler
+    $('.nuclearButton').off('click.deploy');
+    $("#targetSearch").unbind('click').bind('click', function() {
+      var search = $("#nuclearSearch").val().trim()
+      if (search != "") {
+        $("#locationRes").text("LOCATION: LOCATING...")
+        $.getJSON(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(search)}&format=json&accept-language=en-US`, function(data) {
+          searchMarker(data)
+        }).fail(function() {
+          $.getJSON(`https://api.mapbox.com/geocoding/v5/mapbox.pladces/${encodeURIComponent(search)}.json?access_token=${config.MAPBOX}&cachebuster=1633085782227&autocomplete=false&limit=1`, function(data) {
+            mapProvider = 2
+            searchMarker(data)
           }).fail(function() {
             $("#locationRes").html(`LOCATION: <span class="redColour">FAILED TO FETCH LOCATION</span>`);
           })
-        }
-      })
-    });
-});
+        })
+      }
+    })
+  });
+}
 
-$("#eraseButton").unbind('click').bind('click', function() {
+function launchButtonFun() {
+
+}
+
+function searchMarker(data) {
+  if (data == '' || data == null) {
+    $("#locationRes").html(`LOCATION: <span class="redColour">INVALID LOCATION</span>`)
+  } else {
+    //add location text
+    var id = "";
+    var long = "";
+    var lat = "";
+    var locationName = "";
+    if (mapProvider == 2) {
+      var root = data.features[0]
+      id = root.id
+      lat = root.center[1]
+      long = root.center[0]
+      locationName = root.place_name
+    } else {
+      id = data[0].osm_id
+      lat = data[0].lat
+      long = data[0].lon
+      locationName = data[0].display_name
+    }
+    if (preInput != id) {
+      preInput = id
+      $("#locationRes").text(`LOCATION: ${lat}, ${long}`)
+      if (searchRecord.find(x => x.key == id) != undefined) {
+        var index = searchRecord.findIndex(function(pos) {
+          return pos.key == id
+        });
+        fatalities += searchRecord[index].fatalities
+        population -= searchRecord[index].fatalities
+      } else {
+        //new search
+        var generatedFat = Math.floor(Math.random() * 30000)
+        searchRecord.push({
+          key: id,
+          fatalities: generatedFat
+        });
+        fatalities += generatedFat
+        population -= generatedFat
+      }
+
+      //position marker
+      markerFun(id, long, lat, locationName)
+    } else {
+      $("#locationRes").text("LOCATION: PREVIOUS LOCATION")
+    }
+  }
+}
+
+function markerFun(id, long, lat, locationName) {
+  globe.addMarker(lat, long, "TARGET", true);
+  targetList.push({
+    name: locationName,
+    location: `LAT:${lat}, LON:${long}`
+  });
+  $("#locationBorder ol").append(`
+              <li>
+                <div>
+                  <div class="targetsLabel">${locationName}
+                  <hr>
+                  <small>LAT:${lat}<br>LON:${long}</small>
+                  </div>
+                </div>
+              </li>`)
+  $('#locationBorder ol').scrollTop($('#locationBorder ol')[0].scrollHeight);
+  animateValue("fatalities", Number($("#fatalities").text().replace(/,/g, '')), fatalities, 3000);
+  animateValue("humanPopulation", Number($("#humanPopulation").text().replace(/,/g, '')), population, 3000)
+}
+
+function cancelButtonFun() {
+  $("#nuclearCancel").on('click.cancel', function() {
+    // TODO: add sound effect
+    $(".nuclearHide").fadeOut(500)
+    $("#hiddenDash").hide()
+    $("#showDash").fadeIn(500)
+    $("#nuclearText").text("NUCLEAR WARHEAD DEPLOYMENT")
+    $(".nuclearButton:not(#nuclearCancel)").attr("id", "")
+    deploymentButtonFun()
+    resetMarkers()
+  })
+}
+cancelButtonFun()
+deploymentButtonFun()
+
+function resetMarkers() {
   globe.setMaxMarkers(0)
   globe.setMaxMarkers(900)
-  $("#fatalities").text("0")
+  $("#locationBorder ol").html("")
+  animateValue("humanPopulation", Number($("#humanPopulation").text().replace(/,/g, '')), initalPopulation, 2000);
+  animateValue("fatalities", Number($("#fatalities").text().replace(/,/g, '')), 0, 2000);
+  targetList = []
+  population = 7895488415
+  fatalities = 0;
+  preInput = "";
   addLaunch()
+}
+$("#eraseButton").unbind('click').bind('click', function() {
+  resetMarkers()
+});
+$("#selfButton").unbind('click').bind('click', function() {
+  // TODO: add location detection
+  if (false) {
+
+  }
+  markerFun([])
 });

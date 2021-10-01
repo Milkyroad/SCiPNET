@@ -55,7 +55,7 @@ var servers = {
     {
       urls: 'turn:numb.viagenie.ca',
       credential: '123456',
-      username: 'scipnetcontact@gmail.com'
+      username: config.VC_USER
     },
     {
       urls: ['turn:74.125.247.128:3478?transport=udp', 'turn:[2001:4860:4864:4:8000::]:3478?transport=udp', 'turn:74.125.247.128:3478?transport=tcp', 'turn:[2001:4860:4864:4:8000::]:3478?transport=tcp'],

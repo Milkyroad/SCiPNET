@@ -85,7 +85,7 @@ function foldTable() {
   });
 }
 
-function loadFile(quote1, quote2) {
+function loadFile(quote1, quote2, callback) {
   inBar = true
   scroll()
   var progressNo = 0;
@@ -107,6 +107,7 @@ function loadFile(quote1, quote2) {
         scroll()
         $d.find("#fileSize").removeAttr("id", "fileSize")
         inBar = false
+        callback()
       }
     }, 30);
 }

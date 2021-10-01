@@ -851,6 +851,12 @@ locationdata {
   position: relative;
 }
 
+.isUN {
+  height: 40px;
+  margin-left: 15px;
+  display: none
+}
+
 .smallSCPLogo {
   display: block;
   position: absolute;
@@ -865,4 +871,22 @@ locationdata {
   text-align: center;
   text-transform: none;
   margin-bottom: 30px;
+}
+
+.locationInfo {
+  float: right;
+  max-width: 305px;
+  margin: 15px;
+  background: #343434d6;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.locationInfo .flag {
+  margin: 20px auto;
+  display: block;
+}
+
+.locationInfo .description p {
+  margin: 0
 }

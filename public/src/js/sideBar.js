@@ -78,11 +78,10 @@ export function sideBarFun() {
       window.countryCity = data.city || unavaText
       window.country = data.country_name || unavaText
       window.countryRegion = data.region || unavaText
-      window.countryPopulation = data.country_population || unavaText
       window.countryTimezone = data.timezone || unavaText
       window.countryUtc = data.utc_offset || unavaText
       window.countryCallingCode = data.country_calling_code || unavaText
-      window.countryLanguages = data.languages || unavaText
+      window.countryLanguages = data.languages.replace(/,/g, ', ') || unavaText
       if (data.longitude == "Sign up to access" || data.longitude == null) {
         $.getJSON(`https://geocode.xyz/${countryRegion}?geoit=json`, function(data) {
           window.countrylong = data.longt
@@ -95,27 +94,60 @@ export function sideBarFun() {
       window.ip = data.ip
       window.tele = data.org
       window.displayLoc = place.toUpperCase()
-      $.getJSON(`https://restcountries.eu/rest/v2/alpha/${data.country_code_iso3}`, function(data) {
-          window.countryNativeName = data.nativeName || unavaText
-          window.countryCode = data.alpha2Code || unavaText
+      $.getJSON(`https://restcountries.com/v3/alpha/${data.country_code_iso3}`, function(recieveData) {
+          data = recieveData[0]
+          window.countryPopulation = data.population || unavaText
+          window.countryOfficalName = data.name.official || unavaText
+          window.countryCommonName = data.name.common || unavaText
+          window.countryCode = data.cca2 || unavaText
           window.countryArea = data.area || unavaText
-          window.countryFlag = data.flag || unavaText
+          window.countryFlag = data.flags[0] || unavaText
           window.countryCon = data.region || unavaText
           window.countrySubRe = data.subregion || unavaText
-          window.countryDemonym = data.demonym || unavaText
-          window.countryCapital = data.capital || unavaText
+          window.countryCapital = data.capital.join(', ') || unavaText
           window.countrySubregion = data.subregion || unavaText
-          if (data.currencies[1]) {
-            var currencyData = data.currencies;
+          window.countryBorder = data.borders.join(', ')
+          //demonyms handling
+          if (data.demonyms.eng.m != data.demonyms.eng.f) {
+            window.countryDemonym = `${data.demonyms.eng.m || unavaText}/${data.demonyms.eng.f || unavaText}`
+          } else {
+            window.countryDemonym = `${data.demonyms.eng.m}` || unavaText
+          }
+          //currency handling
+          var currencyData = data.currencies;
+          var currencyValue = Object.values(currencyData)
+          var currencyKey = Object.keys(currencyData)
+          if (currencyKey[1]) {
             var currencyList = ``
-            currencyData.forEach((item) => {
-              currencyList += `<li>${item.name || unavaText}, ${item.symbol || unavaText} (${item.code || unavaText})</li>`
-            })
+            for (var i = 0; i < currencyKey.length; i++) {
+              currencyList += `<li>${currencyValue[i].name || unavaText}, ${currencyKey[i] || unavaText} (${currencyValue[i].symbol || unavaText})</li>`
+            }
             window.countryCurrency = `<ul>${currencyList}</ul>`
           } else {
-            window.countryCurrency = `${data.currencies[0].name || unavaText}, ${data.currencies[0].symbol || unavaText} (${data.currencies[0].code || unavaText})<br>`
+            window.countryCurrency = `${currencyValue[0].name || unavaText}, ${currencyKey[0] || unavaText} (${currencyValue[0].symbol || unavaText})<br>`
           }
-          window.countryGini = data.gini || unavaText
+          //country status
+          var dependence = ""
+          var landlocked = ""
+          var un = ""
+          if (data.independent) {
+            dependence = "An independent"
+          } else {
+            dependence = "A non-independent"
+          }
+          if (data.landlocked) {
+            landlocked = "landlocked"
+          } else {
+            landlocked = "non-landlocked"
+          }
+          if (data.unMember) {
+            un = "is"
+          }
+          else {
+            un = "is not"
+          }
+          window.countryisUN = data.unMember
+          window.countryStatus = `${dependence} and ${landlocked} territory, currently ${un} a United Nations Member State`
         })
         .fail(function(data) {
           failedLocation()

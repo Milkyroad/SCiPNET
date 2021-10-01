@@ -47263,7 +47263,7 @@ var Lines = {
 };
 
 var Labels = {
-    TextFont: 'Verdana',
+    TextFont: 'Barlow',
     TextColor: Colors.Label,
     TextSize: 22,
     TextPaddingX: 10,

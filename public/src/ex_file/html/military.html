@@ -12,8 +12,16 @@
   <div id="NormalModalId" class="modal" style="display:block;background: #1e1e1e url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;">
     <div class="modal-content">
       <div class="modal-wrap">
+        <div id="nuclearWarningOuter">
+          <div id="nuclearWarning">
+            <div class="nuclearBanner outerBanner"></div>
+            <p class="nuclearBannerContent" id="deploymentTitle"></p>
+            <p class="nuclearBannerContent" id="deploymentContent"></p>
+            <div class="nuclearBanner outerBanner" style="bottom: 0; position: absolute;"></div>
+          </div>
+        </div>
         <div class="militaryDash">
-          <div class="militaryDash-left">
+          <div class="militaryDash-left" id="showDash">
             <div style="display: flex; align-items: center;">
               <div class="warheadCount">
                 <div>
@@ -68,6 +76,21 @@
               </div>
             </div>
           </div>
+          <div class="militaryDash-left" id="hiddenDash">
+            <div id="locationBorder">
+              <p id="targetsTitle"><span id="targetsTitleWord">TARGETS</span></p>
+              <hr>
+              <ol>
+
+              </ol>
+            </div>
+            <div class="nuclearButton" id="nuclearCancel">
+              <div class="nuclearBanner nuclearCancelBanner"></div>
+              <p class="bold-text" id="CancelText">CANCEL OPERATION</p>
+              <div class="nuclearBanner nuclearCancelBanner">
+              </div>
+            </div>
+          </div>
           <div class="militaryDash-middle">
             <div id="militaryDashEarth"></div>
           </div>
@@ -90,7 +113,17 @@
               </div>
               <p id="locationRes">LOCATION: WAITING FOR INPUT...</p>
               <hr>
-              <img src="/src/images/eraser.svg" class="targetButton" id="eraseButton" title="remove all target markers"></img>
+              <div style="display: flex;justify-content: center;">
+                <div class="targetButtonOuter">
+                  <img src="/src/images/eraser.svg" class="targetButton" id="eraseButton" title="Remove all target markers"></img>
+                  <span class="tooltiptext">Tooltip text</span>
+                </div>
+                <div class="targetButtonOuter">
+                  <img src="/src/images/selfDestruct.svg" class="targetButton" id="selfButton" title="Site self-destruction">
+                  <span class="tooltiptext">Tooltip text</span>
+                  </img>
+                </div>
+              </div>
             </div>
             <div class="weaponDetails">
               <div class="small-dash-font alignLeft">
@@ -116,6 +149,7 @@
     </div>
     <link rel="stylesheet" href="/src/css/style.min.css">
     <link rel="stylesheet" href="/src/css/military.min.css">
+    <script src="/config.js"></script>
     <script src="/src/js/military.js"></script>
 </body>
 
