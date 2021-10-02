@@ -26,8 +26,18 @@ export function access(accessNo, accessCl) {
       url: `${link}${linkLanguage}${accessNo}`,
       type: 'GET',
       success: function(data) {
-        const $ = cheerio.load(data);
-        if ($("#page-content").html() != null) {
+        var $;
+        var availability = true;
+        if (link == "https://api.allorigins.win/get?url=") {
+          $ = cheerio.load(data.contents);
+          if (data.status.http_code!=200) {
+            availability = false
+          }
+        }
+        else {
+          $ = cheerio.load(data);
+        }
+        if ($("#page-content").html() != null && availability == true) {
           $(".class-text:contains('{$contain-class}')").parent(".contain-class").remove()
           $(".class-text:contains('{$secondary-class}')").parent(".second-class").remove()
           $(".class-text:contains('{$disruption-class}')").parent(".disrupt-class").remove()
@@ -396,6 +406,10 @@ function getFrame() {
         type: 'GET',
         success: function(data) {
           var domain = source.origin
+          var availability = true;
+          if (link == "https://api.allorigins.win/get?url=") {
+            data = data.contents
+          }
           var $c = cheerio.load(data.replace(`window.open("//`, `window.open("http://`).replace(`window.open('//`, `window.open('http://`).replace(`window.open("/`, `window.open("${domain}/`).replace(`window.open('/`, `window.open('${domain}/`), {
             decodeEntities: false
           });

@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "scipnet-new"
-  }
+    "default": "scipnet-terminal"
+  },
+  "targets": {}
 }

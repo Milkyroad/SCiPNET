@@ -23,7 +23,7 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-21-0.21")
+  $("#version").text("V. 01-22-0.21")
 }
 updateVersionText()
 $(window).resize(function() {
@@ -396,9 +396,9 @@ function statusCheck(url, callback) {
 }
 //check the available proxy server and find the one that can be used
 window.checkall = (callback) => {
-  statusCheck("https://api.allorigins.win/raw?url=", function(data) {
+  statusCheck("https://api.allorigins.win/get?url=", function(data) {
     if (data == true) {
-      link = "https://api.allorigins.win/raw?url="
+      link = "https://api.allorigins.win/get?url="
       callback()
     } else {
       statusCheck("https://cors.scipnet.workers.dev/", function(data) {
