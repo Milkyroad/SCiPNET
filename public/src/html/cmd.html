@@ -1,25 +1,41 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="/src/css/iframe.min.css" async>
-    <style id="languageSelectS"></style>
-    <style id="bgmListS"></style>
-  </head>
-  <body>
-    <div id="opening">
-      <h1>SCiPNET DIRECT ACCESS TERMINAL</h1><h2>SCP FOUNDATION</h2>
-      <br><img src="/src/images/scp.svg" width="100px" height="100px" alt="SCP Foundation Logo" style="display: block; margin-left: auto; margin-right: auto;">
-      <br><br>
-      Welcome to SCiPNET Direct Access Terminal
-      <hr><span class="highlight">Type "Help" for more information</span>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="/src/css/iframe.min.css" async>
+  <style id="languageSelectS"></style>
+  <style id="bgmListS"></style>
+</head>
+
+<body>
+  <div id="opening">
+    <h1>SCiPNET DIRECT ACCESS TERMINAL</h1>
+    <div id="openingContainer">
+      <h2>SCP FOUNDATION</h2>
+      <h2 id="BottomTitleOpening">Secure . Contain . Protect</h2>
+      <br><img src="/src/images/scipnet.svg" id="openingLogo" width="100px" height="100px" alt="SCP Foundation Logo">
     </div>
-    <br>
-    <br>
-    <span id="defaultHolder">
-    </span>
-    <script type="text/javascript">
-    var iframeBody,jQuery,$;function resizeIframe(e){setInterval(function(){e.contentWindow.document.body.offsetHeight-4!=$(e).height()&&0==parent.tab&&$(e).height(e.contentWindow.document.body.offsetHeight-4)},250)}void 0===jQuery&&(iframeBody=document.getElementsByTagName("body")[0],$=jQuery=function(e){return parent.jQuery(e,iframeBody)});
-    </script>
-  </body>
+    <br><br>
+    Welcome to SCiPNET Direct Access Terminal
+    <hr><span class="highlight">Type "Help" for more information</span>
+  </div>
+  <br>
+  <br>
+  <span id="defaultHolder">
+  </span>
+  <script type="text/javascript">
+    var iframeBody, jQuery, $;
+
+    function resizeIframe(e) {
+      setInterval(function() {
+        e.contentWindow.document.body.offsetHeight - 4 != $(e).height() && 0 == parent.tab && $(e).height(e.contentWindow.document.body.offsetHeight - 4)
+      }, 250)
+    }
+    void 0 === jQuery && (iframeBody = document.getElementsByTagName("body")[0], $ = jQuery = function(e) {
+      return parent.jQuery(e, iframeBody)
+    });
+  </script>
+</body>
+
 </html>

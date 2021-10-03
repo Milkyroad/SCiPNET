@@ -32,6 +32,12 @@ body {
   word-wrap: break-word;
 }
 
+#openingLogo {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /*theme styles*/
 .resetTheme, .saveCloudTheme {
   margin-bottom: 0 !important
@@ -94,12 +100,31 @@ hr {
   padding: 3%;
 }
 
+#BottomTitleOpening {
+  font-size: 14px !important;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  border-top: 1px solid var(--defaultText) !important;
+  border-bottom: 1px solid var(--defaultText) !important;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  margin: auto;
+  color: var(--defaultText) !important;
+}
+
+#openingContainer {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  margin: auto;
+}
+
 #opening h1 {
   background: none;
   border: none;
   color: var(--defaultText);
   text-align: center;
   text-transform: none;
+  margin-bottom: 0;
 }
 
 #opening h2 {
@@ -198,7 +223,8 @@ h1, h3, .top-left-box {
 }
 
 .styleh3 {
-  width: fit-content;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
   padding: 5px 10px;
   margin: 15px auto;
   font-weight: lighter;

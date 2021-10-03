@@ -23,7 +23,7 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-22-0.21")
+  $("#version").text("V. 01-23-0.21")
 }
 updateVersionText()
 $(window).resize(function() {
@@ -804,7 +804,7 @@ function reply(val) {
       break;
     default:
       addEventLog(`Undefined command -${splitValue(val)[0]}-`, true)
-      appendError("INCORRECT FORMAT OR UNKNOWN COMMAND")
+      appendError(`INCORRECT FORMAT OR UNKNOWN COMMAND. TYPE "HELP" FOR USER MANUAL`)
   }
 }
 
