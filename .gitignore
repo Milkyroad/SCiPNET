@@ -71,3 +71,6 @@ node_modules/
 
 # key
 config.js
+
+# code
+.vscode

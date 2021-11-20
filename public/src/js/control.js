@@ -10,7 +10,7 @@ export const siteControl = () => {
   }
   window.dataRandom = setInterval(function() {
     valueList = {
-      "Reactor Core": randomVa(70, 27),
+      "Reactor Core (°C)": randomVa(870, 800),
       "Signal (dBm)": randomVa(-30, -67),
       "Radiation Level (μSv/h)": randomVa(0.15, 0.1),
       "Temperature": randomVa(temperature, temperature - 2),
@@ -203,7 +203,7 @@ export const siteControl = () => {
     //generate graphs
     new Chart(
       document.getElementById('reactorChart'),
-      configLine("Reactor Core", 80, 0, true)
+      configLine("Reactor Core (°C)", 900, 700, true)
     );
     new Chart(
       document.getElementById('signalChart'),

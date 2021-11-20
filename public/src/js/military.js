@@ -30,6 +30,149 @@ var initialData = [{
   }
 ];
 var globe;
+var energyInterval;
+var timeInterval;
+var nuclearChart;
+// TODO: remove this functions later
+function randomVa(max, min) {
+  return Math.random() * (max - min) + min
+}
+// TODO: remove this part later
+jQuery.get("/src/ex_file/html/controldash.html", function (va) { //get control html code
+  $("head").append(`
+    <link rel="stylesheet" href="/src/css/controlStyle.min.css">
+    <script src="/src/ex_file/scripts/chart.js"></script>
+    <script src="/src/ex_file/scripts/luxon.js"></script>
+    <script src="/src/ex_file/scripts/chartjs-adapter-luxon.js"></script>
+    <script src="/src/ex_file/scripts/chartjs-plugin-streaming.js"></script>`)
+  $.getScript("https://cdnjs.cloudflare.com/ajax/libs/three.js/109/three.min.js", function () {
+    $.getScript("https://unpkg.com/three@0.85.0/examples/js/controls/OrbitControls.js", function () {
+      addPowerGraph()
+    })
+  })
+})
+
+// TODO: remove this functions later
+function configLine(title, max, min, show) {
+  return {
+    type: 'line',
+    data: {
+      datasets: [{
+        // TODO: Add the theme colour
+        backgroundColor: `rgba(245, 213, 70, 0.2)`,
+        borderColor: `rgb(245, 213, 70)`,
+        cubicInterpolationMode: 'monotone',
+        fill: true,
+        data: []
+      }]
+    },
+    options: {
+      layout: {
+        padding: {
+          left: -10,
+          bottom: -10
+        }
+      },
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: show,
+          text: title,
+          font: {
+            weight: 'regular'
+          }
+        },
+        legend: {
+          display: false
+        }
+      },
+      elements: {
+        point: {
+          radius: 0
+        },
+        line: {
+          borderWidth: 1
+        }
+      },
+      scales: {
+        x: {
+          type: 'realtime',
+          realtime: {
+            delay: 2000,
+            onRefresh: chart => {
+              chart.data.datasets.forEach(dataset => {
+                dataset.data.push({
+                  x: Date.now(),
+                  y: randomVa(1900, 1700)
+                });
+              });
+            }
+          },
+          grid: {
+            display: false
+          },
+          ticks: {
+            display: false
+          },
+        },
+        y: {
+          suggestedMin: min,
+          suggestedMax: max,
+          grid: {
+            display: show,
+            drawBorder: false,
+            color: 'gray',
+          },
+          ticks: {
+            display: show,
+            maxTicksLimit: 6,
+            color: "gray",
+          },
+        },
+      }
+    }
+  };
+}
+
+//graph functions
+function addPowerGraph() {
+  nuclearChart = new Chart(
+    document.getElementById('powergraph'),
+    configLine("Main Power Source (MWT)", 2000, 1700, false)
+  );
+  Chart.defaults.font.family = "'Barlow'";
+}
+
+function removePowerGraph() {
+  nuclearChart.destroy();
+  $("canvas#powergraph").html(``)
+}
+
+// TODO: remove interval later
+window.addMiInterval = () => {
+  energyInterval = setInterval(function () {
+    var value = Math.round(randomVa(2000, 1993) * 100) / 100
+    $("#powerNum").text(value)
+    $('#powerBar #inner').animate({
+      height: `${(value - 1900) / 2}%`
+    }, 1000);
+  }, 1000);
+  timeInterval = setInterval(function () {
+    $("#overviewDisplayTime").html(`${new Date().toLocaleTimeString("en-GB")}:<span>${new Date().getMilliseconds().toLocaleString('en-US', {
+      minimumIntegerDigits: 3,
+      useGrouping: false
+    })}</span>`)
+  }, 1);
+}
+window.removeMiInterval = () => {
+  clearInterval(energyInterval)
+  clearInterval(timeInterval)
+  removePowerGraph()
+}
+addMiInterval()
+
+overviewDisplayTime
 //record fatalities for each search
 var searchRecord = [];
 var init = false;
@@ -56,9 +199,10 @@ function addLaunch() {
 
 function createGlobe() {
   if (init == false) {
-    d3.json('/src/ex_file/json/grid-mq.json', function(world) {
+    d3.json('/src/ex_file/json/grid-mq.json', function (world) {
       worldData = world
       readyGlobe()
+      $('head').append(`<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">`)
     });
   } else {
     readyGlobe()
@@ -107,7 +251,7 @@ function createGlobe() {
           globe.addPin(lat, lon, name);
         }
         globe.addConstellation(constellation, opts);
-        setTimeout(function() {
+        setTimeout(function () {
           addLaunch()
         }, 2000);
         // Handle window resize events
@@ -152,7 +296,7 @@ createGlobe()
 
 function type(id, txt, callback) {
   var i = 0;
-  typeWriter(id, txt, function() {
+  typeWriter(id, txt, function () {
     callback()
   })
 
@@ -161,7 +305,7 @@ function type(id, txt, callback) {
       let text = txt.charAt(i);
       document.getElementById(id).innerHTML += text === "\n" ? "<br/>" : text;
       i++;
-      setTimeout(function() {
+      setTimeout(function () {
         typeWriter(id, txt, callback)
       }, speed);
     } else {
@@ -217,38 +361,43 @@ animateValue("humanPopulation", 0, initalPopulation, 4000);
 
 //nuclear button event handlers
 function deploymentButtonFun() {
-  $(".nuclearButton:not(#nuclearCancel)").on('click.deploy', function() {
-    $("#nuclearWarningOuter, .nuclearHide").fadeIn(500)
+  $('.nuclearButton').off('click.launch');
+  $(".nuclearButton:not(#nuclearCancel)").on('click.deploy', function () {
+    $("#nuclearWarningOuter").fadeIn(500)
     //typing function
-    type("deploymentTitle", "NUCLEAR DEPLOYMENT PROTOCOL INITIATED (CODE: 38D42 RED)", function() {
+    type("deploymentTitle", "NUCLEAR DEPLOYMENT PROTOCOL INITIATED (CODE: 38D42 RED)", function () {
       // TODO: Add username
       // TODO: Add sound effect
-      type("deploymentContent", `validating action.....Success - Code: 38D42 RED initiated from SCiPNET Local Portal\nunLocking DX-SCP Nuclear Protection System.....Success\nRemoving local cache.....Success\nChecking nuclear weapon status.....all values normal\nConfirming satellites signal.....Success, 15 signal found\n.\n.\n.\n.\n.\nOpening Nuclear Planning Dashboard.....`, function() {
-        setTimeout(function() {
+      type("deploymentContent", `validating action.....Success - Code: 38D42 RED initiated from SCiPNET Local Portal\nunLocking DX-SCP Nuclear Protection System.....Success\nRemoving local cache.....Success\nChecking nuclear weapon status.....all values normal\nConfirming satellites signal.....Success, 15 signals found\n.\n.\n.\n.\n.\nOpening Nuclear Planning Dashboard.....`, function () {
+        setTimeout(function () {
           $("#nuclearWarningOuter").fadeOut(500)
           $(".nuclearBannerContent").text("")
         }, 1000);
       });
     });
-    $("#showDash").hide()
-    $("#hiddenDash").show()
+    $(".showDash").fadeOut(500, function () {
+      $("#hiddenDash, .nuclearHide").fadeIn(500)
+    })
+    removeMiInterval()
     globe.resize($("#militaryDashEarth").width(), $("#militaryDashEarth").height())
     //setup new launching button
     $("#nuclearText").text("ACTIVATE LAUNCHING PROTOCOL")
     $(".nuclearButton:not(#nuclearCancel)").attr("id", "launchBtn")
     //remove previous clicking handler
     $('.nuclearButton').off('click.deploy');
-    $("#targetSearch").unbind('click').bind('click', function() {
+    launchButtonFun()
+    $("#targetSearch").unbind('click').bind('click', function () {
       var search = $("#nuclearSearch").val().trim()
       if (search != "") {
+        $("#nuclearSearch").val("")
         $("#locationRes").text("LOCATION: LOCATING...")
-        $.getJSON(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(search)}&format=json&accept-language=en-US`, function(data) {
+        $.getJSON(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(search)}&format=json&accept-language=en-US`, function (data) {
           searchMarker(data)
-        }).fail(function() {
-          $.getJSON(`https://api.mapbox.com/geocoding/v5/mapbox.pladces/${encodeURIComponent(search)}.json?access_token=${config.MAPBOX}&cachebuster=1633085782227&autocomplete=false&limit=1`, function(data) {
+        }).fail(function () {
+          $.getJSON(`https://api.mapbox.com/geocoding/v5/mapbox.pladces/${encodeURIComponent(search)}.json?access_token=${config.MAPBOX}&cachebuster=1633085782227&autocomplete=false&limit=1`, function (data) {
             mapProvider = 2
             searchMarker(data)
-          }).fail(function() {
+          }).fail(function () {
             $("#locationRes").html(`LOCATION: <span class="redColour">FAILED TO FETCH LOCATION</span>`);
           })
         })
@@ -258,7 +407,21 @@ function deploymentButtonFun() {
 }
 
 function launchButtonFun() {
-
+  $(".nuclearButton:not(#nuclearCancel)").on('click.launch', function () {
+    if (targetList != "") {
+      // TODO: play audio
+      $("#militarynormal").css("transform", "scale(0.9, 0.9)").css("transition", "transform 0.5s linear");
+      $("#militarynormal").fadeOut(500, function () {
+        $("#militarynormal").attr("style", "")
+        $("#militarynormal").hide()
+        $("#militarysecond").fadeIn(500)
+        $("#militarysecond").css("display", "flex")
+      })
+    } else {
+      // TODO: warning no input
+      
+    }
+  })
 }
 
 function searchMarker(data) {
@@ -286,7 +449,7 @@ function searchMarker(data) {
       preInput = id
       $("#locationRes").text(`LOCATION: ${lat}, ${long}`)
       if (searchRecord.find(x => x.key == id) != undefined) {
-        var index = searchRecord.findIndex(function(pos) {
+        var index = searchRecord.findIndex(function (pos) {
           return pos.key == id
         });
         fatalities += searchRecord[index].fatalities
@@ -302,20 +465,20 @@ function searchMarker(data) {
         population -= generatedFat
       }
 
-      //position marker
-      markerFun(id, long, lat, locationName)
+      //on marker
+      markerFun(long, lat, locationName)
     } else {
       $("#locationRes").text("LOCATION: PREVIOUS LOCATION")
     }
   }
 }
 
-function markerFun(id, long, lat, locationName) {
+function markerFun(long, lat, locationName) {
   globe.addMarker(lat, long, "TARGET", true);
   targetList.push({
     name: locationName,
     location: `LAT:${lat}, LON:${long}`
-  });
+  });  
   $("#locationBorder ol").append(`
               <li>
                 <div>
@@ -331,23 +494,28 @@ function markerFun(id, long, lat, locationName) {
 }
 
 function cancelButtonFun() {
-  $("#nuclearCancel").on('click.cancel', function() {
+  $("#nuclearCancel").on('click.cancel', function () {
     // TODO: add sound effect
+    addMiInterval()
     $(".nuclearHide").fadeOut(500)
-    $("#hiddenDash").hide()
-    $("#showDash").fadeIn(500)
+    $("#hiddenDash").fadeOut(500, function () {
+      $(".showDash").fadeIn(500)
+    })
     $("#nuclearText").text("NUCLEAR WARHEAD DEPLOYMENT")
     $(".nuclearButton:not(#nuclearCancel)").attr("id", "")
+    addPowerGraph()
     deploymentButtonFun()
     resetMarkers()
   })
 }
+
 cancelButtonFun()
 deploymentButtonFun()
 
 function resetMarkers() {
   globe.setMaxMarkers(0)
   globe.setMaxMarkers(900)
+  $("#locationRes").text("LOCATION: WAITING FOR INPUT...")
   $("#locationBorder ol").html("")
   animateValue("humanPopulation", Number($("#humanPopulation").text().replace(/,/g, '')), initalPopulation, 2000);
   animateValue("fatalities", Number($("#fatalities").text().replace(/,/g, '')), 0, 2000);
@@ -357,13 +525,7 @@ function resetMarkers() {
   preInput = "";
   addLaunch()
 }
-$("#eraseButton").unbind('click').bind('click', function() {
-  resetMarkers()
-});
-$("#selfButton").unbind('click').bind('click', function() {
-  // TODO: add location detection
-  if (false) {
 
-  }
-  markerFun([])
+$("#eraseButton").unbind('click').bind('click', function () {
+  resetMarkers()
 });

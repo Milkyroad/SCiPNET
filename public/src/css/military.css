@@ -2,7 +2,7 @@
   --deepLine: rgba(var(--defaultTextRGB), .2)
 }
 
-@-webkit-keyframes out {
+@keyframes out {
   0% {
     transform: scale(1);
   }
@@ -15,27 +15,48 @@
 .militaryDash {
   display: flex;
   align-items: center;
+  border-left: 1px solid rgba(var(--defaultTextRGB), .2);
+  justify-content: space-between;
+}
+
+#militarysecond {
+  display: none;
+  flex-direction: column;
+  border: none;
+}
+
+#militarynormal {
+  display: flex;
+  /**/
 }
 
 .militaryDash-left {
   float: left;
   margin-right: 20px;
+  border-right: 1px dashed var(--deepLine);
 }
 
 .militaryDash-right {
   float: right;
   margin-left: 20px;
+  border-left: 1px dashed var(--deepLine);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.warheadCount, .securityOverview, .weaponDetails, .nuclearButton, .userDetails, .map {
+.warheadCount,
+.securityOverview,
+.weaponDetails,
+.nuclearButton,
+.userDetails,
+.map {
   border: rgba(var(--defaultTextRGB), 0.2) 1px solid;
   margin: 10.5px;
   padding: 10.5px;
   width: 250px;
   border-radius: 4px;
+  letter-spacing: 1px;
 }
 
 .weaponDetails {
@@ -111,18 +132,45 @@
   padding-bottom: 13px;
 }
 
-#warheadCircle {
+.warheadCircle {
   display: inline-block;
-  width: 25px;
-  height: 25px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   border-style: solid;
-  border-width: 2px;
+  border-width: 1px;
   border-color: #db3d3d;
-  background-color: rgba(0, 0, 0, 0);
+  background-color: #db3d3d;
   pointer-events: none;
   margin-right: 8px;
   margin-top: 8px;
+  animation: flicker 1s infinite;
+  padding: 2px;
+  background-clip: content-box;
+}
+
+#deCircle {
+  animation: none;
+  background: 0 0;
+  border: rgba(var(--defaultTextRGB), .7) 1px solid;
+  height: 10px;
+  width: 10px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+@keyframes flicker {
+  0% {
+    background-color: #db3d3d;
+  }
+
+  50% {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  100% {
+    background-color: #db3d3d;
+  }
 }
 
 .warheadLines {
@@ -170,7 +218,10 @@ site-text {
 }
 
 #overviewDisplayTime {
-  font-size: 40px;
+  font-size: 25px;
+  width: 170px;
+  margin-right: 10px;
+  display: flex
 }
 
 /*Globe*/
@@ -179,6 +230,11 @@ site-text {
   cursor: move;
   height: 600px;
   min-width: 200px;
+}
+
+.militaryDash-middle,
+.militaryDash-middle canvas {
+  border-radius: 5px;
 }
 
 #militaryDashEarth canvas {
@@ -274,7 +330,8 @@ site-text {
 }
 
 /*Nuclear Panel*/
-.nuclearButton, #nuclearCancel {
+.nuclearButton,
+#nuclearCancel {
   background: #65313159;
   border-color: #db3d3d59;
   padding: 0;
@@ -330,12 +387,11 @@ site-text {
       #f1cf378c 1rem) !important;
 }
 
-#nuclearText, #CancelText {
+#nuclearText,
+#CancelText {
   letter-spacing: 0.4em;
   color: #ee555596;
 }
-
-#CancelText {}
 
 .nuclearPanel hr {
   border-top: 1px solid #db3d3d59;
@@ -356,6 +412,7 @@ site-text {
   width: calc(100% - 50px);
   display: inline-block;
   padding: 5px;
+  border-radius: 7px;
 }
 
 .targetButton {
@@ -434,4 +491,143 @@ site-text {
   text-transform: lowercase;
   font-size: 10px;
   letter-spacing: 2px;
+}
+
+#powerVal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#powerNum {
+  text-align: center;
+  width: 50%;
+  height: 50%;
+  overflow: show;
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  letter-spacing: 2px;
+}
+
+#powergraph {
+  height: 150px !important;
+  width: 200px !important;
+}
+
+#powerBar {
+  display: inline-block;
+  width: 20px;
+  border: var(--deepLine) 1px solid;
+  overflow: hidden;
+  position: relative;
+  border-radius: 10px;
+}
+
+#powerBar #inner {
+  width: 100%;
+  overflow: hidden;
+  left: -2px;
+  position: absolute;
+  background: #00000047
+}
+
+#powerBar #inner {
+  border: 2px solid var(--deepLine);
+  border-top-width: 0;
+  background-color: rgba(var(--defaultThemeRGB), 0.4);
+  bottom: 0;
+  height: 0%;
+}
+
+#powerBar #inner div {
+  border-bottom-width: 0;
+  top: 0;
+  width: 100%;
+  height: 5px;
+}
+
+#powerNumContain {
+  border-radius: 0px;
+  position: relative;
+  padding: 0;
+  width: 100px;
+  background-size: 12px 14.1px;
+  background-image: linear-gradient(to right, #2b2b2b 1px, transparent 1px), linear-gradient(to bottom, #2b2b2b 1px, #1e1e1e 1px);
+}
+
+#powerVal p {
+  letter-spacing: 1.4px;
+  color: var(--deepLine);
+  margin: 0;
+  text-align: center;
+}
+
+/*launch panel*/
+.launchSystemTitle {
+  margin: auto;
+  font-size: 20px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-family: 'Roboto Mono', monospace;
+}
+
+#lowerTitle {
+  letter-spacing: 2px;
+  font-size: 30px;
+}
+
+#topBannerFlex {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  border-top: var(--defaultText) 3px solid;
+  border-bottom: var(--defaultText) 3px solid;
+  padding: 10px 0;
+}
+
+#topBannerFlex img {
+  width: 70px;
+  margin: auto 30px;
+  margin-left: 6px;
+}
+
+#weaponImg {
+  width: 210px;
+}
+
+#weaponImgCon {
+  border: 1px solid var(--deepLine);
+  padding: 10px 50px;
+  position: relative;
+  border-radius: 5px;
+  background: linear-gradient(346deg, rgb(227 185 185 / 5%) 0%, rgba(17, 17, 17, 0) 100%), #262626 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;
+}
+
+@keyframes x {
+  to {
+    transform: translateX(-100%);
+    left: 100%;
+  }
+}
+
+.weaponImgTag {
+  font-weight: 400;
+  letter-spacing: 4px;
+  font-size: 10px;
+  color: gray;
+}
+
+#secondDashCon {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 30px;
 }

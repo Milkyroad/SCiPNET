@@ -23,13 +23,14 @@ let generator = new Generator(180, {
 });
 //update version
 function updateVersionText() {
-  $("#version").text("V. 01-23-0.21")
+  $("#version").text("V. 01-24-0.21")
 }
 updateVersionText()
-$(window).resize(function() {
+$(window).resize(function () {
   matchHeight()
   updateVersionText()
 });
+
 //script variables
 var access
 var vcLoaded = false;
@@ -110,13 +111,13 @@ window.updateUsersInfo = () => {
       displayName: displayName,
       photoURL: `${clearance}|-|${title}|-|${classification}|-|${site}|-|${keyphrase}`
     })
-    .then(function() {
+    .then(function () {
       reloadInfo()
       appendNormal(`<span style="color:#98FB98">[✓] </span>Updated successfully`)
       editState = 0
       cmdShow()
       btnShow()
-    }, function(error) {
+    }, function (error) {
       appendError(`${error.message.toUpperCase()}, EDITING PROCESS EXCITED.`)
       editState = 0
       cmdShow()
@@ -128,7 +129,7 @@ window.checkUsernameAva = async (con, callback) => {
   var userNameDoc = await firebase.firestore().collection("users").where("Tag", "==", UserTag).get()
   if (!userNameDoc.empty) {
     UserTag = `${userReg}#${Math.ceil(Math.random()*10000)}`
-    checkUsernameAva("normal", function() {
+    checkUsernameAva("normal", function () {
       console.log("loop")
     })
   } else {
@@ -151,7 +152,7 @@ window.checkUsernameAva = async (con, callback) => {
         }
         callback()
       })
-      .catch(function(error) {
+      .catch(function (error) {
         callback()
         reloadInfo()
         appendError(`ERROR OCCURED: ${String(error).toUpperCase()} YOUR ACCOUNT WAS SUCCESSFULLY CREATED OR UPDATED, BUT WE WERE UNABLE TO GENERATE A UNIQUE USERNAME FOR YOU. PLEASE TRY AGAIN LATER BY EDITING YOUR USERNAME.`)
@@ -165,26 +166,26 @@ window.checkUsernameAva = async (con, callback) => {
 window.errorEffect = () => {
   addEventLog("Level 5 Security Warning: An anomaly was detected, internal system crash may have occurred.", true)
   cmdHide()
-  setTimeout(function() {
+  setTimeout(function () {
     $d.append(`<div class="errorCmd"><span style="background:black">EEEEERRRRRR::::::::::</span> [DATA EXPUUUGGGEEEEED]</div>`)
     scroll()
   }, 1000);
-  setTimeout(function() {
+  setTimeout(function () {
     $d.append(`<div class="errorCmd">SCiPNET detected a fatal error..;d;;sdl23D34&^#&87ui</div>`)
     $d.append(`<div class="errorCmd">INTERNAL DATA CRASHED..:::::::::: SCiPNET V.01 OS HAS STOPPED WORKINGG::::::</div>`)
     scroll()
     $("#ok").css('color', '#EA3546')
     $("#ok").text('INSECURE')
   }, 1300);
-  setTimeout(function() {
+  setTimeout(function () {
     $d.css({
       overflow: 'hidden',
     });
-    jQuery.get("/src/ex_file/html/codeText.html", function(va) {
+    jQuery.get("/src/ex_file/html/codeText.html", function (va) {
       $d.append(`<div style="display:none">${va}</div>`)
       $d.append(`<div id="codePage" class="codePageStyle"></div>`)
       var lines = va.split("\n");
-      var displayLine = function() {
+      var displayLine = function () {
         var nextLine = lines.shift();
         if (nextLine) {
           var newLine = $('<li>' + nextLine + '</li>');
@@ -232,7 +233,7 @@ function checkAudioSetting() {
 }
 
 //monitor the login state of user
-firebase.auth().onAuthStateChanged(function(user) {
+firebase.auth().onAuthStateChanged(function (user) {
   checkLocalStorageAndChange()
   if (user) {
     firebase.firestore().doc(`users/${firebase.auth().currentUser.uid}`).get().then((doc) => {
@@ -245,7 +246,7 @@ firebase.auth().onAuthStateChanged(function(user) {
               popUp("NOTICE", `<blockquote>SCiPNET detected two theme versions, which one would you like to use?<br><div><span class="applicationBtn" id="option1">Local Version</span><span class="applicationBtn" id="option2">Server Version</span></div></blockquote>`)
               $("#option1").attr("style", `outline:1.5px ${localcolor} solid;`)
               $("#option2").attr("style", `outline:1.5px ${colorArray[1]} solid;`)
-              $("#option1").off('click').bind('click', function() {
+              $("#option1").off('click').bind('click', function () {
                 checkLocalStorageAndChange()
                 close()
                 $(".close").show()
@@ -253,7 +254,7 @@ firebase.auth().onAuthStateChanged(function(user) {
                   Theme: firebase.firestore.FieldValue.delete()
                 });
               })
-              $("#option2").off('click').bind('click', function() {
+              $("#option2").off('click').bind('click', function () {
                 backgroundColor = colorArray[0];
                 color = colorArray[1];
                 textColor = colorArray[2];
@@ -365,7 +366,7 @@ function fetchVisitorCount() {
 if (localStorage.getItem('count') == null) {
   firebase.firestore().collection('general').doc('count').update({
     count: firebase.firestore.FieldValue.increment(1)
-  }).then(function() {
+  }).then(function () {
     fetchVisitorCount()
   })
   localStorage.setItem('count', "logged");
@@ -377,52 +378,35 @@ if (localStorage.getItem('count') == null) {
 
 //check if the proxy server up
 function statusCheck(url, callback) {
-  return $.ajax({
-    type: "GET",
-    url: url,
-    dataType: "jsonp",
-    success: function(data, textStatus, xhr) {
-      callback(true);
-    },
-    error: function(data, textStatus, xhr) {
-      if (data.status === 200) {
-        callback(true);
-      } else {
-        callback(false);
-      }
-    },
-    timeout: 5000
-  });
+  const controller = new AbortController()
+  // 5 second timeout:
+  setTimeout(() => controller.abort(), 5000)
+  fetch(url, {
+    signal: controller.signal
+  }).then(function (response) {
+    callback(true)
+  }).catch(function () {
+    callback(false)
+  })
 }
 //check the available proxy server and find the one that can be used
-window.checkall = (callback) => {
-  statusCheck("https://api.allorigins.win/get?url=", function(data) {
+window.checkall = () => {
+  statusCheck("https://api.allorigins.win/get?url=https://scp-wiki.wikidot.com/", function (data) {
     if (data == true) {
       link = "https://api.allorigins.win/get?url="
-      callback()
     } else {
-      statusCheck("https://cors.scipnet.workers.dev/", function(data) {
+      statusCheck("https://jsonp.afeld.me/?url=https://scp-wiki.wikidot.com/", function (data) {
         if (data == true) {
-          link = "https://cors.scipnet.workers.dev/?u="
-          callback()
+          link = "https://jsonp.afeld.me/?url="
         } else {
-          statusCheck("https://cors.ryanking13.workers.dev/", function(data) {
+          statusCheck("https://api.codetabs.com/v1/proxy/?quest=https://scp-wiki.wikidot.com/", function (data) {
             if (data == true) {
-              link = "https://cors.ryanking13.workers.dev/?u="
-              callback()
+              link = "https://api.codetabs.com/v1/proxy/?quest="
             } else {
-              statusCheck("https://api.codetabs.com/", function(data) {
-                if (data == true) {
-                  link = "https://api.codetabs.com/v1/proxy/?quest="
-                  callback()
-                } else {
-                  showWarning("SCiPNET failed to connect with the SCP Foundation database, please reload the page or try again later.")
-                  appendWarn("SCiPNET FAILED TO CONNECT WITH THE SCP FOUNDATION DATABASE.")
-                  callback()
-                  cmdShow()
-                  btnShow()
-                }
-              });
+              showWarning("SCiPNET failed to connect with the SCP Foundation database, please reload the page or try again later.")
+              appendWarn("SCiPNET FAILED TO CONNECT WITH THE SCP FOUNDATION DATABASE.")
+              cmdShow()
+              btnShow()
             }
           });
         }
@@ -431,10 +415,10 @@ window.checkall = (callback) => {
   });
 }
 
-//check the availability of the current server
+//check the availability of current server
 checkall()
 
-//main control unit that identify the user input and allocate command
+//main control unit that identifies the user input and allocate command
 function reply(val) {
   val = val.toLowerCase().trim()
   //check the user input
@@ -485,7 +469,7 @@ function reply(val) {
       break;
     case "language":
       appendNormal("<div>Please click and select the language of the SCP documentation you wish to access below:<ol class='languageSelect listClass'><li>Traditional Chinese</li><li>Simplified Chinese</li><li>Russian</li><li>Korean</li><li>French</li><li>Polish</li><li>Spanish</li><li>Thai</li><li>Japanese</li><li>German</li><li>Italian</li><li>Ukrainian</li><li>Portuguese</li><li>Czech</li><li>English</li></ol></div>")
-      $d.find(".languageSelect li").unbind('click').bind('click', function() {
+      $d.find(".languageSelect li").unbind('click').bind('click', function () {
         var no = $(this).index() + 1
         $d.append($(this).text())
         appendNormal(`Target language selected: ${$(this).text()}`)
@@ -571,7 +555,7 @@ function reply(val) {
         }
       }
       appendNormal("Please click and select the type of background music you wish to play below:<ol class='bgmList listClass'><li>Ambience</li><li>Music</li><li>Turn off bgm</li></ol>")
-      $d.find(".bgmList li").unbind('click').bind('click', function() {
+      $d.find(".bgmList li").unbind('click').bind('click', function () {
         var no = $(this).index() + 1
         $d.append($(this).text())
         appendNormal(`Target bgm selected: ${$(this).text()}`)
@@ -674,7 +658,7 @@ function reply(val) {
         if (helpLoaded != true) {
           cmdHide()
           $d.append('<blockquote>Loading help module...</blockquote>')
-          jQuery.get("/src/ex_file/html/help.html", function(va) {
+          jQuery.get("/src/ex_file/html/help.html", function (va) {
             helpLoaded = true;
             window.helpHtml = va
             appendNormal(helpHtml)
@@ -691,14 +675,14 @@ function reply(val) {
       break;
     case "theme":
       appendNormal(`<div class="code"><h1>Theme Picker<sub style="font-size:15px">Beta</sub></h1><blockquote style="background:none;margin-bottom: 0;">Please select your theme colour:<br><input type="color" class="colorPicker themePicker" name="colorPicker" onchange="parent.changeColor(this.value);" value="${color}">Please select your contrast colour:<br><input type="color" class="colorPicker contrastPicker" name="colorPicker" onchange="parent.changeContrastColor(this.value);" value="${textContrastColor}">Please select your terminal text colour:<br><input type="color" class="colorPicker textPicker" name="colorPicker " onchange="parent.changeTerminalTextColor(this.value);" value="${textColor}">Please select your background colour:<br><input type="color" class="colorPicker backgroundPicker" name="colorPicker" onchange="parent.changeBackgroundColor(this.value);" value="${backgroundColor}"><span class="applicationBtn resetTheme">Reset</span><span class="applicationBtn saveCloudTheme">Save to Server</span></blockquote></div>`)
-      $d.find(".resetTheme").off('click').bind('click', function() {
+      $d.find(".resetTheme").off('click').bind('click', function () {
         backgroundColor = "#1e1e1e"
         color = "#f5d546"
         textColor = "#ffffff"
         textContrastColor = "#111111"
         changeAll()
       })
-      $d.find(".saveCloudTheme").off('click').bind('click', function() {
+      $d.find(".saveCloudTheme").off('click').bind('click', function () {
         if (userLoggedIn && firebase.auth().currentUser.uid != null) {
           $d.find(".saveCloudTheme").css("opacity", "0.7")
           $d.find(".saveCloudTheme").css("pointer-events", "none")
@@ -712,7 +696,7 @@ function reply(val) {
               $d.find(".saveCloudTheme").css("pointer-events", "")
               popUp("notice", "Settings saved.")
             })
-            .catch(function(error) {
+            .catch(function (error) {
               showWarning(error)
             })
         } else {
@@ -766,7 +750,7 @@ function reply(val) {
         $d.append(`<blockquote id="waitingToAdd">Accessing your profile...</blockquote>`)
         addDot()
         import( /*webpackChunkName:'profile'*/ './profile.js').then((module) => {
-          loadCroppie(function() {
+          loadCroppie(function () {
             module.whoami()
           })
         })
@@ -809,7 +793,7 @@ function reply(val) {
 }
 
 //distrube the input according to the variables
-$("#input").on('keyup', function(e) {
+$("#input").on('keyup', function (e) {
   if (e.key === 'Enter' || e.keyCode === 13) {
     if ($("#input").val() != "") {
       inputVal = $("#input").val();
@@ -834,7 +818,13 @@ $("#input").on('keyup', function(e) {
           lockoutProcessFun(inputVal)
         }
         scroll()
-        $("#input").val('')
+        if (loginState != 4) {
+          $("#input").val('')
+        } else {
+          if (inputVal.trim().toLowerCase() != "answer") {
+            $("#input").val('')
+          }
+        }
       }
     }
   }
@@ -852,21 +842,21 @@ function isNumber(n) {
 
 //switching tabs
 var refreshHide;
-$("#chat").off('click').bind('click', function() {
+$("#chat").off('click').bind('click', function () {
   if (tab == 0) {
     if (vcLoaded == false) {
       $("#comIframe").attr('src', '/src/html/comframe.html')
-      $("#comIframe").on('load', function() {
+      $("#comIframe").on('load', function () {
         bubbleIframeMouseMove(document.getElementById("comIframe"))
       })
       $.getScript('src/js/vc.js')
       vcLoaded = true
     }
-    refreshHide = setInterval(function() {
+    refreshHide = setInterval(function () {
       $("#input").css("opacity", "0.5")
       $("#input").attr('disabled', 'disabled')
     }, 100);
-    setTimeout(function() {
+    setTimeout(function () {
       clearInterval(refreshHide);
     }, 2000);
     $("#input").css("opacity", "0.5")
@@ -880,7 +870,7 @@ $("#chat").off('click').bind('click', function() {
     $("#cmdIframe").css("z-index", "1")
   }
 })
-$("#cmdBtn").off('click').bind('click', function() {
+$("#cmdBtn").off('click').bind('click', function () {
   if (tab == 1) {
     clearInterval(refreshHide);
     tab = 0
@@ -932,7 +922,7 @@ window.locationMasking = (con) => {
 }
 
 //close button
-$(".close").off('click').bind('click', function() {
+$(".close").off('click').bind('click', function () {
   close()
 })
 
@@ -945,13 +935,16 @@ function close() {
     clearInterval(dataRandom);
     clearInterval(dnaRandom);
   }
+  if (typeof energyInterval !== 'undefined') {
+    removeMiInterval()
+  }
   $(".modal").hide()
   $("#previewBox").html('<img id="previewBox" />')
   $(".modalText:not(#previewText)").html('')
   $("#NormalModalId h1").attr("class", "")
   $(".modal-content").addClass("tem")
   $(".tem").removeClass("modal-content")
-  setTimeout(function() {
+  setTimeout(function () {
     $(".tem").addClass("modal-content")
     $(".modal-content").removeClass("tem")
   }, 10);
@@ -1000,21 +993,21 @@ window.changeAll = (condition) => {
         '--defaultContrast': textContrastColor,
         '--defaultBackground': backgroundColor
       });
-      $d.find(".textPicker").each(function() {
+      $d.find(".textPicker").each(function () {
         $(this).val(textColor)
       })
-      $d.find(".contrastPicker").each(function() {
+      $d.find(".contrastPicker").each(function () {
         $(this).val(textContrastColor)
       })
-      $d.find(".themePicker").each(function() {
+      $d.find(".themePicker").each(function () {
         $(this).val(color)
       })
-      $d.find(".backgroundPicker").each(function() {
+      $d.find(".backgroundPicker").each(function () {
         $(this).val(backgroundColor)
       })
     }
     if ($d == undefined || $m == undefined) {
-      $("#cmdIframe").add($("#comIframe")).on('load', function() {
+      $("#cmdIframe").add($("#comIframe")).on('load', function () {
         changeCssVar()
       })
     }
@@ -1061,10 +1054,10 @@ window.loadCroppie = (callback) => {
       $.getScript("/__/firebase/8.6.3/firebase-storage.js"),
       $.getScript("/__/firebase/8.8.0/firebase-app-check.js"),
       $.getScript("/src/js/upload.js"),
-      $.Deferred(function(deferred) {
+      $.Deferred(function (deferred) {
         $(deferred.resolve);
       })
-    ).done(function() {
+    ).done(function () {
       //appCheck setup
       const appCheck = firebase.appCheck();
       appCheck.activate('6Lch95QbAAAAAKydxDgt3zyqBGtAt9WWQ2-qafVi');
@@ -1083,27 +1076,13 @@ function accessLoad(a, b) {
   if (init == false) {
     $d.append(`<blockquote id="waitingToAdd">Initializing connection...`)
     addDot()
-    setTimeout(function() {
-      var verifyLinkLoaded = false
-      $('#cmdIframe').contents().find("head").append('<link rel="stylesheet" href="/src/ex_file/css/discord.min.css" />');
-      checkall(function() {
-        verifyLinkLoaded = true
+    $('#cmdIframe').contents().find("head").append('<link rel="stylesheet" href="/src/ex_file/css/discord.min.css" />');
+    import( /*webpackChunkName:'access'*/ './access.js')
+      .then(module => {
+        access = module.access
+        init = true
+        access(a, b)
       })
-      import( /*webpackChunkName:'access'*/ './access.js')
-        .then(module => {
-          access = module.access
-          checkLinkLoaded()
-
-          function checkLinkLoaded() {
-            if (verifyLinkLoaded) {
-              init = true
-              access(a, b)
-              return;
-            }
-            window.setTimeout(checkLinkLoaded, 100)
-          }
-        })
-    }, 100);
   } else {
     access(a, b)
   }
@@ -1111,7 +1090,7 @@ function accessLoad(a, b) {
 
 //setup a listener for access button click
 function AccessLink() {
-  $d.find("ele-access").off('click').bind('click', function() {
+  $d.find("ele-access").off('click').bind('click', function () {
     if ($("#input").attr('disabled') == undefined && loginState == 0 && registerState == 0 && editState == 0 && resetState == 0) {
       $("#input").css("opacity", "0.5")
       $("#input").attr('disabled', 'disabled')
@@ -1189,12 +1168,12 @@ function lockoutProcessFun(val) {
 
 //function to reset password
 function resetPassword(emailAddress) {
-  firebase.auth().sendPasswordResetEmail(emailAddress).then(function() {
+  firebase.auth().sendPasswordResetEmail(emailAddress).then(function () {
     appendNormal(`<span style="color:#98FB98">[✓] </span>The email to reset your password has been sent to your email inbox`)
     resetState = 0
     cmdShow()
     btnShow()
-  }).catch(function(error) {
+  }).catch(function (error) {
     appendError(`${String(error).toUpperCase()} PROCESS EXITED.`)
     resetState = 0
     cmdShow()
