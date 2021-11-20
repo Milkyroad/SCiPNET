@@ -391,13 +391,13 @@ function statusCheck(url, callback) {
 }
 //check the available proxy server and find the one that can be used
 window.checkall = () => {
-  statusCheck("https://api.allorigins.win/get?url=https://scp-wiki.wikidot.com/", function (data) {
+  statusCheck("https://jsonp.afeld.me/?url=https://scp-wiki.wikidot.com/", function (data) {
     if (data == true) {
-      link = "https://api.allorigins.win/get?url="
+      link = "https://jsonp.afeld.me/?url="
     } else {
-      statusCheck("https://jsonp.afeld.me/?url=https://scp-wiki.wikidot.com/", function (data) {
+      statusCheck("https://api.allorigins.win/get?url=https://scp-wiki.wikidot.com/", function (data) {
         if (data == true) {
-          link = "https://jsonp.afeld.me/?url="
+          link = "https://api.allorigins.win/get?url="
         } else {
           statusCheck("https://api.codetabs.com/v1/proxy/?quest=https://scp-wiki.wikidot.com/", function (data) {
             if (data == true) {
