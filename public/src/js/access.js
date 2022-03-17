@@ -16,11 +16,11 @@ export function access(accessNo, accessCl) {
   loadFile(`Downloading file`, `Decrypting document`)
   addEventLog(`Accessing ${accessNo} documentation...`)
   if (link == undefined) {
+    checkall()
     btnShow()
     cmdShow()
     addEventLog(`Failed to access ${accessNo}`, true)
-    appendWarn("SCiPNET FAILED TO CONNECT WITH THE SCP FOUNDATION DATABASE.")
-    showWarning("SCiPNET failed to connect with the SCP Foundation database, please reload the page or try again later.")
+    appendWarn("SCiPNET FAILED TO CONNECT WITH THE SCP FOUNDATION DATABASE. THE PROXY SERVER HAS BEEN RESET, PLEASE TRY AGAIN.")
   } else {
     $.ajax({
       url: `${link}${linkLanguage}${accessNo}`,
@@ -86,6 +86,7 @@ export function access(accessNo, accessCl) {
           }
           $(".scp-image-caption").removeAttr("style");
           $(".collapsible-block-unfolded").removeAttr("style")
+          $(".collapsible-block-folded").removeAttr("style")
           $(".collapsible-block-link").removeAttr("href")
           $(".code").each(function() {
             if ($(this).is(':empty') || $(this).text().trim() == "") {
@@ -332,10 +333,10 @@ export function access(accessNo, accessCl) {
         }
       },
       error: function(jqXHR, exception) {
+        checkall()
         var msg = '';
         if (jqXHR.status === 0) {
           msg = 'SCiPNET FAILED TO CONNECT TO THE INTERNET, PLEASE TRY AGAIN';
-          checkall()
           $d.find("#fileSize").removeAttr("id", "fileSize")
         } else if (jqXHR.status == 404) {
           msg = 'THE CORRESPONDING FILE WITH THE CURRENT LANGUAGE SETTING COULD NOT BE FOUND IN THE DATABASE';
@@ -461,7 +462,7 @@ function getFrame() {
 }
 
 function checkForAva(linkforAccess) {
-  var sitelist = ["scp-wiki.net/", "scp-wiki.wikidot.com/", "www.scpwiki.com/", "scp-wiki-cn.wikidot.com/", "scp-zh-tr.wikidot.com/","scpfoundation.net/", "ko.scp-wiki.net/", "fondationscp.wikidot.com/", "scp-wiki.net.pl/", "lafundacionscp.wikidot.com/", "scp-th.wikidot.com/", "scp-jp.wikidot.com/", "scp-wiki-de.wikidot.com/", "fondazionescp.wikidot.com/", "scp-ukrainian.wikidot.com/", "scp-pt-br.wikidot.com/", "scp-cs.wikidot.com/"]
+  var sitelist = ["scp-wiki.net/", "scp-wiki.wikidot.com/", "www.scpwiki.com/", "scp-wiki-cn.wikidot.com/", "scp-zh-tr.wikidot.com/","scpfoundation.net/", "ko.scp-wiki.net/", "fondationscp.wikidot.com/", "scp-wiki.net.pl/", "lafundacionscp.wikidot.com/", "scp-th.wikidot.com/", "scp-jp.wikidot.com/", "scp-wiki-de.wikidot.com/", "fondazionescp.wikidot.com/", "scp-ukrainian.wikidot.com/", "scp-pt-br.wikidot.com/", "scp-cs.wikidot.com/", "scp-wiki.wdfiles.com/"]
   var list = linkforAccess.split(".")
   if (linkforAccess != undefined && sitelist.some(v => linkforAccess.includes(v)) && linkforAccess != '/' && linkforAccess.includes('email-protection') == false && Object.keys($(this).children('img')).length > 2 == false && list.includes("jpg") == false && list.includes("mp3") == false && list.includes("png") == false && list.includes("jpeg") == false && list.includes("gif") == false && list.includes("ogg") == false && list.includes("wav") == false && list.includes("oga") == false && list.includes("webm") == false && list.includes("flac") == false) {
     return true;

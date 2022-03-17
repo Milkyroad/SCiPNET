@@ -9,9 +9,13 @@
 </head>
 
 <body>
-  <div id="NormalModalId" class="modal" style="display:block;background: #1e1e1e url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;">
+  <div id="NormalModalId" class="modal"
+    style="display:block;background: #1e1e1e url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAG0lEQVQYV2P8//+/FCMj4zMGJMCIzIGxKRQEAJgPBAbJqUVTAAAAAElFTkSuQmCC) repeat;">
     <div class="modal-content">
       <div class="modal-wrap">
+        <span class="close">&times;</span>
+        <br>
+        <h1 class="controlTitle">Military Strategic Intelligence</h1>
         <div id="nuclearWarningOuter">
           <div id="nuclearWarning">
             <div class="nuclearBanner outerBanner"></div>
@@ -20,9 +24,9 @@
             <div class="nuclearBanner outerBanner" style="bottom: 0; position: absolute;"></div>
           </div>
         </div>
-        <div class="militaryDash">
-          <div class="militaryDash-left" id="showDash">
-            <div style="display: flex; align-items: center;">
+        <div class="militaryDash" id="militarynormal">
+          <div class="militaryDash-left showDash">
+            <div style="display: flex; align-items: center; position:relative">
               <div class="warheadCount">
                 <div>
                   <div>
@@ -32,13 +36,16 @@
                   <div class="big-font" id="warheadNum">13132</div>
                   <div class="small-dash-font">READY FOR DEPLOYMENT</div>
                   <div class="warheadWarn">
-                    <div id="warheadCircle"></div>
+                    <div class="warheadCircle"></div>
                     <div>ACTIVE ---------<br>WARHEADS-----</div>
                   </div>
                 </div>
               </div>
-              <div class="warheadLines"></div>
-              <div class="warheadLines" style="height: 200px;"></div>
+              <div class="warheadLines" style="height: 240px;"></div>
+              <div style="display: flex;flex-direction: column;align-items: center;margin: 5px;">
+                <div class="warheadCircle" id="deCircle"></div>
+                <div class="warheadLines" style="height: 190px;margin:0"></div>
+              </div>
             </div>
             <div class="securityOverview">
               <div>
@@ -63,16 +70,22 @@
                     </li>
                     <li class="site-status-text">BACKGATE <small>1</small>: <site-text>INTACT (100%)</site-text>
                     </li>
-                    <li class="site-status-text">ELECTRICITY GEN <small>1-3</small>: <site-text>INTACT (100%)</site-text>
+                    <li class="site-status-text">ELECTRICITY GEN <small>1-3</small>: <site-text>INTACT (100%)
+                      </site-text>
                     </li>
                   </ul>
                   <hr>
-                  <p class="small-dash-font alignLeft" style="padding: 0 5px 0 15px;letter-spacing:1px;margin: 0;"><b>15</b> SATELLITES <small>ONLINE</small>: <site-text>STREAMING DATA</site-text>
+                  <p class="small-dash-font alignLeft" style="padding: 0 5px 0 15px;letter-spacing:1px;margin: 0;">
+                    <b>15</b> SATELLITES <small>ONLINE</small>: <site-text>STREAMING DATA</site-text>
                   </p>
                   <hr>
                 </div>
-                <div style="text-align:center"><span class="big-font" id="overviewDisplayTime">16:00:00</span><span><small style="letter-spacing: 0.265em;font-size: 8px;">(SYNC)</small></span></div>
-                <small style="font-size: 8px; line-height: 12px; letter-spacing: 0.265em;margin-left:5px">USER LOGGED IN AS: <span id="overviewDisplayName"></span></small>
+                <div
+                  style="display: flex;flex-direction: row;justify-content: center;color: #d73131;text-shadow: -1px 3px 12px #bf1e1e;">
+                  <span class="big-font" id="overviewDisplayTime">16:00:00</span><span style="line-height: 72px;"><small
+                      style="letter-spacing: 0.265em;font-size: 8px;">(SYNC)</small></span></div>
+                <small style="font-size: 8px; line-height: 12px; letter-spacing: 0.265em;margin-left:5px">USER LOGGED IN
+                  AS: <span id="overviewDisplayName"></span></small>
               </div>
             </div>
           </div>
@@ -108,20 +121,28 @@
                 ENTER YOUR TARGET LOCATION:
               </div>
               <div style="display: flex;align-items: center;">
-                <input type="text" id="nuclearSearch">
+                <input type="text" id="nuclearSearch" autocomplete="off">
                 <img src="/src/images/target.svg" class="targetButton" id="targetSearch">
               </div>
               <p id="locationRes">LOCATION: WAITING FOR INPUT...</p>
               <hr>
               <div style="display: flex;justify-content: center;">
-                <div class="targetButtonOuter">
-                  <img src="/src/images/eraser.svg" class="targetButton" id="eraseButton" title="Remove all target markers"></img>
-                  <span class="tooltiptext">Tooltip text</span>
+                <img src="/src/images/eraser.svg" class="targetButton" id="eraseButton"
+                  title="Remove all target markers"></img>
+              </div>
+            </div>
+            <div class="showDash" style="display: flex;">
+              <div id="powerBar">
+                <div id="inner">
                 </div>
-                <div class="targetButtonOuter">
-                  <img src="/src/images/selfDestruct.svg" class="targetButton" id="selfButton" title="Site self-destruction">
-                  <span class="tooltiptext">Tooltip text</span>
-                  </img>
+              </div>
+              <div id="powerVal">
+                <p>Main Power Source (MWT)</p>
+                <div class="weaponDetails" id="powerNumContain">
+                  <div id="powerNum">14000.8</div>
+                  <div>
+                    <canvas id="powergraph"></canvas>
+                  </div>
                 </div>
               </div>
             </div>
@@ -140,8 +161,32 @@
               <div class="nuclearBanner"></div>
               <p class="bold-text" id="nuclearText">NUCLEAR WARHEAD DEPLOYMENT</p>
               <img src="/src/images/radiation.svg" id="radiationImg"></img>
-              <div class="nuclearBanner">
+              <div class="nuclearBanner"></div>
+            </div>
+          </div>
+        </div>
+        <div class="militaryDash" id="militarysecond">
+          <div id="topBannerFlex">
+            <img src="/src/images/scp.svg" alt="">
+            <div style="text-align: center;">
+              <div class="launchSystemTitle">
+                Strategic Military Control Department
               </div>
+              <div class="launchSystemTitle" id="lowerTitle">
+                Nuclear deployment
+              </div>
+              <div class="launchSystemTitle" id="lowerTitle" style="font-size: 15px;">
+                Full clearance access granted
+              </div>
+            </div>
+          </div>
+          <div id="secondDashCon">
+            <div id="weaponImgCon">
+              <img src="/src/images/nuclear.png" id="weaponImg">
+              <span class="weaponImgTag">R25>NC</span>
+            </div>
+            <div class="mapContainer">
+              <div class="map">Loading...</div>
             </div>
           </div>
         </div>

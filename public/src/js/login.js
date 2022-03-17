@@ -84,6 +84,7 @@ export const loginProcess = (val) => {
         })
     } else if (loginState == 4) {
       if (val == keyLog) {
+        $("#input").val("")
         cmdHide()
         firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
           .then(() => {
@@ -99,7 +100,7 @@ export const loginProcess = (val) => {
           })
       } else {
         if (val.toLowerCase().trim() == "answer") {
-          appendNormal(`Your personal authorization keyphrase is: <span class="highlight">${keyLog}</span>`)
+          appendNormal('Your personal authorization keyphrase is: "<span class="highlight">' + keyLog + '</span>"')
           $("#input").val(keyLog)
         } else {
           appendError(`INCORRECT AUTHENTICATION KEYPHRASE`)

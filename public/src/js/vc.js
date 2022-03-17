@@ -337,7 +337,6 @@ window.call = async (dom) => {
 
         function checkaudioLoaded() {
           if (remoteStream.active) {
-            console.log(remoteStream);
             $(".connectionStatus").html(`Connection with <span class="highlight">${callID}</span> established`)
             drawOscilloscope(remoteStream, 'remoteOscilloscope')
             return;

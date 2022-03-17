@@ -18,6 +18,10 @@
   margin: 0 10px 10px 0;
 }
 
+.bigFeedSym img {
+  width: 15px;
+}
+
 .smallFeedIntro {
   letter-spacing: 2px;
   text-transform: uppercase;
