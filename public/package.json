@@ -20,7 +20,7 @@
     "node-polyfill-webpack-plugin": "^1.1.2",
     "npm": "^7.24.1",
     "request": "^2.88.2",
-    "webpack": "^4.44.1"
+    "webpack": "^5.0.0"
   },
   "devDependencies": {
     "@types/node": "^15.6.1",
