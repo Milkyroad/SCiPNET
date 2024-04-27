@@ -206,7 +206,7 @@ export function access(accessNo, accessCl) {
           });
           $('a[href^="/"]').each(function() {
             var oldUrl = $(this).attr("href"); // Get current url
-            var newUrl = "http://www.scpwiki.com" + oldUrl; // Create new url
+            var newUrl = "https://scp-wiki.wikidot.com/" + oldUrl; // Create new url
             $(this).attr("href", newUrl)
           });
           $(`#main-content iframe`).each(function() {
