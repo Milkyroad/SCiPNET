@@ -22,6 +22,9 @@ export function access(accessNo, accessCl) {
     addEventLog(`Failed to access ${accessNo}`, true)
     appendWarn("SCiPNET FAILED TO CONNECT WITH THE SCP FOUNDATION DATABASE. THE PROXY SERVER HAS BEEN RESET, PLEASE TRY AGAIN.")
   } else {
+    if (linkLanguage == "http://www.scpwiki.com/") {
+      linkLanguage = "https://scp-wiki.wikidot.com/"
+    }
     $.ajax({
       url: `${link}${linkLanguage}${accessNo}`,
       type: 'GET',
